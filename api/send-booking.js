@@ -33,18 +33,6 @@ export default async function handler(req, res) {
       body: JSON.stringify({ chat_id: parseInt(chatId), text: msg })
     });
     
-    // Отправляем голосовое
-    const proto = req.headers['x-forwarded-proto'] || 'https';
-    const host = req.headers['x-forwarded-host'] || req.headers.host;
-    if (host) {
-      const voiceUrl = proto + '://' + host + '/assets/booking-alert.ogg';
-      await fetch(`https://api.telegram.org/bot${token}/sendVoice`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chat_id: parseInt(chatId), voice: voiceUrl })
-      });
-    }
-    
     return res.status(200).json({ ok: true });
   } catch (e) {
     console.error('[send-booking] Error:', e);
