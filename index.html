@@ -865,9 +865,15 @@
         </div>
 
         <div class="serv-success" id="servSuccess">
-          <div class="serv-success-icon">✅</div>
-          <h3>Заявка отправлена!</h3>
-          <p>Мы свяжемся с вами для подтверждения записи</p>
+          <div class="serv-success-icon" style="font-size:2.5rem;margin-bottom:4px">✅</div>
+          <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;color:#111">Вы записаны!</h3>
+          <p style="font-size:.85rem;color:#333;margin:0 0 12px"><span id="servDateDisplaySuccess"></span></p>
+          <div style="font-size:.8rem;color:#555;line-height:1.6">
+            <div style="margin-bottom:8px">Наш адрес:<br><strong>г. Сочи, ул. Пластунская 52"З"/2</strong></div>
+            <div style="margin-bottom:8px">Поднимайтесь к нам по Промышленному переулку или постройте маршрут:<br><a href="https://yandex.ru/maps/org/galaxy_moto_service/172501949586" target="_blank" style="color:#1983dd;font-weight:600">Яндекс.Карты</a></div>
+            <div style="margin-bottom:8px"><strong>Телефон: <a href="tel:+79000018023" style="color:#1983dd">+7 (900) 001-80-23</a></strong></div>
+            <div style="font-size:.78rem;color:#888">Если планы изменились, пожалуйста, предупредите нас! До встречи 👋</div>
+          </div>
         </div>
       </div>
     </div>
@@ -1006,7 +1012,7 @@
       // Обновляем локальный кэш
       servBookings.push(data);
       document.getElementById('servForm').classList.remove('active');
-      document.getElementById('servSuccess').classList.add('active');
+      var disp=sd.split("-").reverse().join(".")+" "+st;document.getElementById('servDateDisplaySuccess').textContent=disp;document.getElementById('servSuccess').classList.add('active');
       document.getElementById('servName').value='';
       document.getElementById('servPhone').value='';
       document.getElementById('servModel').value='';
@@ -1354,7 +1360,7 @@
       for(var i=11;i<19;i++){var ti=String(i).padStart(2,"0")+":00";var b2=bk(sd,ti);var cc="sts";if(b2)cc+=" sbk";if(st===ti)cc+=" stsl";h+="<div class='"+cc+"' onclick='tp(\""+ti+"\")'>"+ti+"</div>"}
       h+="</div></div>";}
       if(sd&&st){h+="<div class='sfm' id='fm'><h4>"+sd.split("-").reverse().join(".")+" "+st+"</h4><input id='n1' placeholder='Имя'><input id='n2' placeholder='Телефон'><input id='n3' placeholder='Модель'><textarea id='n4' rows='2' placeholder='Краткое описание проблемы / визита' style='width:100%;padding:10px;font-size:.82rem;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box;margin-bottom:8px;resize:vertical'></textarea><button class='sbn' onclick='sb()'>Записаться</button></div>"}
-      h+="<div class='ssc' id='sc'><div>✓</div><h3>Готово!</h3><p>Мы свяжемся</p></div></div>";
+      h+="<div class='ssc' id='sc'><div style='font-size:2.5rem;margin-bottom:4px'>✅</div><h3 style='font-size:1rem;font-weight:600;margin:0 0 4px;color:#111'>Вы записаны!</h3><p style='font-size:.85rem;color:#333;margin:0 0 12px'><span id='sdt'></span></p><div style='font-size:.8rem;color:#555;line-height:1.6'><div style='margin-bottom:8px'>Наш адрес:<br><strong>г. Сочи, ул. Пластунская 52"З"/2</strong></div><div style='margin-bottom:8px'>Поднимайтесь к нам по Промышленному переулку или постройте маршрут:<br><a href='https://yandex.ru/maps/org/galaxy_moto_service/172501949586' target='_blank' style='color:#1983dd;font-weight:600'>Яндекс.Карты</a></div><div style='margin-bottom:8px'><strong>Телефон: <a href='tel:+79000018023' style='color:#1983dd'>+7 (900) 001-80-23</a></strong></div><div style='font-size:.78rem;color:#888'>Если планы изменились, пожалуйста, предупредите нас! До встречи 👋</div></div></div></div>";
       e.innerHTML=h;
     }
     function pm(){sc.setMonth(sc.getMonth()-1);sd=null;st=null;ld(function(){rd()})}
@@ -1369,7 +1375,7 @@
       window.db.collection("galaxymoto_bookings").doc(sd+"_"+st.replace(":","-")).set(dt).catch(function(e){console.error(e)});
       // Отправка в Telegram
       fetch("/api/send-booking",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(dt)}).catch(function(){});
-      document.getElementById("fm").style.display="none";document.getElementById("sc").classList.add("ok")
+      document.getElementById("fm").style.display="none";document.getElementById("sdt").textContent=sd.split("-").reverse().join(".")+" "+st;document.getElementById("sc").classList.add("ok")
     }
     function init(){var e=document.getElementById("servInlineCalendar");if(e){ld(function(){rd()});return}setTimeout(init,400)}
     if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",init)}else{setTimeout(init,600)}
@@ -2241,9 +2247,15 @@
         </div>
 
         <div class="serv-success" id="servSuccess">
-          <div class="serv-success-icon">✅</div>
-          <h3>Заявка отправлена!</h3>
-          <p>Мы свяжемся с вами для подтверждения записи</p>
+          <div class="serv-success-icon" style="font-size:2.5rem;margin-bottom:4px">✅</div>
+          <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;color:#111">Вы записаны!</h3>
+          <p style="font-size:.85rem;color:#333;margin:0 0 12px"><span id="servDateDisplaySuccess"></span></p>
+          <div style="font-size:.8rem;color:#555;line-height:1.6">
+            <div style="margin-bottom:8px">Наш адрес:<br><strong>г. Сочи, ул. Пластунская 52"З"/2</strong></div>
+            <div style="margin-bottom:8px">Поднимайтесь к нам по Промышленному переулку или постройте маршрут:<br><a href="https://yandex.ru/maps/org/galaxy_moto_service/172501949586" target="_blank" style="color:#1983dd;font-weight:600">Яндекс.Карты</a></div>
+            <div style="margin-bottom:8px"><strong>Телефон: <a href="tel:+79000018023" style="color:#1983dd">+7 (900) 001-80-23</a></strong></div>
+            <div style="font-size:.78rem;color:#888">Если планы изменились, пожалуйста, предупредите нас! До встречи 👋</div>
+          </div>
         </div>
       </div>
     </div>
@@ -2382,7 +2394,7 @@
       // Обновляем локальный кэш
       servBookings.push(data);
       document.getElementById('servForm').classList.remove('active');
-      document.getElementById('servSuccess').classList.add('active');
+      var disp=sd.split("-").reverse().join(".")+" "+st;document.getElementById('servDateDisplaySuccess').textContent=disp;document.getElementById('servSuccess').classList.add('active');
       document.getElementById('servName').value='';
       document.getElementById('servPhone').value='';
       document.getElementById('servModel').value='';
