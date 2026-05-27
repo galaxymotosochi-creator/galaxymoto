@@ -130,3 +130,30 @@
   display: none !important;
 }
 
+
+/* Аккуратные кнопки карточек */
+.house-card__info-btn {
+  padding: 7px 14px;
+  font-size: .78rem;
+  font-weight: 500;
+  font-family: Inter, sans-serif;
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  background: transparent;
+  color: #444;
+  cursor: pointer;
+  transition: all .15s ease;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.house-card__info-btn:hover {
+  border-color: #888;
+  color: #111;
+  background: rgba(0,0,0,.02);
+}
+.house-card__btn-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
