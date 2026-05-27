@@ -3,13 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-    <title>GALAXY MOTO</title>
+    <title>888.ESTATE — Капсульные дома</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script type="module" crossorigin src="assets/index-CguyBJZF.js?v=11"></script>
-    <link rel="stylesheet" crossorigin href="assets/index-CTYFC3_u.css?v=11">
+    <script type="module" crossorigin src="assets/index-CguyBJZF.js?v=10"></script>
+    <link rel="stylesheet" crossorigin href="assets/index-CTYFC3_u.css?v=10">
     <!-- Галерея-лайтбокс для фото домов -->
     <style>
       .gallery-overlay{display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.92);justify-content:center;align-items:center;flex-direction:column;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
@@ -82,8 +82,27 @@
   </script>
 </head>
   <body>
+    <!-- Видео-фон для Hero -->
+    <div id="heroVideoWrap" style="display:none;position:absolute;top:0;left:0;width:100%;height:100vh;z-index:0;overflow:hidden;pointer-events:none;background:#111">
+      <img id="heroPoster" src="hero-poster.jpg" alt=""
+        style="position:absolute;left:50%;top:0;transform:translateX(-50%);width:115%;height:115%;object-fit:cover;object-position:center top;opacity:1;transition:opacity .6s ease">
+      <video id="heroBgVideo" muted playsinline preload="auto"
+        src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260329_050842_be71947f-f16e-4a14-810c-06e83d23ddb5.mp4"
+        style="position:absolute;left:50%;top:0;transform:translateX(-50%);width:115%;height:115%;object-fit:cover;object-position:center top;opacity:0;transition:opacity .6s ease">
+      </video>
+    </div>
+    <div id="heroOverlay" style="display:none;position:absolute;top:0;left:0;width:100%;height:100vh;z-index:1;background:linear-gradient(135deg,rgba(0,0,0,0.65) 0%,rgba(0,0,0,0.35) 50%,rgba(0,0,0,0.65) 100%);pointer-events:none"></div>
 
 
+    <style id="heroVideoStyles">
+      /* Показываем видео только на главной */
+      .hero { background: transparent !important; background-image: none !important; position: relative; z-index: 2; }
+      .hero__overlay { background: transparent !important; }
+      #root { position: relative; z-index: 2; background: transparent; }
+
+      /* Видео JS-крестфейд */
+      .hero-video-fade { transition: none !important; }
+    </style>
 
     <div id="root"></div>
 
@@ -837,6 +856,10 @@
     <!-- Hero Video — только на главной, безрывный loop -->
     <script>
     (function(){
+      var vw = document.getElementById('heroVideoWrap');
+      var ov = document.getElementById('heroOverlay');
+      var video = document.getElementById('heroBgVideo');
+      var poster = document.getElementById('heroPoster');
       if (!vw || !video) return;
       var rAF = null;
       var FADE_MS = 250;
