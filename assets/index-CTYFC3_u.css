@@ -172,3 +172,20 @@
   transform: translateY(-2px) !important;
   box-shadow: 0 6px 28px rgba(11, 197, 234, 0.4), 0 4px 14px rgba(139, 92, 246, 0.35) !important;
 }
+
+/* Стили кнопок hero */
+.hero__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 28px;
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all .25s ease;
+  white-space: nowrap;
+  border: none;
+  text-decoration: none;
+}
