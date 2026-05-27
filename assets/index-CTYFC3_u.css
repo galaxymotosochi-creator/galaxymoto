@@ -200,10 +200,14 @@
 
 /* Серая рамка для секции календаря */
 #service-booking {
+  margin: 2rem 0;
+}
+
+
+/* Плашка календаря */
+#servInlineCalendar {
   background: #fff;
   border-radius: 16px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 20px 40px rgba(0,0,0,0.06);
-  overflow: hidden;
-  padding: 2rem 1.5rem;
-  margin: 2rem 0;
+  padding: 1.5rem;
 }
