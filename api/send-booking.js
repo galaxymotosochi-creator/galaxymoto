@@ -23,19 +23,14 @@ export default async function handler(req, res) {
     msg += `🛵 Модель: ${model || 'Не указана'}\n`;
     if (notes) msg += `📝 Описание: ${notes}\n`;
     
-    const token = process.env.TELEGRAM_BOT_TOKEN;
-    const chatId = process.env.TELEGRAM_CHAT_ID;
+    const token = process.env.TELEGRAM_BOT_TOKEN || '7471473926:AAE_kyz1Qtb1J8Dddqk1aaxzBGfMQ73lSMM';
+    const chatId = process.env.TELEGRAM_CHAT_ID || '5368408796';
     
-    if (token && chatId) {
-      await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chat_id: parseInt(chatId), text: msg })
-      });
-    } else {
-      console.log('[send-booking] TELEGRAM env vars not set, skipping notification');
-      console.log('[send-booking] Booking data:', msg);
-    }
+    await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: parseInt(chatId), text: msg })
+    });
     
     return res.status(200).json({ ok: true });
   } catch (e) {
