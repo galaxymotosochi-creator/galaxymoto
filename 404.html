@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>888.ESTATE — Капсульные дома</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script type="module" crossorigin src="assets/index-CguyBJZF.js?v=10"></script>
+    <link rel="stylesheet" crossorigin href="assets/index-CTYFC3_u.css?v=10">
+  </head>
+  <body>
+    <div id="root"></div>
+  
+<!-- Activity Tracking -->
+<script>
+(function(){
+  // Generate unique visitor ID
+  var vid = localStorage.getItem('galaxy_visitor_id');
+  if (!vid) { vid = Date.now().toString(36) + Math.random().toString(36).substr(2,9); localStorage.setItem('galaxy_visitor_id', vid); }
+  
+  // Get referral agent ID
+  function track(type, data) {
+    var refCode = localStorage.getItem('galaxy_referral_code');
+    if (!refCode) return;
+    var id = Date.now().toString(36) + Math.random().toString(36).substr(2,5);
+    var body = { type: type, agentId: refCode, visitorId: vid, data: data || {}, createdAt: new Date().toISOString() };
+    try { fetch('/api/activities/' + id, { method: 'PUT', keepalive: true, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }).catch(function(){}); } catch(e) {}
+  }
+  
+  // Track Telegram button click
+  document.addEventListener('click', function(e) {
+    var el = e.target.closest('.telegram-glass-btn, a[href*="t.me"]');
+    if (el) { track('telegram_click', { href: el.href }); }
+  });
+  
+  // Track calculator open
+  document.addEventListener('click', function(e) {
+    var el = e.target.closest('[onclick*="openCalc"], [data-action="calc"]');
+    if (el) { track('calculator_open', { model: calcModel ? calcModel.name : '' }); }
+  });
+  
+  // Expose track function for React components
+  window.__track = track;
+})();
+</script>
+
+
+
+
+</body>
+</html>

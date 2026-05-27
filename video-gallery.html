@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>888.ESTATE — Видеогалерея</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Inter,-apple-system,sans-serif;background:#f8f8f8;padding:2rem}
+.container{max-width:800px;margin:0 auto}
+
+.section-header{text-align:center;margin-bottom:2rem}
+.section-header h2{font-size:1.5rem;font-weight:700;color:#1a1a1a;margin-bottom:.5rem}
+.section-header p{font-size:.9rem;color:#888}
+
+/* Сетка видео */
+.video-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.video-grid .wide{grid-column:span 2}
+
+.video-card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.06);cursor:pointer;transition:transform .2s,box-shadow .2s}
+.video-card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.1)}
+
+.video-preview{position:relative;aspect-ratio:9/16;background:linear-gradient(135deg,#1a1a2e,#2a1a3e);display:flex;align-items:center;justify-content:center}
+
+.play-btn{width:60px;height:60px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:transform .3s;box-shadow:0 4px 15px rgba(0,0,0,.3)}
+.video-card:hover .play-btn{transform:scale(1.08)}
+.play-btn svg{margin-left:3px;width:22px;height:22px;fill:#c9a84c}
+
+.video-info{padding:.8rem 1rem}
+.video-info h4{font-size:.9rem;font-weight:600;color:#1a1a1a;margin-bottom:.15rem}
+.video-info span{font-size:.78rem;color:#999}
+
+/* Модалка */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;align-items:center;justify-content:center;padding:1rem}
+.modal.active{display:flex}
+.modal video{max-height:90vh;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+.modal-close{position:absolute;top:1.5rem;right:1.5rem;width:44px;height:44px;background:rgba(255,255,255,.1);border:none;border-radius:50%;color:#fff;font-size:1.5rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;z-index:10000}
+.modal-close:hover{background:rgba(255,255,255,.25)}
+
+@media(max-width:640px){
+  .video-grid{grid-template-columns:repeat(2,1fr);gap:.6rem}
+  .video-grid .wide{grid-column:span 1}
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Hero placeholder -->
+  <div style="background:#1a1a2e;border-radius:16px;padding:2.5rem 2rem;text-align:center;color:#fff;margin-bottom:2.5rem">
+    <p style="font-size:.75rem;color:#888;text-transform:uppercase;letter-spacing:2px">HERO — ГЛАВНЫЙ ЭКРАН</p>
+    <h1 style="font-size:1.5rem;margin-top:.4rem">888.ESTATE</h1>
+  </div>
+
+  <!-- Видеогалерея -->
+  <div class="section-header">
+    <h2>Видеообзоры</h2>
+    <p>Смотрите наши дома в действии</p>
+  </div>
+
+  <div class="video-grid" id="videoGrid">
+    <!-- Генерируется JS -->
+  </div>
+
+  <!-- Далее каталог домов -->
+  <div style="margin-top:2.5rem;padding:1.5rem;background:#fff;border-radius:12px;text-align:center;color:#888;font-size:.85rem">
+    ↓ Далее каталог домов V11, M2, L1...
+  </div>
+
+</div>
+
+<!-- Модалка -->
+<div class="modal" id="videoModal">
+  <button class="modal-close" onclick="closeModal()">&times;</button>
+  <video controls id="videoPlayer">
+    <source src="" type="video/mp4">
+  </video>
+</div>
+
+<script>
+// 5 видео (заглушки)
+var videos = [
+  { title: 'Обзор дома V11', sub: 'Экскурсия по дому' },
+  { title: 'Производство', sub: 'Как делают наши дома' },
+  { title: 'Доставка и монтаж', sub: 'Процесс установки' },
+  { title: 'Интерьер V11', sub: 'Внутреннее пространство' },
+  { title: 'Отзыв клиента', sub: 'Реальный опыт' }
+];
+
+var grid = document.getElementById('videoGrid');
+for(var i=0;i<videos.length;i++){
+  var v = videos[i];
+  var card = document.createElement('div');
+  card.className = 'video-card';
+  if(i===0) card.classList.add('wide');
+  card.innerHTML = '<div class="video-preview"><div class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div><div class="video-info"><h4>' + v.title + '</h4><span>' + v.sub + '</span></div>';
+  card.onclick = (function(idx){return function(){openVideo(idx)}})(i);
+  grid.appendChild(card);
+}
+
+function openVideo(idx){
+  var modal = document.getElementById('videoModal');
+  modal.classList.add('active');
+  document.getElementById('videoTitle').textContent = videos[idx].title;
+}
+
+function closeModal(){
+  document.getElementById('videoModal').classList.remove('active');
+  var video = document.getElementById('videoPlayer');
+  video.pause();
+}
+
+document.getElementById('videoModal').onclick = function(e){
+  if(e.target === this) closeModal();
+}
+</script>
+
+</body>
+</html>

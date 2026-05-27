@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>888.ESTATE — Капсульные дома</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script type="module" crossorigin src="assets/index-CguyBJZF.js?v=10"></script>
+    <link rel="stylesheet" crossorigin href="assets/index-CTYFC3_u.css?v=10">
+    <!-- Галерея-лайтбокс для фото домов -->
+    <style>
+      .gallery-overlay{display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.92);justify-content:center;align-items:center;flex-direction:column;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+      .gallery-overlay--open{display:flex}
+      .gallery-overlay img{max-width:92vw;max-height:85vh;object-fit:contain;border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+      .gallery-nav{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;z-index:10;user-select:none;-webkit-tap-highlight-color:transparent}
+      .gallery-nav:hover{background:rgba(255,255,255,.25)}
+      .gallery-nav--prev{left:20px}
+      .gallery-nav--next{right:20px}
+      .gallery-close{position:absolute;top:20px;right:20px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.1);border:none;color:#fff;font-size:22px;cursor:pointer;z-index:10;display:flex;align-items:center;justify-content:center;transition:all .2s;-webkit-tap-highlight-color:transparent}
+      .gallery-close:hover{background:rgba(255,255,255,.25)}
+      .gallery-counter{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.6);font-size:14px;font-family:Inter,sans-serif;z-index:10;letter-spacing:.04em}
+      @media(max-width:767px){
+        .gallery-nav{width:40px;height:40px;font-size:20px}
+        .gallery-nav--prev{left:8px}
+        .gallery-nav--next{right:8px}
+        .gallery-close{top:12px;right:12px}
+      }
+    </style>
+    <!-- Стили: стеклянная кнопка Telegram (как в первой версии) -->
+    <style>
+      .telegram-glass-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 32px;
+        border-radius: 999px;
+        font-family: Inter, sans-serif;
+        font-weight: 600;
+        font-size: 15px;
+        cursor: pointer;
+        border: 1px solid rgba(255,255,255,0.2);
+        background: rgba(255,255,255,0.07);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        color: #fff;
+        text-decoration: none;
+        transition: all .25s;
+      }
+      .telegram-glass-btn:hover {
+        background: rgba(255,255,255,0.18);
+        border-color: rgba(255,255,255,0.35);
+        color: #fff;
+        transform: translateY(-2px);
+      }
+    </style>
+    <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDOZnESPJRJlEf3HTYqNyv1O0mYUZoPJzc",
+      authDomain: "capsulehouse-1c0c9.firebaseapp.com",
+      projectId: "capsulehouse-1c0c9",
+      storageBucket: "capsulehouse-1c0c9.firebasestorage.app",
+      messagingSenderId: "640070206939",
+      appId: "1:640070206939:web:e7ba997ec68457be2893fe",
+      measurementId: "G-EJ6YKZHSQJ"
+    };
+    try {
+      firebase.initializeApp(firebaseConfig);
+      window.auth = firebase.auth();
+      window.db = firebase.firestore();
+      db.settings({ merge: true });
+      console.log('Firebase OK');
+    } catch(e) {
+      console.error('Firebase init error:', e);
+    }
+  </script>
+</head>
+  <body>
+    <!-- Видео-фон для Hero -->
+    <div id="heroVideoWrap" style="display:none;position:absolute;top:0;left:0;width:100%;height:100vh;z-index:0;overflow:hidden;pointer-events:none;background:#111">
+      <img id="heroPoster" src="hero-poster.jpg" alt=""
+        style="position:absolute;left:50%;top:0;transform:translateX(-50%);width:115%;height:115%;object-fit:cover;object-position:center top;opacity:1;transition:opacity .6s ease">
+      <video id="heroBgVideo" muted playsinline preload="auto"
+        src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260329_050842_be71947f-f16e-4a14-810c-06e83d23ddb5.mp4"
+        style="position:absolute;left:50%;top:0;transform:translateX(-50%);width:115%;height:115%;object-fit:cover;object-position:center top;opacity:0;transition:opacity .6s ease">
+      </video>
+    </div>
+    <div id="heroOverlay" style="display:none;position:absolute;top:0;left:0;width:100%;height:100vh;z-index:1;background:linear-gradient(135deg,rgba(0,0,0,0.65) 0%,rgba(0,0,0,0.35) 50%,rgba(0,0,0,0.65) 100%);pointer-events:none"></div>
+
+
+    <style id="heroVideoStyles">
+      /* Показываем видео только на главной */
+      .hero { background: transparent !important; background-image: none !important; position: relative; z-index: 2; }
+      .hero__overlay { background: transparent !important; }
+      #root { position: relative; z-index: 2; background: transparent; }
+
+      /* Видео JS-крестфейд */
+      .hero-video-fade { transition: none !important; }
+    </style>
+
+    <div id="root"></div>
+
+    <!-- Секция видео -->
+    <style>
+      .vs{padding:3rem 1.5rem;max-width:1200px;margin:0 auto}
+      .vs-hdr{text-align:center;margin-bottom:2rem}
+      .vs-hdr h2{font-size:1.25rem;font-weight:700;color:#1a1a1a;margin:0 0 .4rem}
+      .vs-hdr p{font-size:.9rem;color:#888;margin:0}
+      .vs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+      .vs-card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.04),0 20px 40px rgba(0,0,0,0.06);cursor:pointer}
+      .vs-card:hover{box-shadow:0 8px 20px rgba(0,0,0,0.06),0 30px 60px rgba(0,0,0,0.08)}
+      .vs-prev{position:relative;aspect-ratio:9/16;background:linear-gradient(135deg,#1a1a2e,#2a1a3e);display:flex;align-items:center;justify-content:center}
+      .vs-pb{width:60px;height:60px;background:rgba(0,0,0,.7);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:transform .2s}.vs-card:hover .vs-pb{transform:scale(1.1)}.vs-pb svg{width:24px;height:24px;fill:#fff;margin-left:3px}
+      .vs-pb svg{width:22px;height:22px;fill:#c9a84c}
+      .vs-info{padding:.8rem 1rem}
+      .vs-info h4{font-size:.85rem;font-weight:600;color:#1a1a1a;margin:0 0 .1rem}
+      .vs-info span{font-size:.75rem;color:#999}
+      .vm{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;align-items:center;justify-content:center;padding:1rem}
+      .vm.active{display:flex}
+      .vm video{max-height:90vh;border-radius:12px}.vm video::-webkit-media-controls-download-button{display:none!important}.vm video::-internal-media-controls-download-button{display:none!important}
+      .vm-close{position:absolute;top:1.5rem;right:1.5rem;width:44px;height:44px;background:rgba(255,255,255,.1);border:none;border-radius:50%;color:#fff;font-size:1.5rem;cursor:pointer;z-index:10000}
+      @media(max-width:640px){.vs-grid{grid-template-columns:repeat(2,1fr);gap:.6rem}}
+      .vs-horiz{margin-top:1rem;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.04),0 20px 40px rgba(0,0,0,0.06);cursor:pointer;background:#fff}.vs-horiz:hover{box-shadow:0 8px 20px rgba(0,0,0,0.06),0 30px 60px rgba(0,0,0,0.08)}.vs-horiz-prev{position:relative;aspect-ratio:16/9;background:linear-gradient(135deg,#1a1a2e,#2a1a3e);display:flex;align-items:center;justify-content:center}.vs-horiz-info{padding:.8rem 1rem}.vs-horiz-info h4{font-size:.85rem;font-weight:600;color:#1a1a1a;margin:0 0 .1rem}.vs-horiz-info span{font-size:.75rem;color:#999}
+      .house-card__btn-row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:0}.house-card__info-btn{cursor:pointer;padding:8px 16px;font-size:13px;font-weight:500;font-family:Inter,sans-serif;background:rgba(0,0,0,.04);border:1px solid #ddd;border-radius:8px;color:#555;line-height:1.5;transition:none!important;outline:none!important;box-shadow:none!important;-webkit-tap-highlight-color:transparent!important;user-select:none!important}.house-card__info-btn:focus,.house-card__info-btn:focus-visible,.house-card__info-btn:active{outline:none!important;box-shadow:none!important;-webkit-tap-highlight-color:transparent!important;background:rgba(0,0,0,.04)!important;border-color:#ddd!important;color:#555!important}.house-card__info-btn:hover{background:rgba(0,0,0,.08);border-color:#999}
+      @media(max-width:1023px){
+        .house-card__content{padding:12px 10px!important}
+        .house-card__title{font-size:24px!important;font-weight:600!important;margin-bottom:8px!important}
+        .house-card__description{font-size:15px!important;font-weight:400!important;margin-bottom:10px!important}
+        .house-card__image{aspect-ratio:4/3!important}
+        .house-card__badge{font-size:9px!important;padding:2px 8px!important;top:6px!important;left:6px!important}
+        /* Specs: 2×2 плитки */
+        .house-card__specs{display:grid!important;grid-template-columns:1fr 1fr!important;grid-template-rows:unset!important;grid-auto-flow:unset!important;gap:6px!important;margin:0 0 10px!important}
+        .house-card__spec{background:#f5f5f5!important;border-radius:8px!important;padding:10px 6px!important;display:flex!important;flex-direction:column!important;align-items:center!important;text-align:center!important;gap:2px!important}
+        .house-card__specs li.house-card__spec .house-card__spec-label{font-size:12px!important;color:#999!important;font-weight:400!important}
+        .house-card__specs li.house-card__spec .house-card__spec-value{font-size:14px!important;color:#222!important;font-weight:700!important}
+        .house-card__spec:nth-child(n+5){display:none!important}
+        /* Footer + цена */
+        .house-card__footer{padding-top:6px!important;flex-direction:column!important;gap:6px!important}
+        .house-card__price{flex-direction:row!important;justify-content:flex-start!important;width:100%!important;gap:4px!important}
+        .house-card__price-value{font-size:17px!important}
+        .house-card__price-label{font-size:12px!important}
+        /* Кнопки: 2 ряда по 2 */
+        .house-card__btn-row{display:grid!important;grid-template-columns:1fr 1fr!important;gap:6px!important;width:100%!important}
+        .house-card__info-btn{font-size:12px!important;padding:10px 6px!important;text-align:center!important;width:100%!important;margin:0!important}
+        .house-card__cta{font-size:12px!important;padding:10px 6px!important;text-align:center!important;width:100%!important;margin:0!important}
+        /* Калькулятор: компактно на мобильных */
+        .calc-body .calc-option{padding:8px 0!important;width:100%!important;justify-content:space-between!important}
+        .calc-body .calc-option span[style*="white-space:nowrap"]{white-space:normal!important;flex-wrap:wrap!important;gap:2px!important}
+        .calc-body .calc-option__label{font-size:12px!important}
+        .calc-body .calc-option__price{font-size:12px!important}
+        .calc-modal{padding:1.2rem!important}
+        .calc-body{min-height:auto!important}
+        .calc-nav{margin-top:10px!important;padding-top:8px!important}
+      }
+    </style>
+
+    <section class="vs" style="display:none">
+      <div class="vs-hdr">
+        <h2>Наши проекты</h2>
+        <p>Видеообзоры готовых решений</p>
+      </div>
+      <div class="vs-grid" id="vsGrid"></div>
+      <div class="vs-horiz" id="vsHoriz">
+        <div class="vs-horiz-prev" style="background-image:url('images/horiz-thumb.jpg');background-size:cover;background-position:center"><div class="vs-pb"><svg viewBox="0 0 24 24" width="24" height="24"><polygon points="5 3 19 12 5 21 5 3" fill="#fff"/></svg></div></div>
+        <div class="vs-horiz-info"><h4>Полноценный дом 28 м²</h4><span>Вариант с кухней, спальней и балконом</span></div>
+      </div>
+    </section>
+
+    <div class="vm" id="vmModal">
+      <button class="vm-close" onclick="document.getElementById('vmModal').classList.remove('active')">&times;</button>
+      <video controls controlsList="nodownload" disablePictureInPicture id="vmPlayer"><source src="" type="video/mp4"></video>
+    </div>
+
+    <script>
+    function initVideo(){
+      var v = [['Капсула 39 м²','Модель с балконом','videos/v11-overview.mp4','images/v11-overview-thumb.jpg'],['Капсула 38 м² с балконом','Пространство с видом на природу','videos/petal-720.mp4','images/petal-thumb.jpg'],['Личный офис 38 м²','Пространство для встреч','videos/petal3-720.mp4','images/petal3-thumb.jpg'],['Уютный глэмпинг 28 м²','Комфорт на свежем воздухе','videos/petal4-720.mp4','images/petal4-thumb.jpg'],['Жилая капсула 39 м²','Максимум пространства и уюта','videos/petal5-720.mp4','images/petal5-thumb.jpg'],['Бизнес - пространство 38 м²','Зона для отдела продаж','videos/petal6-720.mp4','images/petal6-thumb.jpg']];
+      var g = document.getElementById('vsGrid');
+      if(g && g.children.length===0){
+        for(var i=0;i<v.length;i++){
+          var d = document.createElement('div');
+          d.className = 'vs-card';
+          d.innerHTML = '<div class="vs-prev"' + (v[i][3]?' style="background-image:url('+v[i][3]+');background-size:cover;background-position:center"':'') + '><div class="vs-pb"><svg viewBox="0 0 24 24" width="24" height="24"><polygon points="5 3 19 12 5 21 5 3" fill="#fff"/></svg></div></div><div class="vs-info"><h4>' + v[i][0] + '</h4><span>' + v[i][1] + '</span></div>';
+          d.onclick = (function(idx){return function(){
+            var src = v[idx][2];
+            if(src){
+              document.getElementById('vmPlayer').querySelector('source').src = src;
+              document.getElementById('vmPlayer').load();
+              document.getElementById('vmPlayer').play();
+            }
+            document.getElementById('vmModal').classList.add('active');
+          }})(i);
+          g.appendChild(d);
+        }
+      }
+      // Клик по горизонтальной карточке
+      document.getElementById('vsHoriz').onclick = function(){
+        var player = document.getElementById('vmPlayer');
+        player.querySelector('source').src = 'videos/horizontal-video.mp4';
+        player.load();
+        player.play();
+        document.getElementById('vmModal').classList.add('active');
+      };
+      // Перемещаем секцию под hero
+      var vs = document.querySelector('.vs');
+      var hero = document.querySelector('.hero');
+      if(vs && hero && vs.parentNode !== hero.parentNode){
+        var parent = hero.parentNode;
+        var next = hero.nextElementSibling;
+        if(next){
+          parent.insertBefore(vs, next);
+        } else {
+          parent.appendChild(vs);
+        }
+      }
+    }
+    // Ждём пока React отрендерит
+    setTimeout(function(){initVideo();}, 500);
+
+    // Показываем/скрываем секцию при переходе по страницам
+    var vsMo = new MutationObserver(function(){
+      var vs = document.querySelector('.vs');
+      var hero = document.querySelector('.hero');
+      if (vs) {
+        if (hero) {
+          vs.style.display = '';
+          // Перемещаем следом за hero только один раз
+          if (vs._placed) return;
+          var parent = hero.parentNode;
+          var next = hero.nextElementSibling;
+          if (next) parent.insertBefore(vs, next);
+          else parent.appendChild(vs);
+          vs._placed = true;
+        } else {
+          vs.style.display = 'none';
+          vs._placed = false;
+        }
+      }
+    });
+    setTimeout(function(){
+      var root = document.getElementById('root');
+      if (root) vsMo.observe(root, { childList: true, subtree: true });
+    }, 100);
+    </script>
+
+    <!-- Комплектация V11 -->
+    <div id="equipment-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:999;justify-content:center;align-items:flex-start;padding:2rem 1rem;overflow-y:auto">
+      <div style="background:#fff;max-width:600px;width:100%;margin:auto;border-radius:12px;padding:1.5rem;position:relative;box-shadow:0 10px 40px rgba(0,0,0,.2)">
+        <button onclick="document.getElementById('equipment-modal').style.display='none'" style="position:absolute;top:.75rem;right:1rem;background:none;border:none;font-size:1.3rem;cursor:pointer;color:#999">&times;</button>
+        <div id="equipment-content"></div>
+      </div>
+    </div>
+
+
+
+
+
+    <script>
+    // Данные комплектации
+    var eqData = {
+      paymentSections: [
+        {title: 'Заключение контракта:', items: ['Напрямую с фабрикой (вы контрактодержатель и импортер)', 'С нашим российским юр.лицом (все вопросы берем на себя)']},
+        {title: 'Способы оплаты:', items: ['Безналичный платеж (оплата на р/с)', 'Наличными (в одном из наших офисов)', 'Альтернативные способы (уточняйте у менеджера)']},
+        {title: 'Порядок оплаты:', items: ['50% — авансовый платеж для начала производства', '50% — после производства и инспекции в Китае']},
+        {title: '', text: 'Если у вас есть необходимость согласовать индивидуальные условия поставки — уточняйте у персонального менеджера.'}
+      ],
+      deliverySections: [
+        {title: 'Способы доставки (виды транспорта):', items: ['Авто (евро-фуры, низкорамный тралл, контейнеровоз)', 'ЖД (контейнеры 20HQ, 40HQ, 40FR)', 'Море (контейнеры 20HQ, 40HQ, 40FR)', 'Мультимодальная доставка']},
+        {title: 'Доставка домов возможна в контейнерах:', items: ['20HQ', '40HQ', '40FR (открытая платформа)']},
+        {title: 'Состояние домов для доставки:', items: ['Полностью собранные «под ключ»']},
+        {title: 'Этапы доставки:', items: ['Отправка из Китая: подготовка, упаковка, экспортное оформление', 'Получение в стране: таможня, СВХ', 'Доставка на место установки', 'Монтаж, подключение, первый запуск']},
+        {title: 'Сроки:', items: ['Производство: 1-45 дней (в среднем 15-30)', 'Доставка: 10-30 дней (в среднем 10-20)', 'Монтаж: 1-5 дней (в среднем 1-2)']},
+        {title: '', text: 'Сроки могут меняться в зависимости от степени готовности дома, уникальности проекта, загрузки производства, праздников, сложности маршрута.'}
+      ],
+
+      sections: [
+        {title: 'Дом:', items: ['Отделка «под ключ»','Каркас из оцинкованной стали','Обшивка из авиационного алюминия','Защита от УФ','Теплоизоляция и гидроизоляция','Стеклянные стены: закаленное стекло LOW-E','Окна с алюминиевыми рамами и сеткой','Душевая, туалет, раковина, смарт-зеркало','Умный замок, дверь из нержавейки','LED освещение, электропроводка, щиток','Канализация, водоподготовка, водоснабжение','Розетки с умным управлением']},
+        {title: 'Техника (варианты):', text: 'Водонагреватель, кондиционеры, вытяжка, умный дом, раздвигатели штор, подогрев пола, HD-проектор, кофемашина, микроволновка, холодильник, телевизор, варочная панель.'},
+        {title: 'Мебель (варианты):', text: 'Диван, журнальный столик, обеденный стол, ТВ-тумба, кровать, шкаф-кровать, диван-кровать, гардероб, шкаф, шторы, кухонный гарнитур, барная стойка.'}
+      ]
+    };
+
+    function openDelivery() {
+      var content = document.getElementById('equipment-content');
+      var html = '';
+      for (var i = 0; i < eqData.deliverySections.length; i++) {
+        var s = eqData.deliverySections[i];
+        html += '<div style="margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid #eee">';
+        if (s.title) html += '<strong style="color:#333;font-size:.9rem">' + s.title + '</strong>';
+        if (s.items) {
+          html += '<ul style="margin:.3rem 0 0;padding-left:1.2rem;font-size:.82rem">';
+          for (var j = 0; j < s.items.length; j++) {
+            html += '<li style="margin-bottom:.1rem">' + s.items[j] + '</li>';
+          }
+          html += '</ul>';
+        } else if (s.text) {
+          html += '<p style="margin:.3rem 0 0;font-size:.82rem;color:#666">' + s.text + '</p>';
+        }
+        html += '</div>';
+      }
+      content.innerHTML = html;
+      document.getElementById('equipment-modal').style.display = 'flex';
+    }
+
+    function openPayment() {
+      var content = document.getElementById('equipment-content');
+      var html = '';
+      for (var i = 0; i < eqData.paymentSections.length; i++) {
+        var s = eqData.paymentSections[i];
+        html += '<div style="margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid #eee">';
+        if (s.title) html += '<strong style="color:#333;font-size:.9rem">' + s.title + '</strong>';
+        if (s.items) {
+          html += '<ul style="margin:.3rem 0 0;padding-left:1.2rem;font-size:.82rem">';
+          for (var j = 0; j < s.items.length; j++) {
+            html += '<li style="margin-bottom:.1rem">' + s.items[j] + '</li>';
+          }
+          html += '</ul>';
+        } else if (s.text) {
+          html += '<p style="margin:.3rem 0 0;font-size:.82rem;color:#666">' + s.text + '</p>';
+        }
+        html += '</div>';
+      }
+      content.innerHTML = html;
+      document.getElementById('equipment-modal').style.display = 'flex';
+    }
+
+    function openEquipment() {
+      var content = document.getElementById('equipment-content');
+      var html = '';
+      for (var i = 0; i < eqData.sections.length; i++) {
+        var s = eqData.sections[i];
+        html += '<div style="margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid #eee">';
+        html += '<strong style="color:#333;font-size:.9rem">' + s.title + '</strong>';
+        if (s.items) {
+          html += '<ul style="margin:.3rem 0 0;padding-left:1.2rem;font-size:.82rem">';
+          for (var j = 0; j < s.items.length; j++) {
+            html += '<li style="margin-bottom:.1rem">' + s.items[j] + '</li>';
+          }
+          html += '</ul>';
+        } else {
+          html += '<p style="margin:.3rem 0 0;font-size:.82rem">' + s.text + '</p>';
+        }
+        html += '</div>';
+      }
+      content.innerHTML = html;
+      document.getElementById('equipment-modal').style.display = 'flex';
+    }
+    </script>
+
+    <!-- ====== Калькулятор (тест) ====== -->
+    <style>
+      .calc-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;justify-content:center;align-items:center;padding:1rem}
+      .calc-overlay.active{display:flex}
+      .calc-modal{background:#fff;max-width:560px;width:100%;border-radius:12px;padding:2rem;position:relative;box-shadow:0 10px 40px rgba(0,0,0,.2);max-height:90vh;overflow-y:auto}
+      .calc-close{position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.4rem;cursor:pointer;color:#999}
+      .calc-steps{display:flex;gap:8px;margin-bottom:1.5rem;justify-content:center}
+      .calc-step{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;background:#eee;color:#999;transition:all .2s}
+      .calc-step.active{background:#000;color:#fff}
+      .calc-step.done{background:#333;color:#fff}
+      .calc-body{min-height:200px;display:flex;flex-direction:column;justify-content:center;align-items:center;color:#999;font-size:14px}
+      .calc-nav{display:flex;justify-content:space-between;margin-top:1.5rem;padding-top:1rem;border-top:1px solid #eee}
+      .calc-btn{padding:8px 20px;font-size:13px;font-weight:500;font-family:Inter,sans-serif;border-radius:8px;cursor:pointer;transition:all .15s;border:none}
+      .calc-btn--prev{background:#f0f0f0;color:#555}
+      .calc-btn--prev:hover{background:#e0e0e0}
+      .calc-btn--next{background:#000;color:#fff}
+      .calc-btn--next:hover{background:#333}
+      .calc-btn:disabled{opacity:.4;cursor:default}
+      /* Toggle switch */
+      .calc-option{display:flex;align-items:center;justify-content:space-between;width:100%;gap:10px;padding:12px 0;border-bottom:1px solid #f0f0f0}
+      .calc-option:last-child{border-bottom:none}
+      .calc-option__label{font-size:14px;font-weight:500;color:#333}
+      .calc-option__price{font-size:13px;font-weight:500;transition:color .2s}
+      .calc-option__price--off{color:#999}
+      .calc-option__price--on{color:#000}
+      .calc-toggle{position:relative;width:44px;height:24px;flex-shrink:0}
+      .calc-toggle input{opacity:0;width:0;height:0}
+      .calc-toggle__slider{position:absolute;inset:0;background:#ddd;border-radius:12px;cursor:pointer;transition:background .2s}
+      .calc-toggle__slider::before{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:transform .2s}
+      .calc-toggle input:checked + .calc-toggle__slider{background:#000}
+      .calc-toggle input:checked + .calc-toggle__slider::before{transform:translateX(20px)}
+      #citySearch:focus{outline:1px solid #333!important;outline-offset:0!important;box-shadow:none!important}
+    </style>
+
+    <div class="calc-overlay" id="calcOverlay">
+      <div class="calc-modal">
+        <button class="calc-close" onclick="closeCalc()">&times;</button>
+        <div class="calc-steps" id="calcSteps">
+          <div class="calc-step active" data-step="0">1</div>
+          <div class="calc-step" data-step="1">2</div>
+          <div class="calc-step" data-step="2">3</div>
+          <div class="calc-step" data-step="3">4</div>
+        </div>
+        <div class="calc-body" id="calcBody">
+          <p style="color:#bbb">Здесь будет контент шага</p>
+        </div>
+        <div class="calc-nav" id="calcNav">
+          <button class="calc-btn calc-btn--prev" id="calcPrev" onclick="prevStep()">Назад</button>
+          <button class="calc-btn calc-btn--next" id="calcNext" onclick="nextStep()">Далее</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+    // ====== Логика калькулятора ======
+    var calcStep = 0;
+    var calcTitles = [
+      'Выбор модели и комплектации',
+      'Дополнительные опции',
+      'Расчёт доставки',
+      'Итоговая стоимость'
+    ];
+
+    // Данные V11
+    var calcModel = { name:'V11', area:38, basePrice:2224999 };
+    // Опции для шага 1 — зимнее утепление
+    var calcWinter = [
+      { id:'warm-floor', label:'Тёплый пол', price:20000, on:false },
+      { id:'triple-glass', label:'Тройной стеклопакет', price:60000, on:false },
+      { id:'pipe-insulation', label:'Теплоизоляция труб', price:40000, on:false }
+    ];
+    // Опции для шага 2 — интерьер
+    var calcInterior = [
+      { id:'kitchen', label:'Кухня (вытяжка, столешница, индукционная плита)', price:74900, on:false },
+      { id:'sofa', label:'Диван для отдыха', price:20900, on:false },
+      { id:'bed-storage', label:'Кровать с ящиком для хранения + матрас', price:74900, on:false },
+      { id:'bed-brand', label:'Фирменная кровать + матрас', price:33900, on:false },
+      { id:'curtains', label:'Шторы', price:33900, on:false },
+      { id:'projector', label:'Проектор + передние моторизованные рулонные шторы', price:20900, on:false }
+    ];
+
+    // Расстояния от Уссурийска до городов
+    var calcDist = {
+      'Владивосток':112,'Артём':70,'Находка':220,'Хабаровск':740,'Биробиджан':820,
+      'Комсомольск-на-Амуре':930,'Благовещенск':1530,'Чита':2800,'Улан-Удэ':3400,
+      'Иркутск':3700,'Красноярск':4600,'Абакан':4800,'Новокузнецк':4900,'Кемерово':5000,
+      'Томск':5200,'Новосибирск':5300,'Барнаул':5400,'Омск':5800,'Тюмень':6300,
+      'Челябинск':6700,'Екатеринбург':6800,'Сургут':6800,'Пермь':7100,'Уфа':7200,
+      'Ижевск':7300,'Оренбург':7400,'Самара':7500,'Тольятти':7550,'Казань':7600,
+      'Ульяновск':7700,'Киров':7700,'Чебоксары':7750,'Саратов':7800,'Йошкар-Ола':7800,
+      'Саранск':7900,'Волгоград':8000,'Пенза':8000,'Нижний Новгород':8000,
+      'Сыктывкар':8000,'Тамбов':8200,'Элиста':8300,'Липецк':8300,'Рязань':8400,
+      'Воронеж':8400,'Москва':8500,'Владимир':8500,'Астрахань':8500,'Ярославль':8600,
+      'Тула':8600,'Тверь':8700,'Кострома':8700,'Иваново':8700,'Калуга':8700,
+      'Орёл':8700,'Ростов-на-Дону':8700,'Брянск':8800,'Курск':8800,'Вологда':8800,
+      'Белгород':8900,'Смоленск':9000,'Краснодар':9000,'Ставрополь':9100,'Майкоп':9100,
+      'Новороссийск':9200,'Черкесск':9300,'Сочи':9300,'Нальчик':9400,'Владикавказ':9500,
+      'Грозный':9600,'Махачкала':9700,'Санкт-Петербург':9200,'Великий Новгород':9300,
+      'Псков':9400,'Архангельск':9500,'Петрозаводск':9700,'Калининград':10200,'Мурманск':11000,
+      'Симферополь':9500,'Севастополь':9600
+    };
+    // Выбранный город и константы
+    var calcSelectedCity = '';
+    var calcChinaDelivery = 350000;
+    var calcTaxRate = 0.27;
+
+    // Какой массив опций активен на текущем шаге
+    function getStepOptions(step) {
+      if (step === 0) return calcWinter;
+      if (step === 1) return calcInterior;
+      return [];
+    }
+
+    function toggleOption(id) {
+      var opts = getStepOptions(calcStep);
+      for (var i = 0; i < opts.length; i++) {
+        if (opts[i].id === id) {
+          opts[i].on = !opts[i].on;
+          break;
+        }
+      }
+      renderCalc();
+    }
+
+    function openCalc(name, price, area) { if(name){calcModel.name=name;calcModel.basePrice=price||calcModel.basePrice;calcModel.area=area||calcModel.area} document.getElementById('calcOverlay').classList.add('active'); renderCalc(); }
+    function closeCalc() { document.getElementById('calcOverlay').classList.remove('active'); }
+
+    function getTotalOptions() {
+      var total = 0;
+      var steps = [calcWinter, calcInterior];
+      for (var s = 0; s < steps.length; s++) {
+        for (var i = 0; i < steps[s].length; i++) {
+          if (steps[s][i].on) total += steps[s][i].price;
+        }
+      }
+      return total;
+    }
+
+    function getTaxBase() {
+      return calcModel.basePrice + getTotalOptions() + calcChinaDelivery;
+    }
+
+    function getRussiaDelivery() {
+      if (calcSelectedCity && calcDist[calcSelectedCity]) {
+        return 120 * calcDist[calcSelectedCity];
+      }
+      return 0;
+    }
+
+    function getTaxAmount() {
+      return Math.round(getTaxBase() * calcTaxRate);
+    }
+
+    function getGrandTotal() {
+      return calcModel.basePrice + getTotalOptions() + calcChinaDelivery + getRussiaDelivery() + getTaxAmount();
+    }
+
+    function selectCity(city) {
+      calcSelectedCity = city;
+      var input = document.getElementById('citySearch');
+      if (input) input.value = city;
+      renderCalc();
+    }
+
+    function renderCalc() {
+      var steps = document.querySelectorAll('.calc-step');
+      steps.forEach(function(s, i) {
+        s.classList.toggle('active', i === calcStep);
+        s.classList.toggle('done', i < calcStep);
+      });
+      if (calcStep === 0) renderStep0();
+      else if (calcStep === 1) renderStep1();
+      else if (calcStep === 2) renderStep2();
+      else if (calcStep === 3) renderStep3();
+      document.getElementById('calcPrev').disabled = calcStep === 0;
+      document.getElementById('calcNext').textContent = calcStep === 3 ? 'Готово' : 'Далее';
+    }
+
+    function renderStep0() {
+      var opts = getStepOptions(0);
+      var html = '';
+      // Модель по центру
+      html += '<div style="margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid #eee;text-align:center">';
+      html += '<h3 style="margin:0 0 2px;color:#333;font-size:17px;font-weight:700">' + calcModel.name + '</h3>';
+      html += '<p style="margin:0;color:#888;font-size:13px">Площадь: ' + calcModel.area + ' м²</p>';
+      html += '</div>';
+      // Заголовок
+      html += '<p style="margin:0 0 12px;font-size:14px;font-weight:600;color:#000;text-align:center">ВЫБЕРИТЕ ЗИМНЕЕ УТЕПЛЕНИЕ КАПСУЛЫ</p>';
+      // Опции
+      for (var i = 0; i < opts.length; i++) {
+        var o = opts[i];
+        var priceClass = o.on ? 'calc-option__price--on' : 'calc-option__price--off';
+        var checked = o.on ? 'checked' : '';
+        html += '<div class="calc-option">';
+        html += '<span style="white-space:nowrap;display:flex;align-items:center;gap:4px"><span class="calc-option__label">' + o.label + ' </span><span class="calc-option__price ' + priceClass + '">+' + o.price.toLocaleString('ru-RU') + ' ₽</span></span>';
+        html += '<label class="calc-toggle">';
+        html += '<input type="checkbox" ' + checked + ' onchange="toggleOption(\'' + o.id + '\')">';
+        html += '<span class="calc-toggle__slider"></span>';
+        html += '</label>';
+        html += '</div>';
+      }
+      document.getElementById('calcBody').innerHTML = html;
+    }
+
+    function renderStep1() {
+      var opts = getStepOptions(1);
+      var html = '';
+      // Заголовок
+      html += '<p style="margin:0 0 12px;font-size:14px;font-weight:600;color:#000;text-align:center">ВЫБЕРИТЕ ИНТЕРЬЕР КАПСУЛЫ</p>';
+      // Опции
+      for (var i = 0; i < opts.length; i++) {
+        var o = opts[i];
+        var priceClass = o.on ? 'calc-option__price--on' : 'calc-option__price--off';
+        var checked = o.on ? 'checked' : '';
+        html += '<div class="calc-option">';
+        html += '<span style="white-space:nowrap;display:flex;align-items:center;gap:4px"><span class="calc-option__label">' + o.label + ' </span><span class="calc-option__price ' + priceClass + '">+' + o.price.toLocaleString('ru-RU') + ' ₽</span></span>';
+        html += '<label class="calc-toggle">';
+        html += '<input type="checkbox" ' + checked + ' onchange="toggleOption(\'' + o.id + '\')">';
+        html += '<span class="calc-toggle__slider"></span>';
+        html += '</label>';
+        html += '</div>';
+      }
+      document.getElementById('calcBody').innerHTML = html;
+    }
+
+    function renderStep2() {
+      var html = '';
+      html += '<p style="margin:0 0 16px;font-size:14px;font-weight:600;color:#000;text-align:center">РАСЧЕТ ДОСТАВКИ</p>';
+      
+      html += '<p style="margin:0 0 8px;font-size:13px;color:#333">Выберите Ваш город или ближайший город от Вас</p>';
+      
+      // Поиск города
+      html += '<input type="text" id="citySearch" placeholder="Начните вводить город…" oninput="filterCities()" style="width:100%;padding:10px 12px;font-size:13px;font-family:Inter,sans-serif;border:1px solid #ddd;border-radius:8px;color:#333;background:#fff;margin-bottom:4px;box-sizing:border-box">';
+      html += '<div id="cityList" style="max-height:180px;overflow-y:auto;border:1px solid #eee;border-radius:8px;margin-bottom:10px;text-align:left"></div>';
+      
+      // Если город выбран — результаты
+      if (calcSelectedCity) {
+        var rusDel = getRussiaDelivery();
+        var totalDel = rusDel + calcChinaDelivery;
+        var tax = getTaxAmount();
+        html += '<div style="padding:10px 12px;background:#f9f9f9;border-radius:8px;margin-bottom:8px">';
+        html += '<div style="display:flex;justify-content:space-between;align-items:center;font-size:13px">';
+        html += '<span style="color:#555">Доставка</span>';
+        html += '<span style="font-weight:600;color:#000">' + totalDel.toLocaleString('ru-RU') + ' ₽</span>';
+        html += '</div></div>';
+        html += '<div style="padding:10px 12px;background:#f9f9f9;border-radius:8px;margin-bottom:8px">';
+        html += '<div style="display:flex;justify-content:space-between;align-items:center;font-size:13px">';
+        html += '<span style="color:#555">Таможенные пошлины (27%)</span>';
+        html += '<span style="font-weight:600;color:#000">' + tax.toLocaleString('ru-RU') + ' ₽</span>';
+        html += '</div></div>';
+      }
+      
+      // Стикер
+      html += '<div style="margin-top:14px;padding:12px 14px;background:#fff3cd;border:1px solid #ffc107;border-radius:10px;font-size:13px;font-weight:600;color:#856404;text-align:center;line-height:1.5">';
+      html += '❗ При заказе от двух домов стоимость доставки в два раза меньше!<br><span style="font-weight:400;font-size:12px">Уточняйте у менеджера</span>';
+      html += '</div>';
+      
+      document.getElementById('calcBody').innerHTML = html;
+      filterCities();
+    }
+
+    function filterCities() {
+      var input = document.getElementById('citySearch');
+      var list = document.getElementById('cityList');
+      if (!input || !list) return;
+      var q = input.value.toLowerCase().trim();
+      var html = '';
+      var found = 0;
+      if (q !== '') {
+        for (var city in calcDist) {
+          if (city.toLowerCase().indexOf(q) !== -1) found++;
+        }
+        if (found === 0) {
+          html = '<div style="padding:12px;font-size:12px;color:#999;text-align:left;border-bottom:1px solid #eee">Город не найден. <span style="color:#333;cursor:pointer;text-decoration:underline" onclick="alert(\'Уточните у менеджера\')">Уточнить у менеджера</span></div>';
+        }
+      }
+      list.innerHTML = html;
+    }
+
+    function renderStep3() {
+      var rusDel = getRussiaDelivery();
+      var totalDel = rusDel + calcChinaDelivery;
+      var tax = getTaxAmount();
+      var optionsTotal = getTotalOptions();
+      var grand = getGrandTotal();
+      
+      var html = '';
+      html += '<p style="margin:0 0 16px;font-size:14px;font-weight:600;color:#000;text-align:center">ИТОГОВАЯ СТОИМОСТЬ</p>';
+      
+      function row(label, val, cls) {
+        return '<div style="display:table;width:100%;padding:10px 0;border-bottom:1px solid #f0f0f0;font-size:13px;line-height:1.5">' +
+          '<span style="display:table-cell;text-align:left;color:' + (cls || '#555') + '">' + label + '</span>' +
+          '<span style="display:table-cell;text-align:right;font-weight:600;color:' + (cls || '#333') + ';padding-left:8px;white-space:nowrap">' + val.toLocaleString('ru-RU') + ' ₽</span></div>';
+      }
+      
+      html += row(calcModel.name + ' (базовая):', calcModel.basePrice);
+      html += row('Доп. опции:', optionsTotal);
+      if (calcSelectedCity) {
+        html += row('Доставка до ' + calcSelectedCity + ':', totalDel);
+      } else {
+        html += row('Доставка:', totalDel);
+      }
+      html += row('Таможенные пошлины и НДС:', tax);
+      
+      // Итог
+      html += '<div style="display:table;width:100%;padding:14px 0;margin-top:8px;font-size:16px;font-weight:700;border-top:2px solid #000;line-height:1.5">';
+      html += '<span style="display:table-cell;text-align:left">ИТОГО:</span>';
+      html += '<span style="display:table-cell;text-align:right;padding-left:8px;white-space:nowrap">' + grand.toLocaleString('ru-RU') + ' ₽</span>';
+      html += '</div>';
+      
+      document.getElementById('calcBody').innerHTML = html;
+    }
+
+    function nextStep() {
+      // Шаг 3 — проверка города
+      if (calcStep === 2) {
+        var input = document.getElementById('citySearch');
+        if (input) {
+          var val = input.value.trim();
+          if (val === '') {
+            alert('Введите Ваш город');
+            return;
+          }
+          if (!calcSelectedCity || calcSelectedCity !== val) {
+            var found = null;
+            for (var city in calcDist) {
+              if (city.toLowerCase() === val.toLowerCase()) { found = city; break; }
+            }
+            if (!found) {
+              for (var city in calcDist) {
+                if (city.toLowerCase().indexOf(val.toLowerCase()) !== -1) { found = city; break; }
+              }
+            }
+            if (found) { selectCity(found); }
+            else { alert('Город не найден. Уточните у менеджера'); return; }
+          }
+        }
+      }
+      if (calcStep < 3) { calcStep++; renderCalc(); }
+      else showLeadForm();
+    }
+
+    function showLeadForm() {
+      // Скрываем шаги и навигацию
+      document.getElementById('calcSteps').style.display = 'none';
+      document.getElementById('calcNav').style.display = 'none';
+      // Первый вопрос
+      renderLeadQuestion();
+    }
+
+    function renderLeadQuestion() {
+      var html = '';
+      html += '<p style="margin:0 0 16px;font-size:14px;font-weight:600;color:#000;text-align:center">Насколько цена совпала с вашими ожиданиями?</p>';
+      html += '<div style="display:flex;flex-direction:column;gap:10px">';
+      html += '<button onclick="renderLeadMatch()" style="padding:14px;font-size:14px;font-weight:500;font-family:Inter,sans-serif;border-radius:10px;border:none;background:#000;color:#fff;cursor:pointer">Ожидания совпали</button>';
+      html += '<button onclick="renderLeadCheaper()" style="padding:14px;font-size:14px;font-weight:500;font-family:Inter,sans-serif;border-radius:10px;border:1px solid #ddd;background:#fff;color:#333;cursor:pointer">Думал(а), будет дешевле</button>';
+      html += '</div>';
+      document.getElementById('calcBody').innerHTML = html;
+    }
+
+    function renderLeadMatch() {
+      var html = '';
+      html += '<p style="margin:0 0 6px;font-size:15px;font-weight:700;color:#000;text-align:center">Отлично! Проверим доступность?</p>';
+      html += '<p style="margin:0 0 16px;font-size:13px;color:#888;text-align:center;line-height:1.5">Узнайте, есть ли эта модель в наличии на заводе или какие ближайшие даты производства</p>';
+      html += '<div style="display:flex;flex-direction:column;gap:10px">';
+      html += '<input type="tel" id="leadPhone" placeholder="Введите ваш телефон" style="width:100%;padding:10px 12px;font-size:13px;font-family:Inter,sans-serif;border:1px solid #ddd;border-radius:8px;color:#333;background:#fff;box-sizing:border-box">';
+      html += '<select id="leadContact" style="width:100%;padding:10px 12px;font-size:13px;font-family:Inter,sans-serif;border:1px solid #ddd;border-radius:8px;color:#333;background:#fff;cursor:pointer">';
+      html += '<option value="">Как удобнее с вами связаться?</option>';
+      html += '<option value="Позвонить">Позвонить</option>';
+      html += '<option value="Написать в MAX">Написать в MAX</option>';
+      html += '<option value="Написать в Telegram">Написать в Telegram</option>';
+      html += '<option value="Написать в WhatsApp">Написать в WhatsApp</option>';
+      html += '</select>';
+      html += '</div>';
+      html += '<button id="leadSubmitBtn" onclick="submitLead(\'match\')" style="width:100%;margin-top:16px;padding:12px;font-size:13px;font-weight:500;font-family:Inter,sans-serif;border-radius:8px;border:none;background:#000;color:#fff;cursor:pointer">Проверить наличие</button>';
+      document.getElementById('calcBody').innerHTML = html;
+    }
+
+    function renderLeadCheaper() {
+      var html = '';
+      html += '<p style="margin:0 0 6px;font-size:15px;font-weight:700;color:#000;text-align:center">Понимаем. Но это не просто стены</p>';
+      html += '<p style="margin:0 0 16px;font-size:13px;color:#555;text-align:center;line-height:1.6">В эту стоимость уже включены: готовая премиум-отделка, панорамное остекление, сантехника и система «Умный дом». Вы получаете готовый дом за 1 день без стройки на участке.</p>';
+      html += '<p style="margin:0 0 14px;font-size:14px;font-weight:500;color:#000;text-align:center">Но мы знаем как подобрать дом под ваш бюджет!</p>';
+      html += '<div style="display:flex;flex-direction:column;gap:10px">';
+      html += '<input type="text" id="leadBudget" placeholder="Бюджет" style="width:100%;padding:10px 12px;font-size:13px;font-family:Inter,sans-serif;border:1px solid #ddd;border-radius:8px;color:#333;background:#fff;box-sizing:border-box">';
+      html += '<input type="tel" id="leadPhone" placeholder="Введите ваш телефон" style="width:100%;padding:10px 12px;font-size:13px;font-family:Inter,sans-serif;border:1px solid #ddd;border-radius:8px;color:#333;background:#fff;box-sizing:border-box">';
+      html += '<select id="leadContact" style="width:100%;padding:10px 12px;font-size:13px;font-family:Inter,sans-serif;border:1px solid #ddd;border-radius:8px;color:#333;background:#fff;cursor:pointer">';
+      html += '<option value="">Как удобнее с вами связаться?</option>';
+      html += '<option value="Позвонить">Позвонить</option>';
+      html += '<option value="Написать в MAX">Написать в MAX</option>';
+      html += '<option value="Написать в Telegram">Написать в Telegram</option>';
+      html += '<option value="Написать в WhatsApp">Написать в WhatsApp</option>';
+      html += '</select>';
+      html += '</div>';
+      html += '<button id="leadSubmitBtn" onclick="submitLead(\'cheaper\')" style="width:100%;margin-top:16px;padding:12px;font-size:13px;font-weight:500;font-family:Inter,sans-serif;border-radius:8px;border:none;background:#000;color:#fff;cursor:pointer">Получить спецпредложение</button>';
+      document.getElementById('calcBody').innerHTML = html;
+    }
+
+    function submitLead(type) {
+      var phone = document.getElementById('leadPhone').value.trim();
+      var contact = document.getElementById('leadContact').value;
+      
+      if (!phone || !contact) {
+        alert('Заполните телефон и выберите способ связи');
+        return;
+      }
+      
+      var budget = '';
+      if (type === 'cheaper') {
+        budget = document.getElementById('leadBudget').value.trim();
+      }
+      
+      // Читаем реферальный код
+      var refCode = localStorage.getItem('galaxy_referral_code');
+      var agentId = refCode || '';
+      
+      // Генерируем ID заявки
+      var leadId = Date.now().toString(36) + Math.random().toString(36).substr(2,9);
+      
+      // Собираем опции
+      var selectedOptions = [];
+      var allOpts = [calcWinter, calcInterior];
+      for (var s = 0; s < allOpts.length; s++) {
+        for (var i = 0; i < allOpts[s].length; i++) {
+          if (allOpts[s][i].on) selectedOptions.push(allOpts[s][i].label);
+        }
+      }
+      
+      // Данные заявки
+      var leadData = {
+        name: 'Заявка с калькулятора',
+        phone: phone,
+        visitorId: localStorage.getItem('galaxy_visitor_id') || '',
+        city: calcSelectedCity || '',
+        houseName: calcModel.name,
+        houseCount: '1',
+        budgetPerHouse: String(getGrandTotal()),
+        source: 'calculator',
+        agentId: agentId,
+        contactMethod: contact,
+        budget: budget,
+        expectation: type === 'match' ? 'Совпали' : 'Дешевле',
+        selectedOptions: selectedOptions,
+        deliveryCity: calcSelectedCity,
+        totalPrice: getGrandTotal(),
+        status: 'new',
+        createdAt: new Date().toISOString()
+      };
+      
+      var btn = document.getElementById('leadSubmitBtn');
+      if (btn) { btn.textContent = 'Отправка...'; btn.disabled = true; }
+      
+      // Сохраняем в Firestore через API
+      fetch('/api/leads/' + leadId, {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(leadData)
+      })
+      .then(function(){
+        document.getElementById('calcBody').innerHTML = '<p style="text-align:center;color:#000;font-size:16px;font-weight:600;padding:50px 20px;line-height:1.7;margin:0">Спасибо!<br><span style="font-size:14px;font-weight:400;color:#666">Мы свяжемся с Вами в ближайшее время</span></p>';
+      })
+      .catch(function(){
+        // Fallback: отправляем напрямую в Telegram если API не ответил
+        var msg = '📋 НОВАЯ ЗАЯВКА\n';
+        msg += 'Ожидания: ' + (type === 'match' ? 'Совпали ✓' : 'Дешевле ✗') + '\n';
+        msg += 'Модель: ' + calcModel.name + ' (' + calcModel.basePrice.toLocaleString('ru-RU') + ' ₽)\n';
+        if (selectedOptions.length) msg += 'Опции: ' + selectedOptions.join(', ') + '\n';
+        msg += 'Доставка до ' + (calcSelectedCity || 'Уточняется') + '\n';
+        msg += 'ИТОГО: ' + getGrandTotal().toLocaleString('ru-RU') + ' ₽\n\n';
+        msg += '📞 ' + phone + '\n';
+        msg += 'Связь: ' + contact + '\n';
+        if (budget) msg += '💰 Бюджет: ' + budget + '\n';
+        if (agentId) msg += '\n👤 Агент: ID ' + agentId + '\n';
+        
+        fetch('https://api.telegram.org/bot8897088321:AAFNTxJYvbyC8Q7zY4eUh33hvmH4cSQMzZw/sendMessage', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ chat_id: 5368408796, text: msg })
+        }).then(function(){
+          document.getElementById('calcBody').innerHTML = '<p style="text-align:center;color:#000;font-size:16px;font-weight:600;padding:50px 20px;line-height:1.7;margin:0">Спасибо!<br><span style="font-size:14px;font-weight:400;color:#666">Мы свяжемся с Вами в ближайшее время</span></p>';
+        }).catch(function(){
+          alert('Ошибка отправки. Попробуйте позже.');
+          if (btn) { btn.textContent = 'Отправить'; btn.disabled = false; }
+        });
+      });
+    }
+
+    function prevStep() {
+      if (calcStep > 0) {
+        // Возврат с шага 4 на шаг 3 — сбрасываем город
+        if (calcStep === 3) {
+          calcSelectedCity = '';
+        }
+        calcStep--;
+        renderCalc();
+      }
+    }
+
+
+    </script>
+
+    <!-- Hero Video — только на главной, безрывный loop -->
+    <script>
+    (function(){
+      var vw = document.getElementById('heroVideoWrap');
+      var ov = document.getElementById('heroOverlay');
+      var video = document.getElementById('heroBgVideo');
+      var poster = document.getElementById('heroPoster');
+      if (!vw || !video) return;
+      var rAF = null;
+      var FADE_MS = 250;
+      var wasOnHome = false;  // чтобы не дёргать без необходимости
+      var posterWasHidden = false;
+
+      // Seamless loop — безрывный! без задержек и серых экранов
+      function onEnded() {
+        video.currentTime = 0;
+        video.play().catch(function(){});
+      }
+
+      function showOnHome() {
+        var hero = document.querySelector('.hero');
+        var onHome = !!hero;
+        if (onHome === wasOnHome) return;
+        wasOnHome = onHome;
+        if (onHome) {
+          vw.style.display = 'block';
+          ov.style.display = 'block';
+          if (poster && !posterWasHidden) {
+            poster.style.opacity = '1';
+          }
+          if (video.paused) {
+            video.style.opacity = '0';
+            video.play().catch(function(){});
+          }
+          fadeInVideo();
+        } else {
+          vw.style.display = 'none';
+          ov.style.display = 'none';
+        }
+      }
+
+      video.addEventListener('ended', onEnded);
+      video.loop = false;
+
+      // Плавный фейд видео поверх постера
+      function fadeInVideo() {
+        function showVideo() {
+          video.style.opacity = '1';
+          if (poster && !posterWasHidden) {
+            posterWasHidden = true;
+            setTimeout(function(){ poster.style.opacity = '0'; }, 100);
+          }
+        }
+        if (video.readyState >= 3 || video.currentTime > 0) {
+          showVideo();
+        } else {
+          video.addEventListener('canplay', function onCan() {
+            showVideo();
+            video.removeEventListener('canplay', onCan);
+          }, { once: true });
+        }
+      }
+
+      // Первый запуск
+      setTimeout(function(){ showOnHome(); }, 50);
+      fadeInVideo();
+
+      // Следим за появлением/исчезновением hero (React рендерит его только на главной)
+      var mo = new MutationObserver(showOnHome);
+      var root = document.getElementById('root');
+      if (root) {
+        mo.observe(root, { childList: true, subtree: true });
+      }
+
+      video.load();
+    })();
+    </script>
+
+    <!-- Галерея-лайтбокс -->
+    <div class="gallery-overlay" id="galleryOverlay" onclick="closeGallery(event)" role="dialog" aria-label="Просмотр фото">
+      <button class="gallery-close" onclick="closeGallery()" aria-label="Закрыть">✕</button>
+      <button class="gallery-nav gallery-nav--prev" id="galleryPrev" onclick="galleryNav(-1)" aria-label="Предыдущее">‹</button>
+      <img id="galleryImg" src="" alt="">
+      <button class="gallery-nav gallery-nav--next" id="galleryNext" onclick="galleryNav(1)" aria-label="Следующее">›</button>
+      <div class="gallery-counter" id="galleryCounter"></div>
+    </div>
+
+    <script>
+      var _galleryImages = [];
+      var _galleryIndex = 0;
+
+      document.body.addEventListener('click', function(e) {
+        var img = e.target.closest('.house-card img, .house-card__image img');
+        if (!img) return;
+        if (img.closest('.gallery-arrow')) return;
+        e.preventDefault();
+        var container = img.parentNode;
+        var imgs = container.querySelectorAll('img');
+        _galleryImages = [];
+        imgs.forEach(function(m) { _galleryImages.push(m.src); });
+        _galleryIndex = Array.prototype.indexOf.call(imgs, img);
+        openGallery();
+      });
+
+      function openGallery() {
+        if (_galleryImages.length === 0) return;
+        showGalleryImage();
+        document.getElementById('galleryOverlay').classList.add('gallery-overlay--open');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeGallery(e) {
+        if (e && e.target !== e.currentTarget) return;
+        document.getElementById('galleryOverlay').classList.remove('gallery-overlay--open');
+        document.body.style.overflow = '';
+      }
+
+      function galleryNav(dir) {
+        _galleryIndex = (_galleryIndex + dir + _galleryImages.length) % _galleryImages.length;
+        showGalleryImage();
+      }
+
+      function showGalleryImage() {
+        document.getElementById('galleryImg').src = _galleryImages[_galleryIndex];
+        document.getElementById('galleryCounter').textContent = (_galleryIndex + 1) + ' / ' + _galleryImages.length;
+      }
+
+      document.addEventListener('keydown', function(e) {
+        if (!document.getElementById('galleryOverlay').classList.contains('gallery-overlay--open')) return;
+        if (e.key === 'Escape') { closeGallery(); }
+        if (e.key === 'ArrowLeft') { galleryNav(-1); }
+        if (e.key === 'ArrowRight') { galleryNav(1); }
+      });
+    </script>
+
+    <!-- Firebase sync -->
+  <script>
+    // Patch referral link display with short code
+    function patchReferralCode() {
+      var code = localStorage.getItem('galaxy_ref_code');
+      if (!code) return;
+      var inputs = document.querySelectorAll('.referral-link__input');
+      inputs.forEach(function(inp) {
+        if (inp.value && inp.value.indexOf('ref=') > 0) {
+          inp.value = window.location.origin + window.location.pathname + '#/?r=' + code;
+        }
+      });
+    }
+    setInterval(patchReferralCode, 1000);
+    setTimeout(patchReferralCode, 500);
+
+    (function() {
+      var ready = false;
+      function firebaseReady() {
+        if (ready) return true;
+        ready = typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length > 0;
+        return ready;
+      }
+
+      // Save lead to Firestore when submitted
+      function saveLeadToFirestore(data) {
+        if (!firebaseReady()) return;
+        var ref = sessionStorage.getItem('ref_code') 
+               || new URLSearchParams(window.location.hash.split('?')[1]||window.location.search).get('ref') 
+               || new URLSearchParams(window.location.hash.split('?')[1]||window.location.search).get('r');
+        
+        // Try to resolve short code to email
+        function doSave(agentEmail) {
+          data.agentId = agentEmail;
+          data.firebaseSaved = true;
+          data.createdAt = new Date().toISOString();
+          db.collection('leads').doc(data.id || data.phone + '_' + Date.now()).set(data)
+            .then(function() { console.log('Lead saved to Firestore for agent:', agentEmail); })
+            .catch(function(e) { console.error('Firestore save error:', e); });
+        }
+
+        if (ref) {
+          if (ref.indexOf('@') > 0) {
+            doSave(ref);
+          } else {
+            db.collection('referrals').doc(ref).get().then(function(d) {
+              if (d.exists) doSave(d.data().email);
+              else console.log('Referral code not found:', ref);
+            }).catch(function(e) { console.error('Referral lookup error:', e); });
+          }
+        }
+      }
+
+      // Load leads for agent dashboard
+      function loadAgentLeads(email) {
+        if (!email || !firebaseReady()) return;
+        localStorage.setItem('galaxy_user_refcode', email);
+        
+        // Get referral code
+        db.collection('referrals').where('email', '==', email).get().then(function(snap) {
+          snap.forEach(function(d) { 
+            localStorage.setItem('galaxy_ref_code', d.id);
+            patchReferralCode();
+          });
+        });
+
+        // Pull leads from Firestore
+        db.collection('leads').where('agentId', '==', email).get().then(function(snapshot) {
+          var existing = JSON.parse(localStorage.getItem('galaxy_leads') || '[]');
+          snapshot.forEach(function(doc) {
+            var lead = doc.data();
+            var idx = existing.findIndex(function(l) { return l.id === lead.id; });
+            if (idx >= 0) existing[idx] = lead;
+            else existing.push(lead);
+          });
+          localStorage.setItem('galaxy_leads', JSON.stringify(existing));
+        }).catch(function(e) { console.error('Firestore load error:', e); });
+      }
+
+      // Setup agent: referral code + load leads
+      function setupAgent(email, name) {
+        if (!firebaseReady()) { setTimeout(function() { setupAgent(email, name); }, 500); return; }
+        var existingCode = localStorage.getItem('galaxy_ref_code_' + email);
+        if (!existingCode) {
+          var code = (name ? name.substring(0,2).toUpperCase() : 'AG') 
+                   + Math.random().toString(36).substring(2,5).toUpperCase();
+          db.collection('referrals').doc(code).set({ email: email, name: name || '' })
+            .then(function() { 
+              localStorage.setItem('galaxy_ref_code_' + email, code);
+              localStorage.setItem('galaxy_ref_code', code);
+              console.log('Referral code generated:', code);
+              patchReferralCode();
+            });
+        } else {
+          localStorage.setItem('galaxy_ref_code', existingCode);
+        }
+        loadAgentLeads(email);
+      }
+
+      // Intercept localStorage saves
+      var _origSetItem = Storage.prototype.setItem;
+      Storage.prototype.setItem = function(key, value) {
+        _origSetItem.call(this, key, value);
+        try {
+          if (key === 'galaxy_user' && firebaseReady()) {
+            var user = JSON.parse(value);
+            if (user && user.type === 'agent') {
+              // Find email: check galaxy_agents first, then Firestore
+              function doSetup(agentEmail) {
+                if (!agentEmail) return;
+                if (user.email && user.password) {
+                  auth.createUserWithEmailAndPassword(user.email, user.password).catch(function(e) {
+                    if (e.code !== 'auth/email-already-in-use') console.error('Firebase Auth error:', e.code);
+                  });
+                }
+                setupAgent(agentEmail, user.name || agentEmail);
+              }
+              var agentEmail = user.email;
+              if (!agentEmail && user.id) {
+                var agents = JSON.parse(localStorage.getItem('galaxy_agents') || '[]');
+                var found = agents.find(function(a) { return a.id === user.id || a.email === user.id; });
+                if (found) agentEmail = found.email || found.id;
+              }
+              if (agentEmail) { doSetup(agentEmail); }
+              else if (user.id) {
+                // Direct Firestore lookup
+                db.collection('agents').get().then(function(snap) {
+                  snap.forEach(function(doc) {
+                    var a = doc.data();
+                    if (a.id === user.id || a.email === user.id) {
+                      doSetup(a.email || a.id);
+                      // Also save to localStorage for future
+                      var all = JSON.parse(localStorage.getItem('galaxy_agents') || '[]');
+                      if (!all.find(function(x) { return x.email === a.email; })) {
+                        all.push(a);
+                        localStorage.setItem('galaxy_agents', JSON.stringify(all));
+                      }
+                    }
+                  });
+                });
+              }
+            }
+          }
+          if (key === 'galaxy_agents' && firebaseReady()) {
+            var agents = JSON.parse(value);
+            if (Array.isArray(agents) && agents.length > 0) {
+              var last = agents[agents.length - 1];
+              if (last && last.email) {
+                // Save to Firestore agents collection (for login sync)
+                db.collection('agents').doc(last.email).set(JSON.parse(JSON.stringify(last)));
+                if (last.password) {
+                  auth.createUserWithEmailAndPassword(last.email, last.password).catch(function(e) {
+                    if (e.code !== 'auth/email-already-in-use') console.error('Firebase Auth error:', e.code);
+                  });
+                }
+                setupAgent(last.email, last.fullName || last.name || last.email);
+              }
+            }
+          }
+          if (key === 'galaxy_leads' && firebaseReady()) {
+            var data = JSON.parse(value);
+            var lead = Array.isArray(data) ? data[data.length - 1] : data;
+            if (lead && lead.name && lead.phone) saveLeadToFirestore(lead);
+          }
+        } catch(e) { console.error('Firebase sync error:', e); }
+      };      // Auto-load leads when page loads (check if agent is logged in)
+      // Load existing agents from Firestore (for registration uniqueness check)
+      // Sync agents from Firestore (for login check) - fast
+      function syncExistingAgents() {
+        if (!firebaseReady()) { setTimeout(syncExistingAgents, 200); return; }
+        db.collection('agents').get().then(function(snapshot) {
+          var agents = [];
+          snapshot.forEach(function(doc) { agents.push(doc.data()); });
+          if (agents.length > 0) {
+            localStorage.setItem('galaxy_agents', JSON.stringify(agents));
+          }
+        }).catch(function() {});
+      }
+      // Try immediately, retry quickly
+      syncExistingAgents();
+      setTimeout(syncExistingAgents, 500);
+      setTimeout(syncExistingAgents, 1500);
+
+      function checkAgent() {
+        if (!firebaseReady()) { setTimeout(checkAgent, 1000); return; }
+        var user = JSON.parse(localStorage.getItem('galaxy_user') || '{}');
+        if (user.email && user.type === 'agent') loadAgentLeads(user.email);
+      }
+      setTimeout(checkAgent, 2000);
+    })();
+  </script>
+  <script>
+  // Сохраняем referral код и логируем клики по Telegram
+  (function() {
+    var ref = sessionStorage.getItem('ref_code') 
+           || new URLSearchParams(window.location.hash.split('?')[1]||window.location.search).get('r')
+           || new URLSearchParams(window.location.hash.split('?')[1]||window.location.search).get('ref');
+    if (ref) sessionStorage.setItem('ref_code', ref);
+    
+    // При клике на Telegram — сохраняем действие в Firestore
+    document.body.addEventListener('click', function(e) {
+      var link = e.target.closest('a[href*="t.me"], a[href*="telegram"]');
+      if (link && ref && typeof db !== 'undefined') {
+        // Look up agent email for this ref and save as a lead
+        db.collection('referrals').doc(ref).get().then(function(d) {
+          if (d.exists) {
+            var now = new Date().toISOString();
+            var clickId = 'tg_click_' + Date.now();
+            // Save to leads collection so it shows in dashboard
+            db.collection('leads').doc(clickId).set({
+              id: clickId,
+              agentId: d.data().email,
+              name: '📞 Клик в Telegram',
+              phone: ref,
+              city: '-',
+              house: '-',
+              status: 'Связался',
+              createdAt: now
+            }).then(function() { console.log('Telegram click saved as lead'); });
+          }
+        }).catch(function() {});
+      }
+    });
+  })();
+  </script>
+
+<!-- Activity Tracking -->
+<script>
+(function(){
+  // Generate unique visitor ID
+  var vid = localStorage.getItem('galaxy_visitor_id');
+  if (!vid) { vid = Date.now().toString(36) + Math.random().toString(36).substr(2,9); localStorage.setItem('galaxy_visitor_id', vid); }
+  
+  // Get referral agent ID
+  function track(type, data) {
+    var refCode = localStorage.getItem('galaxy_referral_code');
+    if (!refCode) return;
+    var id = Date.now().toString(36) + Math.random().toString(36).substr(2,5);
+    var body = { type: type, agentId: refCode, visitorId: vid, data: data || {}, createdAt: new Date().toISOString() };
+    try { fetch('/api/activities/' + id, { method: 'PUT', keepalive: true, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }).catch(function(){}); } catch(e) {}
+  }
+  
+  // Track Telegram button click
+  document.addEventListener('click', function(e) {
+    var el = e.target.closest('.telegram-glass-btn, a[href*="t.me"]');
+    if (el) { track('telegram_click', { href: el.href }); }
+  });
+  
+  // Track calculator open
+  document.addEventListener('click', function(e) {
+    var el = e.target.closest('[onclick*="openCalc"], [data-action="calc"]');
+    if (el) { track('calculator_open', { model: calcModel ? calcModel.name : '' }); }
+  });
+  
+  // Expose track function for React components
+  window.__track = track;
+})();
+</script>
+
+
+
+
+</body>
+</html>
