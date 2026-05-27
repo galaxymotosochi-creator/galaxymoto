@@ -189,3 +189,11 @@
   border: none;
   text-decoration: none;
 }
+
+/* Градиентный заголовок Запись на сервис */
+#service-booking .section__title {
+  background: linear-gradient(135deg, #0bc5ea, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
