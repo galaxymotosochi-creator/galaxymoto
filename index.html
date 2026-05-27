@@ -1353,7 +1353,7 @@
       if(sd){h+="<div class='stw'><div class='stl'>11:00-19:00</div><div class='stg'>";
       for(var i=11;i<19;i++){var ti=String(i).padStart(2,"0")+":00";var b2=bk(sd,ti);var cc="sts";if(b2)cc+=" sbk";if(st===ti)cc+=" stsl";h+="<div class='"+cc+"' onclick='tp(\""+ti+"\")'>"+ti+"</div>"}
       h+="</div></div>";}
-      if(sd&&st){h+="<div class='sfm' id='fm'><h4>"+sd.split("-").reverse().join(".")+" "+st+"</h4><input id='n1' placeholder='Имя'><input id='n2' placeholder='Телефон'><input id='n3' placeholder='Модель'><button class='sbn' onclick='sb()'>Записаться</button></div>"}
+      if(sd&&st){h+="<div class='sfm' id='fm'><h4>"+sd.split("-").reverse().join(".")+" "+st+"</h4><input id='n1' placeholder='Имя'><input id='n2' placeholder='Телефон'><input id='n3' placeholder='Модель'><textarea id='n4' rows='2' placeholder='Краткое описание проблемы / визита' style='width:100%;padding:10px;font-size:.82rem;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box;margin-bottom:8px;resize:vertical'></textarea><button class='sbn' onclick='sb()'>Записаться</button></div>"}
       h+="<div class='ssc' id='sc'><div>✓</div><h3>Готово!</h3><p>Мы свяжемся</p></div></div>";
       e.innerHTML=h;
     }
@@ -1364,7 +1364,11 @@
     function sb(){
       var n=document.getElementById("n1").value.trim(),p=document.getElementById("n2").value.trim();
       if(!n){alert("Введите имя");return}if(!p){alert("Введите телефон");return}
-      window.db.collection("galaxymoto_bookings").doc(sd+"_"+st.replace(":","-")).set({date:sd,time:st,name:n,phone:p,model:document.getElementById("n3").value.trim()||"",created:new Date().toISOString()}).catch(function(e){console.error(e)});
+      var desc=document.getElementById("n4").value.trim();
+      var dt={date:sd,time:st,name:n,phone:p,model:document.getElementById("n3").value.trim()||"",notes:desc,created:new Date().toISOString()};
+      window.db.collection("galaxymoto_bookings").doc(sd+"_"+st.replace(":","-")).set(dt).catch(function(e){console.error(e)});
+      // Отправка в Telegram
+      fetch("/api/send-booking",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(dt)}).catch(function(){});
       document.getElementById("fm").style.display="none";document.getElementById("sc").classList.add("ok")
     }
     function init(){var e=document.getElementById("servInlineCalendar");if(e){ld(function(){rd()});return}setTimeout(init,400)}
