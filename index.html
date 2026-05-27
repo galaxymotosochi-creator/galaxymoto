@@ -1017,6 +1017,71 @@
 
     
 
+
+    <style>
+      .si-wrap{max-width:600px;margin:0 auto;padding:0 0 20px}
+      .si-mon{display:flex;align-items:center;justify-content:center;gap:20px;margin-bottom:16px}
+      .si-mon button{background:none;border:1px solid #ddd;border-radius:8px;width:34px;height:34px;font-size:1.1rem;cursor:pointer;color:#333}
+      .si-mon button:hover{background:#f0f0f0}
+      .si-ml{font-weight:600;font-size:1rem;color:#111;min-width:160px;text-align:center}
+      .si-gr{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:16px}
+      .si-wd{text-align:center;font-size:.75rem;font-weight:600;color:#999;padding:6px 0;text-transform:uppercase}
+      .si-d{text-align:center;padding:10px 0;font-size:.85rem;color:#333;border-radius:8px;cursor:pointer;border:2px solid transparent}
+      .si-d:hover{background:#f0f0f0}
+      .si-ot{color:#ddd;pointer-events:none}
+      .si-td{font-weight:700;color:#111;background:#f5f5f5}
+      .si-sl{background:#111!important;color:#fff!important;font-weight:600}
+      .si-pa{color:#ccc;pointer-events:none}
+      .si-tw{margin-bottom:12px}
+      .si-tl{font-size:.82rem;color:#666;margin-bottom:8px;text-align:center}
+      .si-tg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+      .si-ts{text-align:center;padding:10px;font-size:.82rem;font-weight:500;color:#333;border:1.5px solid #ddd;border-radius:8px;cursor:pointer}
+      .si-ts:hover{background:#f0f0f0;border-color:#999}
+      .si-bk{color:#ccc;border-color:#eee;background:#f9f9f9;cursor:not-allowed;text-decoration:line-through}
+      .si-tsl{background:#111;color:#fff;border-color:#111}
+      .si-fm{max-width:400px;margin:12px auto 0;padding-top:12px;border-top:1px solid #eee}
+      .si-fm h4{text-align:center;font-size:.9rem;font-weight:600;margin:0 0 12px;color:#111}
+      .si-f input,.si-f select,.si-f textarea{width:100%;padding:10px;font-size:.82rem;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box;margin-bottom:8px}
+      .si-f input:focus,.si-f select:focus,.si-f textarea:focus{border-color:#111}
+      .si-btn{width:100%;padding:11px;font-size:.85rem;font-weight:600;font-family:Inter,sans-serif;background:#111;color:#fff;border:none;border-radius:8px;cursor:pointer}
+      .si-btn:hover{background:#333}
+      .si-sc{display:none;text-align:center;padding:24px 0}
+      .si-sc.ok{display:block}
+    </style>
+    <script>
+    var im=["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"];
+    var ic=new Date(),id=null,it=null;
+    function siR(){
+      var e=document.getElementById("servInlineCalendar");if(!e)return;
+      var y=ic.getFullYear(),m=ic.getMonth(),f=new Date(y,m,1).getDay(),di=new Date(y,m+1,0).getDate(),o=f===0?6:f-1;
+      var t=new Date();t.setHours(0,0,0,0);var ts=t.getFullYear()+"-"+String(t.getMonth()+1).padStart(2,"0")+"-"+String(t.getDate()).padStart(2,"0");
+      var h="<div class='si-wrap'><div class='si-mon'><button onclick='siP()'>&lsaquo;</button><span class='si-ml'>"+im[m]+" "+y+"</span><button onclick='siN()'>&rsaquo;</button></div><div class='si-gr'>";
+      for(var i=0;i<7;i++)h+="<div class='si-wd'>"+["Пн","Вт","Ср","Чт","Пт","Сб","Вс"][i]+"</div>";
+      for(var i=0;i<o;i++)h+="<div class='si-d si-ot'>&nbsp;</div>";
+      for(var d=1;d<=di;d++){var ds=y+"-"+String(m+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");var c="si-d";if(ds<ts)c+=" si-pa";if(ds===ts)c+=" si-td";if(id===ds)c+=" si-sl";h+="<div class='"+c+"' onclick='siS("+d+")'>"+d+"</div>"}
+      var rm=(7-(o+di)%7)%7;for(var i=0;i<rm;i++)h+="<div class='si-d si-ot'>&nbsp;</div>";
+      h+="</div>";
+      if(id){h+="<div class='si-tw'><div class='si-tl'>График: 11:00-19:00</div><div class='si-tg'>";
+      for(var i=11;i<19;i++){var ti=String(i).padStart(2,"0")+":00";var bk=isSlotBooked(id,ti);var cc="si-ts";if(bk)cc+=" si-bk";if(it===ti)cc+=" si-tsl";h+="<div class='"+cc+"' onclick='siT(\""+ti+"\")'>"+ti+"</div>"}
+      h+="</div></div>";}
+      if(id&&it){h+="<div class='si-fm' id='sifm'><h4>Запись на "+id.split("-").reverse().join(".")+" в "+it+"</h4><div class='si-f'><input id='sin' placeholder='Имя'><input id='sip' placeholder='Телефон'><input id='sim' placeholder='Модель'><select id='sit'><option value=''>Услуга</option><option value='ТО'>ТО</option><option value='Ремонт'>Ремонт</option><option value='Диагностика'>Диагностика</option><option value='Запчасти'>Запчасти</option></select><textarea id='sio' rows='2' placeholder='Комментарий'></textarea><button class='si-btn' onclick='siSub()'>Записаться</button></div></div>"}
+      h+="<div class='si-sc' id='sisc'><div>&#10003;</div><h3>Заявка отправлена!</h3><p>Мы свяжемся с вами</p></div></div>";
+      e.innerHTML=h;
+    }
+    function siP(){ic.setMonth(ic.getMonth()-1);id=null;it=null;loadBookings(function(){siR()})}
+    function siN(){ic.setMonth(ic.getMonth()+1);id=null;it=null;loadBookings(function(){siR()})}
+    function siS(d){var y=ic.getFullYear(),m=ic.getMonth(),ds=y+"-"+String(m+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");var t=new Date();t.setHours(0,0,0,0);if(new Date(y,m,d)<t)return;id=ds;it=null;siR()}
+    function siT(t){it=t;siR()}
+    function siSub(){
+      var n=document.getElementById("sin").value.trim(),p=document.getElementById("sip").value.trim();
+      if(!n){alert("Введите имя");return}if(!p){alert("Введите телефон");return}
+      var d={date:id,time:it,name:n,phone:p,model:document.getElementById("sim").value.trim()||"",type:document.getElementById("sit").value||"",notes:document.getElementById("sio").value.trim(),created:new Date().toISOString()};
+      saveBooking(d);document.getElementById("sifm").style.display="none";document.getElementById("sisc").classList.add("ok")
+    }
+    function siInit(){var e=document.getElementById("servInlineCalendar");if(e){loadBookings(function(){siR()});return}setTimeout(siInit,500)}
+    if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",siInit)}else{setTimeout(siInit,600)}
+    </script>
+
 <!-- Галерея-лайтбокс -->
     <div class="gallery-overlay" id="galleryOverlay" onclick="closeGallery(event)" role="dialog" aria-label="Просмотр фото">
       <button class="gallery-close" onclick="closeGallery()" aria-label="Закрыть">✕</button>
