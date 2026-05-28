@@ -8,8 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script type="module" crossorigin src="assets/index-CguyBJZF.js?v=27"></script>
-    <link rel="stylesheet" crossorigin href="assets/index-CTYFC3_u.css?v=27">
+    <script type="module" crossorigin src="assets/index-CguyBJZF.js?v=28"></script>
+    <link rel="stylesheet" crossorigin href="assets/index-CTYFC3_u.css?v=28">
     <!-- Галерея-лайтбокс для фото домов -->
     <style>
       .gallery-overlay{display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.92);justify-content:center;align-items:center;flex-direction:column;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
@@ -1368,16 +1368,49 @@
     function slc(d){var y=sc.getFullYear(),m=sc.getMonth(),ds=y+"-"+String(m+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");var t=new Date();t.setHours(0,0,0,0);if(new Date(y,m,d)<t)return;sd=ds;st=null;rd()}
     function tp(t){st=t;rd()}
     function sb(){
-      var n=document.getElementById("n1").value.trim(),p=document.getElementById("n2").value.trim();
-      if(!n){alert("Введите имя");return}if(!p){alert("Введите телефон");return}
-      var desc=document.getElementById("n4").value.trim();
-      var dt={date:sd,time:st,name:n,phone:p,model:document.getElementById("n3").value.trim()||"",notes:desc,created:new Date().toISOString()};
-      window.db.collection("galaxymoto_bookings").doc(sd+"_"+st.replace(":","-")).set(dt).catch(function(e){console.error(e)});
-      // Отправка в Telegram
-      fetch("/api/send-booking",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(dt)}).catch(function(){});
-      document.getElementById("fm").style.display="none";document.getElementById("sdt").textContent=sd.split("-").reverse().join(".")+" "+st;document.getElementById("servSuccessDateTime").textContent=sd.split("-").reverse().join(".")+" "+st;document.getElementById("servSuccessOverlay").classList.add("active")
+  var n=document.getElementById("n1").value.trim(),p=document.getElementById("n2").value.trim();
+  if(!n){alert("\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0438\u043c\u044f");return}if(!p){alert("\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0442\u0435\u043b\u0435\u0444\u043e\u043d");return}
+  var desc=document.getElementById("n4").value.trim();
+  var dt={date:sd,time:st,name:n,phone:p,model:document.getElementById("n3").value.trim()||"",notes:desc,created:new Date().toISOString()};
+  window.db.collection("galaxymoto_bookings").doc(sd+"_"+st.replace(":","-")).set(dt).catch(function(e){console.error(e)});
+  // Telegram + смарт-история
+  window.db.collection("galaxymoto_bookings").where("phone","==",p).get().then(function(snap){
+    var prev=[];
+    snap.forEach(function(doc){
+      var d=doc.data();
+      if(d.workDone&&d.workDone.items&&d.workDone.items.length>0) prev.push(d);
+    });
+    prev.sort(function(a,b){return a.date.localeCompare(b.date)});
+    var msg="\uD83D\uDEB2 \u041d\u041e\u0412\u0410\u042f \u0417\u0410\u041f\u0418\u0421\u042c\n\n";
+    msg+="\uD83D\uDC64 "+n+"\n";
+    msg+="\uD83D\uDCDE "+p+"\n";
+    msg+="\uD83D\uDCC5 "+sd+"\n";
+    msg+="\u23F0 "+st+"\n";
+    if(dt.model) msg+="\uD83D\uDEB2 "+dt.model+"\n";
+    if(desc) msg+="\uD83D\uDCDD "+desc+"\n";
+    if(prev.length>0){
+      var last=prev[prev.length-1];
+      msg+="\n\uD83D\uDD0D \u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0435\u0435 \u043f\u043e\u0441\u0435\u0449\u0435\u043d\u0438\u0435: "+last.date.split("-").reverse().join(".")+"\n";
+      if(last.workDone.mileage) msg+="\uD83D\uDCCF \u041f\u0440\u043e\u0431\u0435\u0433: "+last.workDone.mileage+" \u043a\u043c\n";
+      msg+="\uD83D\uDCCB \u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0435 \u0440\u0430\u0431\u043e\u0442\u044b:";
+      for(var i=0;i<last.workDone.items.length;i++){
+        msg+="\n  - "+last.workDone.items[i].name+": "+last.workDone.items[i].price+" \u0440\u0443\u0431";
+      }
+      msg+="\n\u0421\u0443\u043c\u043c\u0430: "+last.workDone.total+" \u0440\u0443\u0431";
+    }else{
+      msg+="\n\uD83D\uDC4B \u041a\u043b\u0438\u0435\u043d\u0442 \u043d\u043e\u0432\u044b\u0439, \u043f\u0440\u0435\u0434\u044b\u0434\u0443\u0449\u0438\u0445 \u0440\u0430\u0431\u043e\u0442 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e";
     }
-    function init(){var e=document.getElementById("servInlineCalendar");if(e){ld(function(){rd()});return}setTimeout(init,400)}
+    fetch('https://api.telegram.org/bot7471473926:AAE_kyz1Qtb1J8Dddqk1aaxzBGfMQ73lSMM/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:5368408796,text:msg})}).catch(function(){});
+  }).catch(function(){
+    // fallback: простое уведомление
+    var msg="\uD83D\uDEB2 \u041d\u041e\u0412\u0410\u042f \u0417\u0410\u041f\u0418\u0421\u042c\n\n";
+    msg+="\uD83D\uDC64 "+n+"\n\uD83D\uDCDE "+p+"\n\uD83D\uDCC5 "+sd+"\n\u23F0 "+st;
+    if(dt.model) msg+="\n\uD83D\uDEB2 "+dt.model;
+    fetch('https://api.telegram.org/bot7471473926:AAE_kyz1Qtb1J8Dddqk1aaxzBGfMQ73lSMM/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:5368408796,text:msg})}).catch(function(){});
+  });
+  document.getElementById("fm").style.display="none";document.getElementById("sdt").textContent=sd.split("-").reverse().join(".")+" "+st;document.getElementById("servSuccessDateTime").textContent=sd.split("-").reverse().join(".")+" "+st;document.getElementById("servSuccessOverlay").classList.add("active")
+}
+function init(){var e=document.getElementById("servInlineCalendar");if(e){ld(function(){rd()});return}setTimeout(init,400)}
     if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",init)}else{setTimeout(init,600)}
 </script>
 
