@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>GALAXY MOTO — Админ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script>
+var FC={apiKey:"AIzaSyDOZnESPJRJlEf3HTYqNyv1O0mYUZoPJzc",authDomain:"capsulehouse-1c0c9.firebaseapp.com",projectId:"capsulehouse-1c0c9",storageBucket:"capsulehouse-1c0c9.firebasestorage.app",messagingSenderId:"640070206939",appId:"1:640070206939:web:e7ba997ec68457be2893fe"};
+firebase.initializeApp(FC);var db=firebase.firestore();db.settings({merge:true});
+</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;background:#f5f5f5;color:#111;min-height:100vh}
+.admin-header{background:#111;color:#fff;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.admin-header h1{font-size:18px;font-weight:700;letter-spacing:.5px}
+.admin-header a{color:#999;text-decoration:none;font-size:13px;font-weight:500;cursor:pointer}
+.admin-header a:hover{color:#fff}
+.admin-container{max-width:900px;margin:0 auto;padding:20px 16px 40px}
+.login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#111}
+.login-box{background:#fff;border-radius:16px;padding:2rem;max-width:360px;width:100%;text-align:center}
+.login-box h2{font-size:20px;font-weight:700;margin-bottom:4px;letter-spacing:1px}
+.login-box p{font-size:13px;color:#888;margin-bottom:20px}
+.login-box input{width:100%;padding:12px 14px;font-size:16px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:10px;text-align:center;letter-spacing:8px;outline:none}
+.login-box input:focus{border-color:#111}
+.login-box .error{color:#e53935;font-size:13px;margin-top:8px;display:none}
+.login-btn{width:100%;padding:12px;margin-top:14px;font-size:15px;font-weight:600;font-family:Inter,sans-serif;color:#fff;background:#111;border:none;border-radius:10px;cursor:pointer}
+.login-btn:hover{background:#333}
+.stats{display:flex;gap:10px;margin-bottom:20px}
+.stat-card{flex:1;background:#fff;border-radius:12px;padding:14px;text-align:center;border:1.5px solid #eee}
+.stat-card__value{font-size:24px;font-weight:800}
+.stat-card__label{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.calendar-wrap{background:#fff;border-radius:14px;border:1.5px solid #eee;padding:16px;margin-bottom:20px}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cal-nav button{width:34px;height:34px;border-radius:50%;border:1.5px solid #ddd;background:#fff;color:#333;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.cal-nav button:hover{background:#f0f0f0;border-color:#999}
+.cal-month{font-size:15px;font-weight:700;letter-spacing:.5px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-weekday{font-size:11px;color:#999;text-align:center;font-weight:500;text-transform:uppercase;padding:6px 0;letter-spacing:.5px}
+.cal-day{aspect-ratio:1;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:500;color:#333;background:#fff;border:1.5px solid transparent;position:relative;min-height:40px}
+.cal-day:hover{background:#f5f5f5}
+.cal-day--other{color:#ccc}.cal-day--today{font-weight:700;color:#111;border-color:#111}
+.cal-day--selected{background:#111!important;color:#fff!important;font-weight:600}
+.cal-day__count{position:absolute;top:2px;right:4px;font-size:9px;font-weight:700;color:#888;min-width:14px;text-align:center;line-height:14px}
+.cal-day--green{background:#e8f5e9;border-color:#c8e6c9}.cal-day--green .cal-day__count{color:#2e7d32}
+.cal-day--yellow{background:#fff8e1;border-color:#ffe082}.cal-day--yellow .cal-day__count{color:#e65100}
+.cal-day--red{background:#ffebee;border-color:#ef9a9a}.cal-day--red .cal-day__count{color:#c62828}
+.cal-legend{display:flex;gap:14px;justify-content:center;margin-top:10px;font-size:11px;color:#888}
+.cal-legend span{display:flex;align-items:center;gap:4px}.cal-legend i{width:10px;height:10px;border-radius:3px}
+.bookings-section h3{font-size:14px;font-weight:700;margin-bottom:10px;letter-spacing:.5px}
+.booking-card{background:#fff;border-radius:12px;border:1.5px solid #eee;padding:14px;margin-bottom:8px}
+.booking-card:hover{border-color:#ddd}
+.booking-card--new{border-left:3px solid #111}
+.booking-card--confirmed{border-left:3px solid #2e7d32}
+.booking-card--completed{border-left:3px solid #888;opacity:.7}
+.booking-card--cancelled{border-left:3px solid #e53935;opacity:.5}
+.booking-header{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.booking-time{font-size:14px;font-weight:700;white-space:nowrap}
+.booking-name{font-size:14px;font-weight:600;flex:1}
+.booking-status{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;padding:3px 8px;border-radius:6px;white-space:nowrap}
+.status-new{background:#111;color:#fff}.status-confirmed{background:#e8f5e9;color:#2e7d32}
+.status-completed{background:#f5f5f5;color:#888}.status-cancelled{background:#ffebee;color:#e53935}
+.booking-details{font-size:12px;color:#888;margin-top:6px;line-height:1.5}
+.booking-details span{margin-right:12px}
+.booking-actions{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.booking-actions button{padding:5px 12px;font-size:11px;font-weight:600;font-family:Inter,sans-serif;border:none;border-radius:6px;cursor:pointer}
+.btn-confirm{background:#e8f5e9;color:#2e7d32}.btn-confirm:hover{background:#c8e6c9}
+.btn-complete{background:#f5f5f5;color:#555}.btn-complete:hover{background:#eee}
+.btn-cancel{background:#ffebee;color:#e53935}.btn-cancel:hover{background:#ffcdd2}
+.btn-delete{background:transparent;color:#999}.btn-delete:hover{color:#e53935;background:#ffebee}
+.empty-state{text-align:center;padding:30px 20px;color:#888;font-size:13px}
+.tab-bar{display:flex;background:#fff;border-radius:12px;border:1.5px solid #eee;margin-bottom:16px;overflow:hidden}
+.tab-bar button{flex:1;padding:10px;font-size:12px;font-weight:600;font-family:Inter,sans-serif;border:none;cursor:pointer;background:transparent;color:#888}
+.tab-bar button.active{background:#111;color:#fff}
+.tab-bar button:hover:not(.active){background:#f5f5f5}
+.hidden{display:none!important}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;justify-content:center;align-items:center;padding:1rem}
+.modal-overlay.active{display:flex}
+.modal-box{background:#fff;max-width:480px;width:100%;border-radius:14px;padding:1.5rem;position:relative;max-height:80vh;overflow-y:auto}
+.modal-close{position:absolute;top:12px;right:14px;background:none;border:none;font-size:20px;cursor:pointer;color:#999;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%}
+.modal-close:hover{background:#f0f0f0}
+.detail-row{display:flex;padding:6px 0;border-bottom:1px solid #f0f0f0;font-size:13px}
+.detail-row .label{color:#888;width:80px;flex-shrink:0}
+.detail-row .value{font-weight:500}
+@media(max-width:640px){
+.admin-container{padding:12px 10px 30px}.stats{gap:6px}.stat-card{padding:10px}.stat-card__value{font-size:20px}
+.calendar-wrap{padding:10px}.cal-day{font-size:11px;min-height:32px}.cal-day__count{font-size:8px;top:1px;right:2px}.booking-card{padding:10px}
+}
+</style>
+</head>
+<body>
+<div id="loginScreen" class="login-screen">
+  <div class="login-box">
+    <h2>GALAXY MOTO</h2>
+    <p>Панель управления записями</p>
+    <input type="password" id="pinInput" placeholder="&#9679;&#9679;&#9679;&#9679;" maxlength="4" inputmode="numeric" autocomplete="off" onkeydown="if(event.key==='Enter')checkPin()">
+    <div class="error" id="loginError">Неверный пин-код</div>
+    <button class="login-btn" onclick="checkPin()">Войти</button>
+  </div>
+</div>
+
+<div id="adminApp" class="hidden">
+  <div class="admin-header">
+    <h1>GALAXY MOTO</h1>
+    <a onclick="logout()">Выйти</a>
+  </div>
+  <div class="admin-container">
+    <div class="stats" id="statsRow"></div>
+    <div class="calendar-wrap">
+      <div class="cal-nav">
+        <button onclick="calMove(-1)">&#8249;</button>
+        <span class="cal-month" id="calMonth"></span>
+        <button onclick="calMove(1)">&#8250;</button>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+      <div class="cal-legend">
+        <span><i style="background:#e8f5e9;border:1px solid #c8e6c9"></i> 1 запись</span>
+        <span><i style="background:#fff8e1;border:1px solid #ffe082"></i> 2 записи</span>
+        <span><i style="background:#ffebee;border:1px solid #ef9a9a"></i> 3+ записи</span>
+      </div>
+    </div>
+    <div class="tab-bar">
+      <button class="active" onclick="switchTab('today')" id="tabToday">Сегодня</button>
+      <button onclick="switchTab('tomorrow')" id="tabTomorrow">Завтра</button>
+      <button onclick="switchTab('all')" id="tabAll">Все</button>
+    </div>
+    <div class="bookings-section" id="bookingsList"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="detailModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeDetail()">&times;</button>
+    <h3 id="detailTitle">Детали записи</h3>
+    <div id="detailBody"></div>
+    <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap" id="detailActions"></div>
+  </div>
+</div>
+<script>
+var PIN="8888",BK=[],TB="today",CV=new Date(),SD=null,US=null;
+function FMT(d){var y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,"0"),dd=String(d.getDate()).padStart(2,"0");return y+"-"+m+"-"+dd}
+function SAME(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate()}
+function checkPin(){var p=document.getElementById("pinInput").value;if(p===PIN){localStorage.setItem("ga","1");document.getElementById("loginScreen").classList.add("hidden");document.getElementById("adminApp").classList.remove("hidden");LSTN()}else{document.getElementById("loginError").style.display="block"}}
+function logout(){localStorage.removeItem("ga");if(US)US();document.getElementById("adminApp").classList.add("hidden");document.getElementById("loginScreen").classList.remove("hidden");document.getElementById("loginError").style.display="none"}
+(function(){if(localStorage.getItem("ga")==="1"){document.getElementById("loginScreen").classList.add("hidden");document.getElementById("adminApp").classList.remove("hidden");LSTN()}})()
+function LSTN(){if(US)US();try{US=db.collection("leads").orderBy("date","asc").onSnapshot(function(s){BK=[];s.forEach(function(d){var x=d.data();if(x.date&&x.name)BK.push({id:d.id,date:x.date,time:x.time||"",name:x.name,phone:x.phone||"",model:x.model||"",notes:x.notes||"",status:x.status||"new"})});RALL()})}catch(e){}}
+function RALL(){RSTAT();RCAL();RBOK()}
+function RSTAT(){var n=BK.length,p=BK.filter(function(b){return b.status==="new"}).length,c=BK.filter(function(b){return b.status==="confirmed"}).length;document.getElementById("statsRow").innerHTML='<div class="stat-card"><div class="stat-card__value">'+n+'</div><div class="stat-card__label">Всего</div></div><div class="stat-card"><div class="stat-card__value">'+p+'</div><div class="stat-card__label">Новые</div></div><div class="stat-card"><div class="stat-card__value">'+c+'</div><div class="stat-card__label">Подтверждены</div></div>'}
+function RCAL(){var y=CV.getFullYear(),m=CV.getMonth();document.getElementById("calMonth").textContent=new Date(y,m).toLocaleDateString("ru",{month:"long",year:"numeric"});var fd=new Date(y,m,1).getDay();fd=(fd===0?6:fd-1);var ld=new Date(y,m+1,0).getDate(),pd=new Date(y,m,1-fd).getDate(),html="",td=new Date();["Пн","Вт","Ср","Чт","Пт","Сб","Вс"].forEach(function(w){html+='<div class="cal-weekday">'+w+"</div>"});for(var i=0;i<fd;i++){html+='<div class="cal-day cal-day--other">'+pd+"</div>";pd++}for(var d=1;d<=ld;d++){var dt=new Date(y,m,d),ds=FMT(dt),cnt=BK.filter(function(b){return b.date===ds}).length,cls="cal-day";if(SAME(dt,td))cls+=" cal-day--today";if(SD&&SAME(dt,SD))cls+=" cal-day--selected";if(cnt===1)cls+=" cal-day--green";else if(cnt===2)cls+=" cal-day--yellow";else if(cnt>=3)cls+=" cal-day--red";html+='<div class="'+cls+'" onclick="SD=new Date('+y+","+m+","+d+');RCAL();RBOK()"><span>'+d+"</span>"+(cnt>0?'<span class="cal-day__count">'+cnt+"</span>":"")+"</div>"}var rem=(7-(fd+ld)%7)%7;for(var i=0;i<rem;i++){html+='<div class="cal-day cal-day--other">'+(i+1)+"</div>"}document.getElementById("calGrid").innerHTML=html}
+function calMove(d){CV.setMonth(CV.getMonth()+d);RCAL()}
+function switchTab(t){TB=t;document.querySelectorAll(".tab-bar button").forEach(function(b){b.classList.remove("active")});document.getElementById("tab"+t.charAt(0).toUpperCase()+t.slice(1)).classList.add("active");RBOK()}
+function RBOK(){var now=new Date(),tom=new Date(now);tom.setDate(tom.getDate()+1);var flt=[];if(TB==="today")flt=BK.filter(function(b){var bd=new Date(b.date);return SAME(bd,now)});else if(TB==="tomorrow")flt=BK.filter(function(b){var bd=new Date(b.date);return SAME(bd,tom)});else flt=[].concat(BK);flt.sort(function(a,b){return a.date.localeCompare(b.date)||a.time.localeCompare(b.time)});var html="",labels={today:"Сегодня",tomorrow:"Завтра",all:"Все записи"};html+="<h3>"+labels[TB]+" &mdash; "+flt.length+"</h3>";if(flt.length===0){html+='<div class="empty-state">Нет записей</div>'}else{flt.forEach(function(b){var st=b.status||"new",scls="status-"+st;html+='<div class="booking-card booking-card--'+st+'" onclick="openDetail(\''+b.id+'\')">';html+='<div class="booking-header">';html+='<span class="booking-time">'+b.date.split("-").reverse().join(".")+(b.time?" "+b.time:"")+"</span>";html+='<span class="booking-name">'+esc(b.name)+"</span>";html+='<span class="booking-status '+scls+'">'+{"new":"НОВАЯ","confirmed":"ПОДТВЕРЖДЕНА","completed":"ВЫПОЛНЕНА","cancelled":"ОТМЕНЕНА"}[st]||st+"</span></div>";if(b.model||b.phone){html+='<div class="booking-details">';if(b.phone)html+="<span>&#9742; "+b.phone+"</span>";if(b.model)html+="<span>&#128663; "+esc(b.model)+"</span>";html+="</div>"}html+="</div>"})}document.getElementById("bookingsList").innerHTML=html}
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function openDetail(id){var b=BK.find(function(x){return x.id===id});if(!b)return;var st=b.status||"new";document.getElementById("detailTitle").textContent="Детали записи";var html='<div class="detail-row"><span class="label">Дата</span><span class="value">'+b.date.split("-").reverse().join(".")+"</span></div>";if(b.time)html+='<div class="detail-row"><span class="label">Время</span><span class="value">'+b.time+"</span></div>";html+='<div class="detail-row"><span class="label">Имя</span><span class="value">'+esc(b.name)+"</span></div>";if(b.phone)html+='<div class="detail-row"><span class="label">Телефон</span><span class="value">'+b.phone+"</span></div>";if(b.model)html+='<div class="detail-row"><span class="label">Модель</span><span class="value">'+esc(b.model)+"</span></div>";if(b.notes)html+='<div class="detail-row"><span class="label">Описание</span><span class="value">'+esc(b.notes)+"</span></div>";html+='<div class="detail-row"><span class="label">Статус</span><span class="value"><span class="booking-status status-'+st+'">'+{"new":"НОВАЯ","confirmed":"ПОДТВЕРЖДЕНА","completed":"ВЫПОЛНЕНА","cancelled":"ОТМЕНЕНА"}[st]+"</span></span></div>";document.getElementById("detailBody").innerHTML=html;var act="";act+='<button class="btn-confirm" onclick="setStatus(\''+b.id+'\',\'confirmed\');closeDetail()">&#10003; Подтвердить</button>';act+='<button class="btn-complete" onclick="setStatus(\''+b.id+'\',\'completed\');closeDetail()">&#10003; Выполнена</button>';act+='<button class="btn-cancel" onclick="setStatus(\''+b.id+'\',\'cancelled\');closeDetail()">&#10007; Отменить</button>';act+='<button class="btn-delete" onclick="if(confirm(\'Удалить запись?\')){delBook(\''+b.id+'\')};closeDetail()">&#10007; Удалить</button>';document.getElementById("detailActions").innerHTML=act;document.getElementById("detailModal").classList.add("active")}
+function closeDetail(){document.getElementById("detailModal").classList.remove("active")}
+function setStatus(id,st){try{db.collection("leads").doc(id).update({status:st,updatedAt:new Date().toISOString()})}catch(e){}}
+function delBook(id){try{db.collection("leads").doc(id).delete()}catch(e){}}
+</script>
+</body>
+</html>
