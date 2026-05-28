@@ -154,7 +154,7 @@ tr.done td:not(:last-child){text-decoration:line-through!important;text-decorati
       <label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Описание</label>
       <textarea id="addNotes" rows="2" placeholder="Описание" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box;resize:vertical"></textarea>
     </div>
-    <button class="btn-grad" style="width:100%;padding:12px;font-size:14px" onclick="saveNewRecord()">Сохранить</button>
+    <button class="btn-grad" style="width:100%;padding:10px;font-size:13px" onclick="saveNewRecord()">Сохранить</button>
   </div>
 </div>
 
@@ -298,7 +298,7 @@ function closeWorkForm(){
 function addWorkRow(){
   var tb = document.getElementById("workItems");
   var tr = document.createElement("tr");
-  tr.innerHTML = '<td style="padding:4px"><input class="wi-name" placeholder="Наименование" style="width:100%;padding:7px 8px;font-size:12px;font-family:Inter,sans-serif;border:1px solid #ddd;border-radius:6px;outline:none;box-sizing:border-box"></td><td style="padding:4px"><input class="wi-price" type="number" placeholder="0" oninput="calcWorkTotal()" style="width:100%;padding:7px 8px;font-size:12px;font-family:Inter,sans-serif;border:1px solid #ddd;border-radius:6px;outline:none;box-sizing:border-box;text-align:right"></td>';
+  tr.innerHTML = '<td style="padding:4px"><input class="wi-name" placeholder="Наименование" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box"></td><td style="padding:4px"><input class="wi-price" type="number" placeholder="0" oninput="calcWorkTotal()" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box;text-align:right"></td>';
   tb.appendChild(tr);
 }
 function calcWorkTotal(){
@@ -343,11 +343,11 @@ function saveWork(){
     <h3 style="margin-bottom:12px">Какие виды работ были выполнены?</h3>
     <p style="font-size:14px;color:#888;margin:0 0 12px">Заполните информацию о выполненном обслуживании</p>
     <div style="margin-bottom:10px">
-      <label style="font-size:13px;font-weight:600;color:#333;display:block;margin-bottom:4px">Пробег</label>
-      <input type="text" id="workMileage" placeholder="км" style="width:100%;padding:8px 10px;font-size:13px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box">
+      <label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Пробег</label>
+      <input type="text" id="workMileage" placeholder="км" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box">
     </div>
     <table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:10px">
-      <thead><tr><th style="text-align:left;padding:6px;color:#888;font-weight:600;border-bottom:2px solid #eee;width:65%">Наименование работ</th><th style="text-align:right;padding:6px;color:#888;font-weight:600;border-bottom:2px solid #eee;width:35%">Стоимость, руб</th></tr></thead>
+      <thead><tr><th style="text-align:left;padding:8px 6px;color:#888;font-weight:600;border-bottom:2px solid #eee;width:65%">Наименование работ</th><th style="text-align:right;padding:6px;color:#888;font-weight:600;border-bottom:2px solid #eee;width:35%">Стоимость, руб</th></tr></thead>
       <tbody id="workItems"></tbody>
     </table>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
