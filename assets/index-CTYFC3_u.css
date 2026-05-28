@@ -206,12 +206,6 @@
 }
 
 /* Градиентный заголовок Каталог техники */
-#catalog .section__title {
-  background: linear-gradient(135deg, #00d4ff, #a855f7);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  filter: brightness(1.2);
-}
+
 
 /* Разделитель между Каталог и Запись на сервис */
