@@ -82,6 +82,8 @@ body{font-family:Inter,sans-serif;background:#f5f5f5;color:#111;min-height:100vh
 }
 
 .btn-grad,.btn-grad-del{background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff;padding:5px 12px;font-size:11px;font-weight:600;font-family:Inter,sans-serif;border:none;border-radius:6px;cursor:pointer;transition:opacity .15s}.btn-grad:hover,.btn-grad-del:hover{opacity:.85}
+.ts-slot{text-align:center;padding:8px 4px;font-size:13px;font-weight:500;color:#333;border:1px solid #ddd;border-radius:8px;cursor:pointer}
+.ts-taken{color:#aaa;background:#f5f5f5;cursor:default}
 tr.done td:not(:last-child){text-decoration:line-through!important;text-decoration-thickness:1px!important;opacity:.55}
 </style>
 </head>
@@ -197,7 +199,30 @@ function closeAddForm(){
   document.getElementById('addModal').classList.remove('active');
   document.getElementById('addTime').value='';
 }
-function renderTimeSlots(){var dt=document.getElementById("addDate").value;var cont=document.getElementById("addTimeSlots");if(!dt||!cont)return;var h="";for(var hh=11;hh<19;hh++){for(var mm=0;mm<60;mm+=30){var ti=String(hh).padStart(2,"0")+":"+String(mm).padStart(2,"0");var taken=BK.some(function(b){return b.date===dt&&b.time===ti});if(taken){h+="<div style='text-align:center;padding:8px 4px;font-size:13px;font-weight:500;color:#aaa;border:1px solid #ddd;border-radius:8px;background:#f5f5f5;cursor:default'>"+ti+"</div>"}else{h+="<div onclick='document.getElementById(\"addTime\").value=\"+ti+"\";for(var i=0;i<cont.children.length;i++){cont.children[i].style.borderColor=\"#ddd\";cont.children[i].style.background=\"#fff\"}this.style.borderColor=\"#111\";this.style.background=\"#eee\"' style='text-align:center;padding:8px 4px;font-size:13px;font-weight:500;color:#333;border:1px solid #ddd;border-radius:8px;cursor:pointer'>"+ti+"</div>"}}}cont.innerHTML=h;document.getElementById("addTime").value="";}
+function renderTimeSlots(){
+  var dt=document.getElementById("addDate").value;
+  var cont=document.getElementById("addTimeSlots");
+  if(!dt||!cont)return;
+  var h="";
+  for(var hh=11;hh<19;hh++){
+    for(var mm=0;mm<60;mm+=30){
+      var ti=String(hh).padStart(2,"0")+":"+String(mm).padStart(2,"0");
+      var taken=BK.some(function(b){return b.date===dt&&b.time===ti});
+      if(taken){
+        h+="<div class='ts-slot ts-taken'>"+ti+"</div>";
+      }else{
+        h+="<div class='ts-slot ts-free' onclick=\"selectSlot(this,'"+ti+"')\">"+ti+"</div>";
+      }
+    }
+  }
+  cont.innerHTML=h;
+}
+function selectSlot(el,ti){
+  document.getElementById("addTime").value=ti;
+  var x=document.getElementById("addTimeSlots").children;
+  for(var i=0;i<x.length;i++){x[i].style.borderColor="#ddd";x[i].style.background="#fff"};
+  el.style.borderColor="#111";el.style.background="#eee";
+}
 function saveNewRecord(){
   var dt=document.getElementById('addDate').value;
   var tm=document.getElementById('addTime').value;
