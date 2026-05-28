@@ -260,11 +260,18 @@ function openDet(id){
     }
   }
 document.getElementById("detBody").innerHTML=h;
-  var a="";
-  a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px\" onclick=\"setStat(\u0027"+b.id+"\u0027,\u0027confirmed\u0027);closeDet()\"> Подтвердить</button>";
-  a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px\" onclick=\"openWorkForm(\u0027"+b.id+"\u0027)\"> Выполнена</button>";
-  a+="<button class=\"btn-grad-del\" style=\"flex:1;padding:10px;font-size:13px\" onclick=\"setStat(\u0027"+b.id+"\u0027,\u0027cancelled\u0027);closeDet()\"> Отменить</button>";
-  document.getElementById("detActions").innerHTML=a;
+    var a="";
+  if(st==='new'){
+    a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px\" onclick=\"setStat(\u0027"+b.id+"\u0027,\u0027confirmed\u0027);closeDet()\"> \u041f\u043e\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044c</button>";
+    a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px\" onclick=\"openWorkForm(\u0027"+b.id+"\u0027)\"> \u0412\u044b\u043f\u043e\u043b\u043d\u0435\u043d\u0430</button>";
+    a+="<button class=\"btn-grad-del\" style=\"flex:1;padding:10px;font-size:13px\" onclick=\"setStat(\u0027"+b.id+"\u0027,\u0027cancelled\u0027);closeDet()\"> \u041e\u0442\u043c\u0435\u043d\u0438\u0442\u044c</button>";
+  }else if(st==='confirmed'){
+    a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px\" onclick=\"openWorkForm(\u0027"+b.id+"\u0027)\"> \u0412\u044b\u043f\u043e\u043b\u043d\u0435\u043d\u0430</button>";
+    a+="<button class=\"btn-grad-del\" style=\"flex:1;padding:10px;font-size:13px\" onclick=\"setStat(\u0027"+b.id+"\u0027,\u0027cancelled\u0027);closeDet()\"> \u041e\u0442\u043c\u0435\u043d\u0438\u0442\u044c</button>";
+  }else if(st==='completed'&&b.workDone){
+    a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px\" onclick=\"editWork(\u0027"+b.id+"\u0027)\"> \u270f \u0420\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u0442\u044c</button>";
+  }
+document.getElementById("detActions").innerHTML=a;
   document.getElementById("detailModal").classList.add("active");
 }function closeDet(){document.getElementById('detailModal').classList.remove('active')}
 function setStat(id,st){try{var d=firebase.firestore();d.collection('leads').doc(id).update({status:st,updatedAt:new Date().toISOString()}).catch(function(){});d.collection('galaxymoto_bookings').doc(id).update({status:st,updatedAt:new Date().toISOString()}).catch(function(){})}catch(e){}}
