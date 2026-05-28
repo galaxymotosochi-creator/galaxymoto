@@ -2724,7 +2724,7 @@
 
 <!-- ====== СЕРВИСНЫЕ КАРТЫ ====== -->
 <style>
-  .sc-section{max-width:1200px;margin:0 auto;padding:1.2rem 1.5rem 1.5rem;position:relative;display:none}
+  .sc-section{max-width:1200px;margin:0 auto;padding:1.2rem 1.5rem 1.5rem;position:relative}
   .sc-header{text-align:center;margin-bottom:.8rem}
   .sc-header h2{font-size:1rem;font-weight:700;color:#111;margin:0 0 .2rem}
   .sc-header p{font-size:.8rem;color:#888;margin:0}
@@ -2864,59 +2864,40 @@
 
 <script>
 (function(){
-  // Сначала вставляем секцию под календарём сервиса
-  function insertSection() {
-    var sec = document.getElementById('serviceCardsSection');
-    if (!sec) return;
-    var sb = document.getElementById('service-booking');
-    if (sb && sb.parentNode) {
-      sb.parentNode.insertBefore(sec, sb.nextSibling);
-      sec.style.display = '';
-    } else {
-      setTimeout(insertSection, 300);
-      return;
-    }
-    // Carousel logic
-    var track = document.getElementById('scTrack');
-    var dots = document.querySelectorAll('.sc-dot');
-    var prev = document.getElementById('scPrev');
-    var next = document.getElementById('scNext');
-    if (!track) return;
+  var track = document.getElementById('scTrack');
+  var dots = document.querySelectorAll('.sc-dot');
+  var prev = document.getElementById('scPrev');
+  var next = document.getElementById('scNext');
+  if (!track) return;
 
-    function updateNav() {
-      var scrollLeft = track.scrollLeft;
-      var maxScroll = track.scrollWidth - track.clientWidth;
-      prev.disabled = scrollLeft <= 5;
-      next.disabled = scrollLeft >= maxScroll - 5;
-      var cardW = track.querySelector('.sc-card').offsetWidth + 10;
-      var idx = Math.round(scrollLeft / cardW);
-      dots.forEach(function(d, i) {
-        d.classList.toggle('active', i === idx);
-      });
-    }
-
-    window.scScroll = function(dir) {
-      var cardW = track.querySelector('.sc-card').offsetWidth + 10;
-      track.scrollBy({ left: cardW * dir, behavior: 'smooth' });
-      setTimeout(updateNav, 350);
-    };
-
-    window.scGo = function(idx) {
-      var cardW = track.querySelector('.sc-card').offsetWidth + 10;
-      track.scrollTo({ left: cardW * idx, behavior: 'smooth' });
-      setTimeout(updateNav, 350);
-    };
-
-    track.addEventListener('scroll', updateNav);
-    track.addEventListener('scrollend', updateNav);
-    setTimeout(updateNav, 500);
-    window.addEventListener('resize', updateNav);
+  function updateNav() {
+    var scrollLeft = track.scrollLeft;
+    var maxScroll = track.scrollWidth - track.clientWidth;
+    prev.disabled = scrollLeft <= 5;
+    next.disabled = scrollLeft >= maxScroll - 5;
+    var cardW = track.querySelector('.sc-card').offsetWidth + 10;
+    var idx = Math.round(scrollLeft / cardW);
+    dots.forEach(function(d, i) {
+      d.classList.toggle('active', i === idx);
+    });
   }
 
-  // Ждём когда React отрендерит
-  setTimeout(insertSection, 800);
-  setTimeout(insertSection, 1500);
-  setTimeout(insertSection, 2500);
+  window.scScroll = function(dir) {
+    var cardW = track.querySelector('.sc-card').offsetWidth + 10;
+    track.scrollBy({ left: cardW * dir, behavior: 'smooth' });
+    setTimeout(updateNav, 350);
+  };
+
+  window.scGo = function(idx) {
+    var cardW = track.querySelector('.sc-card').offsetWidth + 10;
+    track.scrollTo({ left: cardW * idx, behavior: 'smooth' });
+    setTimeout(updateNav, 350);
+  };
+
+  track.addEventListener('scroll', updateNav);
+  track.addEventListener('scrollend', updateNav);
+  setTimeout(updateNav, 500);
+  window.addEventListener('resize', updateNav);
 })();
 </script>
 
