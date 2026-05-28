@@ -223,6 +223,19 @@ function openDet(id){
   h+="<label style=\"font-size:12px;color:#888;display:block;margin-bottom:3px\">Статус</label>";
   h+="<div style=\"width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;background:#f9f9f9\"><span class=\"booking-status status-"+st+"\">"+SL[st]+"</span></div>";
   h+="</div>";
+  if(b.workDone && b.workDone.items && b.workDone.items.length > 0){
+    h+="<div style=\"margin-top:12px;padding-top:10px;border-top:2px solid #ddd\">";
+    h+="<div style=\"font-size:12px;color:#888;font-weight:600;margin-bottom:6px;text-transform:uppercase\">Выполненные работы</div>";
+    if(b.workDone.mileage) h+="<div style=\"font-size:12px;color:#888;margin-bottom:6px\">Пробег: <strong style=\"color:#333\">"+b.workDone.mileage+" км</strong></div>";
+    h+="<table style=\"width:100%;border-collapse:collapse;font-size:12px\">";
+    for(var wi=0;wi<b.workDone.items.length;wi++){
+      var w = b.workDone.items[wi];
+      if(w.name||w.price) h+="<tr><td style=\"padding:4px 0;color:#333;border-bottom:1px solid #f0f0f0\">"+esc(w.name)+"</td><td style=\"padding:4px 0;color:#111;font-weight:600;text-align:right;border-bottom:1px solid #f0f0f0\">"+w.price+" руб</td></tr>";
+    }
+    h+="<tr><td style=\"padding:6px 0;font-weight:700;color:#111;border-top:2px solid #333\">Итого:</td><td style=\"padding:6px 0;font-weight:700;color:#111;text-align:right;border-top:2px solid #333\">"+b.workDone.total+" руб</td></tr>";
+    h+="</table></div>";
+  }
+
   document.getElementById("detBody").innerHTML=h;
   var a="";
   a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px\" onclick=\"setStat(\u0027"+b.id+"\u0027,\u0027confirmed\u0027);closeDet()\"> Подтвердить</button>";
