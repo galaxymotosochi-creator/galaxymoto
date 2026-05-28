@@ -2724,50 +2724,52 @@
 
 <!-- ====== СЕРВИСНЫЕ КАРТЫ ====== -->
 <style>
-  .sc-section{max-width:1200px;margin:0 auto;padding:2.5rem 1.5rem 1.5rem;position:relative}
-  .sc-header{text-align:center;margin-bottom:1.2rem}
-  .sc-header h2{font-size:1.3rem;font-weight:700;color:#111;margin:0 0 .3rem}
-  .sc-header p{font-size:.85rem;color:#888;margin:0}
+  .sc-section{max-width:1200px;margin:0 auto;padding:1.2rem 1.5rem 1.5rem;position:relative;display:none}
+  .sc-header{text-align:center;margin-bottom:.8rem}
+  .sc-header h2{font-size:1rem;font-weight:700;color:#111;margin:0 0 .2rem}
+  .sc-header p{font-size:.8rem;color:#888;margin:0}
   .sc-wrap{position:relative;overflow:hidden;margin:0 -4px}
-  .sc-track{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:4px}
+  .sc-track{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:4px}
   .sc-track::-webkit-scrollbar{display:none}
-  .sc-card{flex:0 0 calc(33.333% - 10px);min-width:280px;scroll-snap-align:start;background:#fff;border-radius:16px;padding:1.5rem;border:1.5px solid #eee;position:relative;transition:all .25s;display:flex;flex-direction:column}
-  .sc-card:hover{border-color:#ddd;box-shadow:0 8px 24px rgba(0,0,0,.06)}
-  .sc-card--highlight{border-color:#111;box-shadow:0 4px 16px rgba(0,0,0,.08)}
-  .sc-card--highlight:hover{border-color:#111;box-shadow:0 8px 28px rgba(0,0,0,.1)}
-  .sc-badge{position:absolute;top:-1px;left:50%;transform:translateX(-50%);padding:4px 16px;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;border-radius:0 0 8px 8px;color:#fff;background:#111}
+  .sc-card{flex:0 0 calc(33.333% - 10px);min-width:250px;scroll-snap-align:start;background:#fff;border-radius:14px;padding:1rem 1rem 1rem;border:1.5px solid #eee;position:relative;transition:all .25s;display:flex;flex-direction:column}
+  .sc-card:hover{border-color:#ddd;box-shadow:0 6px 20px rgba(0,0,0,.05)}
+  .sc-card--highlight{border-color:#111;box-shadow:0 4px 12px rgba(0,0,0,.06)}
+  .sc-card--highlight:hover{border-color:#111;box-shadow:0 6px 20px rgba(0,0,0,.08)}
+  .sc-badge{position:absolute;top:-1px;left:50%;transform:translateX(-50%);padding:3px 14px;font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;border-radius:0 0 8px 8px;color:#fff;background:#111}
   .sc-badge--gold{background:linear-gradient(135deg,#c9a84c,#b8962e);color:#fff}
-  .sc-card-title{font-size:1.1rem;font-weight:700;color:#111;margin:0 0 2px}
-  .sc-card-sub{font-size:.8rem;color:#999;margin:0 0 8px}
-  .sc-card-price{font-size:1.5rem;font-weight:800;color:#111;margin:0 0 2px;line-height:1.2}
-  .sc-card-price-sub{font-size:.78rem;color:#888;margin:0 0 12px;font-weight:400}
+  .sc-card-title{font-size:.95rem;font-weight:700;color:#111;margin:0 0 1px}
+  .sc-card-sub{font-size:.75rem;color:#999;margin:0 0 4px}
+  .sc-card-price{font-size:1.25rem;font-weight:800;color:#111;margin:0 0 1px;line-height:1.2}
+  .sc-card-price-sub{font-size:.72rem;color:#888;margin:0 0 8px;font-weight:400}
   .sc-card-price-sub span{color:#2e7d32;font-weight:600}
-  .sc-divider{height:1px;background:#eee;margin:8px 0 10px}
+  .sc-divider{height:1px;background:#eee;margin:4px 0 6px}
   .sc-features{list-style:none;padding:0;margin:0;flex:1}
-  .sc-features li{font-size:.82rem;color:#444;padding:5px 0;padding-left:20px;position:relative;line-height:1.4}
-  .sc-features li::before{content:"✓";position:absolute;left:0;color:#2e7d32;font-weight:700;font-size:.9rem}
-  .sc-card-cta{display:block;text-align:center;padding:10px;margin-top:14px;font-size:.85rem;font-weight:600;font-family:Inter,sans-serif;color:#fff;background:#111;border:none;border-radius:10px;cursor:pointer;transition:all .2s;text-decoration:none}
+  .sc-features li{font-size:.75rem;color:#444;padding:3px 0;padding-left:18px;position:relative;line-height:1.35}
+  .sc-features li::before{content:"✓";position:absolute;left:0;color:#2e7d32;font-weight:700;font-size:.8rem}
+  .sc-card-cta{display:block;text-align:center;padding:8px;margin-top:10px;font-size:.8rem;font-weight:600;font-family:Inter,sans-serif;color:#fff;background:#111;border:none;border-radius:8px;cursor:pointer;transition:all .2s;text-decoration:none}
   .sc-card-cta:hover{background:#333}
   .sc-card-cta--gold{background:linear-gradient(135deg,#c9a84c,#b8962e)}
   .sc-card-cta--gold:hover{background:linear-gradient(135deg,#d4b55a,#c4a43e)}
-  .sc-nav{display:flex;justify-content:center;align-items:center;gap:12px;margin-top:1rem}
-  .sc-nav-btn{width:36px;height:36px;border-radius:50%;border:1.5px solid #ddd;background:#fff;color:#333;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
+  .sc-card-desc{font-size:.68rem;color:#999;line-height:1.35;margin-top:6px}
+  .sc-nav{display:flex;justify-content:center;align-items:center;gap:10px;margin-top:.6rem}
+  .sc-nav-btn{width:30px;height:30px;border-radius:50%;border:1.5px solid #ddd;background:#fff;color:#333;font-size:.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
   .sc-nav-btn:hover{background:#f0f0f0;border-color:#999}
   .sc-nav-btn:disabled{opacity:.3;cursor:default;pointer-events:none}
-  .sc-dots{display:flex;gap:6px}
-  .sc-dot{width:8px;height:8px;border-radius:50%;background:#ddd;cursor:pointer;transition:all .2s;border:none;padding:0}
-  .sc-dot.active{background:#111;width:22px;border-radius:4px}
-  .sc-footer-note{text-align:center;margin-top:1rem;font-size:.78rem;color:#999}
+  .sc-dots{display:flex;gap:5px}
+  .sc-dot{width:6px;height:6px;border-radius:50%;background:#ddd;cursor:pointer;transition:all .2s;border:none;padding:0}
+  .sc-dot.active{background:#111;width:18px;border-radius:3px}
+  .sc-footer-note{text-align:center;margin-top:.6rem;font-size:.72rem;color:#999}
   .sc-footer-note a{color:#1983dd;font-weight:500;text-decoration:none}
   .sc-footer-note a:hover{text-decoration:underline}
   @media(max-width:1023px){
-    .sc-card{flex:0 0 calc(50% - 8px)}
+    .sc-card{flex:0 0 calc(50% - 8px);min-width:220px}
   }
   @media(max-width:640px){
-    .sc-card{flex:0 0 calc(100% - 8px);min-width:0}
-    .sc-section{padding:2rem 1rem 1.5rem}
-    .sc-header h2{font-size:1.1rem}
-    .sc-card-price{font-size:1.3rem}
+    .sc-card{flex:0 0 calc(100% - 10px);min-width:0}
+    .sc-section{padding:1rem 1rem 1rem}
+    .sc-header h2{font-size:.9rem}
+    .sc-card-price{font-size:1.1rem}
+    .sc-card{padding:.85rem .85rem .85rem}
   }
 </style>
 
@@ -2790,11 +2792,11 @@
           <li>1 бесплатная диагностика в месяц</li>
           <li>Скидка 5% на запчасти и работы</li>
           <li>Приоритетная очередь</li>
-          <li>1 бесплатная замена масла (двигатель/редуктор)</li>
-          <li>1 бесплатная мойка после ТО/ремонта</li>
-          <li>Скидка 50% на мотоэвакуатор (1 раз)</li>
+          <li>1 бесплатная замена масла</li>
+          <li>1 бесплатная мойка после ТО</li>
+          <li>Скидка 50% на мотоэвакуатор</li>
         </ul>
-        <div style="margin-top:10px;font-size:.72rem;color:#999;line-height:1.4">Для начинающих райдеров и тех, кто хочет протестировать сервис</div>
+        <div class="sc-card-desc">Для начинающих райдеров</div>
         <a class="sc-card-cta" href="javascript:void(0)" onclick="openServ()">Записаться</a>
       </div>
 
@@ -2811,12 +2813,12 @@
           <li>Скидка 10% на запчасти и работы</li>
           <li>Приоритетное обслуживание + срочный ремонт</li>
           <li>2 бесплатные замены масла</li>
-          <li>2 бесплатные мойки после ТО/ремонта</li>
-          <li>2 бесплатные эвакуации (до 30 км от Сочи)</li>
-          <li>1 выезд мастера на место поломки (в черте города)</li>
+          <li>2 бесплатные мойки после ТО</li>
+          <li>2 бесплатные эвакуации (до 30 км)</li>
+          <li>1 выезд мастера на место</li>
           <li>Хранение скутера 2 недели бесплатно</li>
         </ul>
-        <div style="margin-top:10px;font-size:.72rem;color:#999;line-height:1.4">Для активных райдеров — идеальный баланс цены и защиты</div>
+        <div class="sc-card-desc">Для активных райдеров</div>
         <a class="sc-card-cta sc-card-cta--gold" href="javascript:void(0)" onclick="openServ()">Выбрать</a>
       </div>
 
@@ -2833,13 +2835,13 @@
           <li>Максимальный приоритет в очереди</li>
           <li>4 бесплатные замены масла</li>
           <li>4 бесплатные мойки</li>
-          <li>4 бесплатные эвакуации (до 50 км от Сочи)</li>
+          <li>4 бесплатные эвакуации (до 50 км)</li>
           <li>2 выезда мастера на место</li>
           <li>Хранение скутера 1 месяц бесплатно</li>
-          <li>Подарок: набор (цепь + фирменный баф)</li>
-          <li>Накопительные баллы (1 ₽ = 1 балл)</li>
+          <li>Подарок (цепь + фирменный баф)</li>
+          <li>Накопительные баллы</li>
         </ul>
-        <div style="margin-top:10px;font-size:.72rem;color:#999;line-height:1.4">Для тех, кто ценит время, комфорт и максимальную безопасность</div>
+        <div class="sc-card-desc">Максимум заботы и комфорта</div>
         <a class="sc-card-cta" href="javascript:void(0)" onclick="openServ()">Выбрать</a>
       </div>
     </div>
@@ -2862,42 +2864,62 @@
 
 <script>
 (function(){
-  var track = document.getElementById('scTrack');
-  var dots = document.querySelectorAll('.sc-dot');
-  var prev = document.getElementById('scPrev');
-  var next = document.getElementById('scNext');
-  if (!track) return;
+  // Сначала вставляем секцию под календарём сервиса
+  function insertSection() {
+    var sec = document.getElementById('serviceCardsSection');
+    if (!sec) return;
+    var sb = document.getElementById('service-booking');
+    if (sb && sb.parentNode) {
+      sb.parentNode.insertBefore(sec, sb.nextSibling);
+      sec.style.display = '';
+    } else {
+      setTimeout(insertSection, 300);
+      return;
+    }
+    // Carousel logic
+    var track = document.getElementById('scTrack');
+    var dots = document.querySelectorAll('.sc-dot');
+    var prev = document.getElementById('scPrev');
+    var next = document.getElementById('scNext');
+    if (!track) return;
 
-  function updateNav() {
-    var scrollLeft = track.scrollLeft;
-    var maxScroll = track.scrollWidth - track.clientWidth;
-    prev.disabled = scrollLeft <= 5;
-    next.disabled = scrollLeft >= maxScroll - 5;
-    var cardW = track.querySelector('.sc-card').offsetWidth + 12;
-    var idx = Math.round(scrollLeft / cardW);
-    dots.forEach(function(d, i) {
-      d.classList.toggle('active', i === idx);
-    });
+    function updateNav() {
+      var scrollLeft = track.scrollLeft;
+      var maxScroll = track.scrollWidth - track.clientWidth;
+      prev.disabled = scrollLeft <= 5;
+      next.disabled = scrollLeft >= maxScroll - 5;
+      var cardW = track.querySelector('.sc-card').offsetWidth + 10;
+      var idx = Math.round(scrollLeft / cardW);
+      dots.forEach(function(d, i) {
+        d.classList.toggle('active', i === idx);
+      });
+    }
+
+    window.scScroll = function(dir) {
+      var cardW = track.querySelector('.sc-card').offsetWidth + 10;
+      track.scrollBy({ left: cardW * dir, behavior: 'smooth' });
+      setTimeout(updateNav, 350);
+    };
+
+    window.scGo = function(idx) {
+      var cardW = track.querySelector('.sc-card').offsetWidth + 10;
+      track.scrollTo({ left: cardW * idx, behavior: 'smooth' });
+      setTimeout(updateNav, 350);
+    };
+
+    track.addEventListener('scroll', updateNav);
+    track.addEventListener('scrollend', updateNav);
+    setTimeout(updateNav, 500);
+    window.addEventListener('resize', updateNav);
   }
 
-  window.scScroll = function(dir) {
-    var cardW = track.querySelector('.sc-card').offsetWidth + 12;
-    track.scrollBy({ left: cardW * dir, behavior: 'smooth' });
-    setTimeout(updateNav, 350);
-  };
-
-  window.scGo = function(idx) {
-    var cardW = track.querySelector('.sc-card').offsetWidth + 12;
-    track.scrollTo({ left: cardW * idx, behavior: 'smooth' });
-    setTimeout(updateNav, 350);
-  };
-
-  track.addEventListener('scroll', updateNav);
-  track.addEventListener('scrollend', updateNav);
-  setTimeout(updateNav, 500);
-  window.addEventListener('resize', updateNav);
+  // Ждём когда React отрендерит
+  setTimeout(insertSection, 800);
+  setTimeout(insertSection, 1500);
+  setTimeout(insertSection, 2500);
 })();
 </script>
+
 
     <div class="serv-overlay" id="servSuccessOverlay" style="z-index:10000">
       <div class="serv-modal" style="max-width:440px;padding:2rem 1.5rem;border-radius:16px;text-align:center">
