@@ -311,10 +311,12 @@ function saveNewRecord(){
   var id=dt+'_'+(tm?tm.replace(':','-'):'00-00');
   var data={date:dt,time:tm||'',name:nm,phone:ph||'',model:md||'',notes:nt||'',status:'new',createdAt:new Date().toISOString()};
   var d=firebase.firestore();
-  d.collection('galaxymoto_bookings').doc(id).set(data).then(function(){closeAddForm()}).catch(function(e){alert('Ошибка')})
+  d.collection('galaxymoto_bookings').doc(id).set(data).then(function(){closeAddForm();sendAdminTG(nm,ph,dt,tm,md)}).catch(function(e){alert('Ошибка')})
 }
-
-
+function sendAdminTG(nm,ph,dt,tm,md){
+  var msg='Новая запись на сервис через админ панель!\n\n'+nm+'\n'+ph+'\n'+dt+'\n'+tm+'\n'+(md||'-');
+  fetch('https://api.telegram.org/bot7471473926:AAE_kyz1Qtb1J8Dddqk1aaxzBGfMQ73lSMM/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:5368408796,text:msg})}).catch(function(){})
+}
 var workBookingId = "";
 function openWorkForm(id){
   workBookingId = id;
