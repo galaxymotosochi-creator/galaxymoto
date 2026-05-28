@@ -130,11 +130,11 @@ tr.done td:not(:last-child){text-decoration:line-through!important;text-decorati
     <h3 style="margin-bottom:12px">Новая запись</h3>
     <div style="margin-bottom:10px">
       <label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Дата</label>
-      <input type="date" id="addDate" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box">
+      <input type="date" id="addDate" onchange="renderTimeSlots()" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box">
     </div>
     <div style="margin-bottom:10px">
-      <label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Время</label>
-      <input type="time" id="addTime" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box">
+      <label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Время</la:repeat(4,1fr);gap:6px"></div>
+      <input type="hidden" id="addTime" value="">
     </div>
     <div style="margin-bottom:10px">
       <label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Имя *</label>
@@ -188,8 +188,33 @@ function setStat(id,st){try{var d=firebase.firestore();d.collection('leads').doc
 function delRec(id){try{var d=firebase.firestore();d.collection('leads').doc(id).delete().catch(function(){});d.collection('galaxymoto_bookings').doc(id).delete().catch(function(){})}catch(e){}}
 
 
-function openAddForm(){document.getElementById('addModal').classList.add('active')}
-function closeAddForm(){document.getElementById('addModal').classList.remove('active')}
+function openAddForm(){
+  document.getElementById('addModal').classList.add('active');
+  document.getElementById('addDate').valueAsDate=new Date();
+  renderTimeSlots();
+}
+function closeAddForm(){
+  document.getElementById('addModal').classList.remove('active');
+  document.getElementById('addTime').value='';
+}
+function renderTimeSlots(){
+  var dt=document.getElementById('addDate').value;
+  var cont=document.getElementById('addTimeSlots');
+  if(!dt||!cont)return;
+  var h='';
+  for(var hh=11;hh<19;hh++){
+    for(var mm=0;mm<60;mm+=30){
+      var ti=String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0');
+      var taken=BK.some(function(b){return b.date===dt&&b.time===ti});
+      var cls='';
+      if(taken)cls=' style="color:#ccc;border-color:#eee;background:#f9f9f9;cursor:not-allowed"';
+      else cls=' style="cursor:pointer" onclick="document.getElementById(\'addTimeSlot\').value=\"'+ti+'\";document.getElementById(\'addTime\').value=\"'+ti+'\";var els=cont.querySelectorAll(\'div\');els.forEach(function(e){e.style.borderColor=\"#ddd\"});this.style.borderColor=\"#111\""';
+      h+='<div'+cls+' style="text-align:center;padding:8px 4px;font-size:13px;font-weight:500;color:#333;border:1.5px solid #ddd;border-radius:8px;transition:all.15s">'+ti+'</div>';
+    }
+  }
+  cont.innerHTML=h;
+  document.getElementById('addTime').value='';
+}
 function saveNewRecord(){
   var dt=document.getElementById('addDate').value;
   var tm=document.getElementById('addTime').value;
