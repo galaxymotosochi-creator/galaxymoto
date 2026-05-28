@@ -197,24 +197,7 @@ function closeAddForm(){
   document.getElementById('addModal').classList.remove('active');
   document.getElementById('addTime').value='';
 }
-function renderTimeSlots(){
-  var dt=document.getElementById('addDate').value;
-  var cont=document.getElementById('addTimeSlots');
-  if(!dt||!cont)return;
-  var h='';
-  for(var hh=11;hh<19;hh++){
-    for(var mm=0;mm<60;mm+=30){
-      var ti=String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0');
-      var taken=BK.some(function(b){return b.date===dt&&b.time===ti});
-      var cls='';
-      if(taken)cls=' style="color:#ccc;border:1px solid #eee;background:#f9f9f9;cursor:not-allowed"';
-      else cls=' style="cursor:pointer" onclick="document.getElementById(\'addTimeSlot\').value=\"'+ti+'\";document.getElementById(\'addTime\').value=\"'+ti+'\";var els=cont.querySelectorAll(\'div\');els.forEach(function(e){e.style.borderColor=\"#ddd\"});this.style.borderColor=\"#111\""';
-      h+='<div'+cls+' style="text-align:center;padding:8px 4px;font-size:13px;font-weight:500;color:#333;border:1px solid #ddd;border-radius:8px;transition:all.15s">'+ti+'</div>';
-    }
-  }
-  cont.innerHTML=h;
-  document.getElementById('addTime').value='';
-}
+function renderTimeSlots(){var dt=document.getElementById("addDate").value;var cont=document.getElementById("addTimeSlots");if(!dt||!cont)return;var h="";for(var hh=11;hh<19;hh++){for(var mm=0;mm<60;mm+=30){var ti=String(hh).padStart(2,"0")+":"+String(mm).padStart(2,"0");var taken=BK.some(function(b){return b.date===dt&&b.time===ti});if(taken){h+="<div style='text-align:center;padding:8px 4px;font-size:13px;font-weight:500;color:#aaa;border:1px solid #ddd;border-radius:8px;background:#f5f5f5;cursor:default'>"+ti+"</div>"}else{h+="<div onclick='document.getElementById(\"addTime\").value=\"+ti+"\";for(var i=0;i<cont.children.length;i++){cont.children[i].style.borderColor=\"#ddd\";cont.children[i].style.background=\"#fff\"}this.style.borderColor=\"#111\";this.style.background=\"#eee\"' style='text-align:center;padding:8px 4px;font-size:13px;font-weight:500;color:#333;border:1px solid #ddd;border-radius:8px;cursor:pointer'>"+ti+"</div>"}}}cont.innerHTML=h;document.getElementById("addTime").value="";}
 function saveNewRecord(){
   var dt=document.getElementById('addDate').value;
   var tm=document.getElementById('addTime').value;
