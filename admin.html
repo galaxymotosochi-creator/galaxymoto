@@ -207,9 +207,9 @@ function renderTimeSlots(){
       var ti=String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0');
       var taken=BK.some(function(b){return b.date===dt&&b.time===ti});
       var cls='';
-      if(taken)cls=' style="color:#ccc;border-color:#eee;background:#f9f9f9;cursor:not-allowed"';
+      if(taken)cls=' style="color:#ccc;border:1px solid #eee;background:#f9f9f9;cursor:not-allowed"';
       else cls=' style="cursor:pointer" onclick="document.getElementById(\'addTimeSlot\').value=\"'+ti+'\";document.getElementById(\'addTime\').value=\"'+ti+'\";var els=cont.querySelectorAll(\'div\');els.forEach(function(e){e.style.borderColor=\"#ddd\"});this.style.borderColor=\"#111\""';
-      h+='<div'+cls+' style="text-align:center;padding:8px 4px;font-size:13px;font-weight:500;color:#333;border:1.5px solid #ddd;border-radius:8px;transition:all.15s">'+ti+'</div>';
+      h+='<div'+cls+' style="text-align:center;padding:8px 4px;font-size:13px;font-weight:500;color:#333;border:1px solid #ddd;border-radius:8px;transition:all.15s">'+ti+'</div>';
     }
   }
   cont.innerHTML=h;
