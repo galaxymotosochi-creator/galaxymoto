@@ -225,9 +225,9 @@ function openDet(id){
   h+="</div>";
   if(b.workDone && b.workDone.items && b.workDone.items.length > 0){
     h+="<div style=\"margin-top:12px;padding-top:10px;border-top:2px solid #ddd\">";
-    h+="<div style=\"font-size:12px;color:#888;font-weight:600;margin-bottom:6px;text-transform:uppercase\">Выполненные работы</div>";
-    if(b.workDone.mileage) h+="<div style=\"font-size:12px;color:#888;margin-bottom:6px\">Пробег: <strong style=\"color:#333\">"+b.workDone.mileage+" км</strong></div>";
-    h+="<table style=\"width:100%;border-collapse:collapse;font-size:12px\">";
+    h+="<div style=\"font-size:13px;color:#555;font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px\">Выполненные работы</div>";
+    if(b.workDone.mileage) h+="<div style=\"font-size:13px;color:#888;margin-bottom:8px\">Пробег: <strong style=\"color:#333\">"+b.workDone.mileage+" км</strong></div>";
+    h+="<table style=\"width:100%;border-collapse:collapse;font-size:13px\">";
     for(var wi=0;wi<b.workDone.items.length;wi++){
       var w = b.workDone.items[wi];
       if(w.name||w.price) h+="<tr><td style=\"padding:4px 0;color:#333;border-bottom:1px solid #f0f0f0\">"+esc(w.name)+"</td><td style=\"padding:4px 0;color:#111;font-weight:600;text-align:right;border-bottom:1px solid #f0f0f0\">"+w.price+" руб</td></tr>";
@@ -242,18 +242,18 @@ function openDet(id){
     if(prev.length>0){
       prev.sort(function(a,b){return a.date.localeCompare(b.date)});
       h+="<div style=\"margin-top:12px;padding-top:10px;border-top:2px solid #ddd\">";
-      h+="<div style=\"font-size:12px;color:#888;font-weight:600;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px\">\u0418\u0441\u0442\u043e\u0440\u0438\u044f \u043f\u043e\u0441\u0435\u0449\u0435\u043d\u0438\u0439</div>";
+      h+="<div style=\"font-size:13px;color:#555;font-weight:700;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px\">\u0418\u0441\u0442\u043e\u0440\u0438\u044f \u043f\u043e\u0441\u0435\u0449\u0435\u043d\u0438\u0439</div>";
       h+="<div style=\"display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:4px 0\">";
       for(var pi=prev.length-1;pi>=0;pi--){
         var pv=prev[pi];
-        h+="<div style=\"flex:0 0 240px;scroll-snap-align:start;background:#fff;border:1.5px solid #eee;border-radius:10px;padding:12px;font-size:12px\">";
+        h+="<div style=\"flex:0 0 260px;scroll-snap-align:start;background:#fff;border:1.5px solid #eee;border-radius:12px;padding:14px;font-size:13px\">";
         h+="<div style=\"font-weight:700;color:#111;margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid #f0f0f0\">\u041f\u043e\u0441\u0435\u0449\u0435\u043d\u0438\u0435 \u2116"+(prev.length-pi)+" \u2014 "+pv.date.split("-").reverse().join(".")+"</div>";
         if(pv.workDone.mileage) h+="<div style=\"color:#888;margin-bottom:6px\">\u041f\u0440\u043e\u0431\u0435\u0433: <strong style=\"color:#333\">"+pv.workDone.mileage+" \u043a\u043c</strong></div>";
                 for(var wi=0;wi<pv.workDone.items.length;wi++){
           var w=pv.workDone.items[wi];
-          h+="<div style=\"display:flex;justify-content:space-between;font-size:11px;padding:3px 0;border-bottom:1px solid #f5f5f5\"><span style=\"color:#555\">"+esc(w.name)+"</span><span style=\"font-weight:600;color:#111\">"+w.price+" \u0440\u0443\u0431</span></div>";
+          h+="<div style=\"display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid #f0f0f0\"><span style=\"color:#555\">"+esc(w.name)+"</span><span style=\"font-weight:600;color:#111\">"+w.price+" \u0440\u0443\u0431</span></div>";
         }
-        h+="<div style=\"display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#111;margin-top:6px;padding-top:6px;border-top:2px solid #333\"><span>\u0418\u0442\u043e\u0433\u043e:</span><span>"+pv.workDone.total+" \u0440\u0443\u0431</span></div>";
+        h+="<div style=\"display:flex;justify-content:space-between;font-size:14px;font-weight:700;color:#111;margin-top:8px;padding-top:8px;border-top:2px solid #333\"><span>\u0418\u0442\u043e\u0433\u043e:</span><span>"+pv.workDone.total+" \u0440\u0443\u0431</span></div>";
         h+="</div>";
       }
       h+="</div></div>";
