@@ -194,14 +194,6 @@
 
 
 /* Серая рамка для секции календаря */
-#service-booking .section__title {
-  background: #f5f5f5;
-  border: 1px solid #e0e0e0;
-  border-radius: 10px;
-  padding: 10px 24px;
-  display: inline-block;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-}
 
 #service-booking {
   margin: 2rem 0;
