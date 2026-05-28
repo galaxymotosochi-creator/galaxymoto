@@ -2758,6 +2758,98 @@ window.scGo2 = function(idx) {
   var w = el.offsetWidth + 10;
   cards.scrollTo({ left: w * idx, behavior: 'smooth' });
 };
+
+window.openConsult = function() {
+  var overlay = document.getElementById('consultOverlay');
+  overlay.classList.add('active');
+  document.getElementById('consultForm').style.display = '';
+  document.getElementById('consultSuccess').style.display = 'none';
+};
+window.closeConsult = function() {
+  document.getElementById('consultOverlay').classList.remove('active');
+};
+
+window.submitConsult = function() {
+  var name = document.getElementById('consultName').value.trim();
+  var phone = document.getElementById('consultPhone').value.trim();
+  
+  if (!name || !phone) {
+    alert('Заполните имя и телефон');
+    return;
+  }
+  
+  var btn = document.getElementById('consultSubmitBtn');
+  if (btn) { btn.textContent = 'Отправка...'; btn.disabled = true; }
+  
+  var leadId = Date.now().toString(36) + Math.random().toString(36).substr(2,9);
+  var now = new Date().toISOString();
+  
+  var leadData = {
+    name: name,
+    phone: phone,
+    source: 'service_cards',
+    status: 'new',
+    message: 'Консультация по сервисным картам',
+    visitorId: localStorage.getItem('galaxy_visitor_id') || '',
+    createdAt: now,
+    updatedAt: now
+  };
+  
+  // Save to Firestore via API
+  fetch('/api/leads/' + leadId, {
+    method: 'PUT',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(leadData)
+  }).catch(function(){});
+  
+  // Send Telegram notification
+  var msg = '📋 ЗАЯВКА НА КОНСУЛЬТАЦИЮ\n';
+  msg += 'Сервисные карты GALAXY MOTO\n\n';
+  msg += '👤 ' + name + '\n';
+  msg += '📞 ' + phone + '\n';
+  
+  fetch('https://api.telegram.org/bot8897088321:AAFNTxJYvbyC8Q7zY4eUh33hvmH4cSQMzZw/sendMessage', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ chat_id: 5368408796, text: msg })
+  }).then(function(){
+    document.getElementById('consultForm').style.display = 'none';
+    document.getElementById('consultSuccess').style.display = '';
+  }).catch(function(){
+    alert('Ошибка отправки. Попробуйте позже.');
+    if (btn) { btn.textContent = 'Записаться'; btn.disabled = false; }
+  });
+};
 </script>
+
+<!-- Модалка консультации по сервисным картам -->
+<div class="serv-overlay" id="consultOverlay">
+  <div class="serv-modal" style="max-width:400px;padding:2rem;border-radius:16px">
+    <button class="serv-close" onclick="closeConsult()">&times;</button>
+    <!-- Форма -->
+    <div id="consultForm">
+      <p style="font-size:1.05rem;font-weight:700;color:#111;margin:0 0 4px;text-align:center">Консультация</p>
+      <p style="font-size:.85rem;color:#888;margin:0 0 1.2rem;text-align:center">По сервисным картам</p>
+      
+      <div style="margin-bottom:12px">
+        <input type="text" id="consultName" placeholder="Имя" style="width:100%;padding:12px 14px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:10px;color:#333;background:#fff;box-sizing:border-box;outline:none" onfocus="this.style.borderColor='#111'" onblur="this.style.borderColor='#ddd'">
+      </div>
+      <div style="margin-bottom:16px">
+        <input type="tel" id="consultPhone" placeholder="Номер телефона" style="width:100%;padding:12px 14px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:10px;color:#333;background:#fff;box-sizing:border-box;outline:none" onfocus="this.style.borderColor='#111'" onblur="this.style.borderColor='#ddd'">
+      </div>
+      
+      <button id="consultSubmitBtn" onclick="submitConsult()" style="width:100%;padding:12px;font-size:15px;font-weight:600;font-family:Inter,sans-serif;color:#fff;background:#111;border:none;border-radius:10px;cursor:pointer">Записаться</button>
+      
+      <p style="font-size:.72rem;color:#999;margin:12px 0 0;text-align:center">Нажимая кнопку, вы соглашаетесь с обработкой персональных данных</p>
+    </div>
+    <!-- Успех -->
+    <div id="consultSuccess" style="display:none;text-align:center;padding:1rem 0">
+      <p style="font-size:1.1rem;font-weight:600;color:#111;margin:0 0 8px">Спасибо!</p>
+      <p style="font-size:.9rem;color:#666;margin:0 0 20px;line-height:1.5">Мы свяжемся с вами<br>в ближайшее время</p>
+      <button onclick="closeConsult()" style="padding:10px 32px;font-size:14px;font-weight:600;font-family:Inter,sans-serif;color:#fff;background:#111;border:none;border-radius:10px;cursor:pointer">Хорошо</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
