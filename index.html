@@ -8,8 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script type="module" crossorigin src="assets/index-CguyBJZF.js?v=21"></script>
-    <link rel="stylesheet" crossorigin href="assets/index-CTYFC3_u.css?v=21">
+    <script type="module" crossorigin src="assets/index-CguyBJZF.js?v=22"></script>
+    <link rel="stylesheet" crossorigin href="assets/index-CTYFC3_u.css?v=22">
     <!-- Галерея-лайтбокс для фото домов -->
     <style>
       .gallery-overlay{display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.92);justify-content:center;align-items:center;flex-direction:column;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
@@ -1390,8 +1390,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script type="module" crossorigin src="assets/index-CguyBJZF.js?v=21"></script>
-    <link rel="stylesheet" crossorigin href="assets/index-CTYFC3_u.css?v=21">
+    <script type="module" crossorigin src="assets/index-CguyBJZF.js?v=22"></script>
+    <link rel="stylesheet" crossorigin href="assets/index-CTYFC3_u.css?v=22">
     <!-- Галерея-лайтбокс для фото домов -->
     <style>
       .gallery-overlay{display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.92);justify-content:center;align-items:center;flex-direction:column;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
@@ -2722,8 +2722,182 @@
 </script>
 
 
+<!-- ====== СЕРВИСНЫЕ КАРТЫ ====== -->
+<style>
+  .sc-section{max-width:1200px;margin:0 auto;padding:2.5rem 1.5rem 1.5rem;position:relative}
+  .sc-header{text-align:center;margin-bottom:1.2rem}
+  .sc-header h2{font-size:1.3rem;font-weight:700;color:#111;margin:0 0 .3rem}
+  .sc-header p{font-size:.85rem;color:#888;margin:0}
+  .sc-wrap{position:relative;overflow:hidden;margin:0 -4px}
+  .sc-track{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:4px}
+  .sc-track::-webkit-scrollbar{display:none}
+  .sc-card{flex:0 0 calc(33.333% - 10px);min-width:280px;scroll-snap-align:start;background:#fff;border-radius:16px;padding:1.5rem;border:1.5px solid #eee;position:relative;transition:all .25s;display:flex;flex-direction:column}
+  .sc-card:hover{border-color:#ddd;box-shadow:0 8px 24px rgba(0,0,0,.06)}
+  .sc-card--highlight{border-color:#111;box-shadow:0 4px 16px rgba(0,0,0,.08)}
+  .sc-card--highlight:hover{border-color:#111;box-shadow:0 8px 28px rgba(0,0,0,.1)}
+  .sc-badge{position:absolute;top:-1px;left:50%;transform:translateX(-50%);padding:4px 16px;font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;border-radius:0 0 8px 8px;color:#fff;background:#111}
+  .sc-badge--gold{background:linear-gradient(135deg,#c9a84c,#b8962e);color:#fff}
+  .sc-card-title{font-size:1.1rem;font-weight:700;color:#111;margin:0 0 2px}
+  .sc-card-sub{font-size:.8rem;color:#999;margin:0 0 8px}
+  .sc-card-price{font-size:1.5rem;font-weight:800;color:#111;margin:0 0 2px;line-height:1.2}
+  .sc-card-price-sub{font-size:.78rem;color:#888;margin:0 0 12px;font-weight:400}
+  .sc-card-price-sub span{color:#2e7d32;font-weight:600}
+  .sc-divider{height:1px;background:#eee;margin:8px 0 10px}
+  .sc-features{list-style:none;padding:0;margin:0;flex:1}
+  .sc-features li{font-size:.82rem;color:#444;padding:5px 0;padding-left:20px;position:relative;line-height:1.4}
+  .sc-features li::before{content:"✓";position:absolute;left:0;color:#2e7d32;font-weight:700;font-size:.9rem}
+  .sc-card-cta{display:block;text-align:center;padding:10px;margin-top:14px;font-size:.85rem;font-weight:600;font-family:Inter,sans-serif;color:#fff;background:#111;border:none;border-radius:10px;cursor:pointer;transition:all .2s;text-decoration:none}
+  .sc-card-cta:hover{background:#333}
+  .sc-card-cta--gold{background:linear-gradient(135deg,#c9a84c,#b8962e)}
+  .sc-card-cta--gold:hover{background:linear-gradient(135deg,#d4b55a,#c4a43e)}
+  .sc-nav{display:flex;justify-content:center;align-items:center;gap:12px;margin-top:1rem}
+  .sc-nav-btn{width:36px;height:36px;border-radius:50%;border:1.5px solid #ddd;background:#fff;color:#333;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
+  .sc-nav-btn:hover{background:#f0f0f0;border-color:#999}
+  .sc-nav-btn:disabled{opacity:.3;cursor:default;pointer-events:none}
+  .sc-dots{display:flex;gap:6px}
+  .sc-dot{width:8px;height:8px;border-radius:50%;background:#ddd;cursor:pointer;transition:all .2s;border:none;padding:0}
+  .sc-dot.active{background:#111;width:22px;border-radius:4px}
+  .sc-footer-note{text-align:center;margin-top:1rem;font-size:.78rem;color:#999}
+  .sc-footer-note a{color:#1983dd;font-weight:500;text-decoration:none}
+  .sc-footer-note a:hover{text-decoration:underline}
+  @media(max-width:1023px){
+    .sc-card{flex:0 0 calc(50% - 8px)}
+  }
+  @media(max-width:640px){
+    .sc-card{flex:0 0 calc(100% - 8px);min-width:0}
+    .sc-section{padding:2rem 1rem 1.5rem}
+    .sc-header h2{font-size:1.1rem}
+    .sc-card-price{font-size:1.3rem}
+  }
+</style>
 
+<section class="sc-section" id="serviceCardsSection">
+  <div class="sc-header">
+    <h2>СЕРВИСНЫЕ КАРТЫ</h2>
+    <p>Годовая забота о вашем скутере — выберите свой уровень</p>
+  </div>
 
+  <div class="sc-wrap">
+    <div class="sc-track" id="scTrack">
+      <!-- 1. Базовый -->
+      <div class="sc-card" data-index="0">
+        <div class="sc-card-title">Базовый</div>
+        <div class="sc-card-sub">3 месяца</div>
+        <div class="sc-card-price">6 500 ₽</div>
+        <div class="sc-card-price-sub">или <span>2 167 ₽/мес</span></div>
+        <div class="sc-divider"></div>
+        <ul class="sc-features">
+          <li>1 бесплатная диагностика в месяц</li>
+          <li>Скидка 5% на запчасти и работы</li>
+          <li>Приоритетная очередь</li>
+          <li>1 бесплатная замена масла (двигатель/редуктор)</li>
+          <li>1 бесплатная мойка после ТО/ремонта</li>
+          <li>Скидка 50% на мотоэвакуатор (1 раз)</li>
+        </ul>
+        <div style="margin-top:10px;font-size:.72rem;color:#999;line-height:1.4">Для начинающих райдеров и тех, кто хочет протестировать сервис</div>
+        <a class="sc-card-cta" href="javascript:void(0)" onclick="openServ()">Записаться</a>
+      </div>
+
+      <!-- 2. Оптимальный (рекомендуем) -->
+      <div class="sc-card sc-card--highlight" data-index="1">
+        <div class="sc-badge sc-badge--gold">Рекомендуем</div>
+        <div class="sc-card-title">Оптимальный</div>
+        <div class="sc-card-sub">6 месяцев</div>
+        <div class="sc-card-price">15 900 ₽</div>
+        <div class="sc-card-price-sub">или <span>2 650 ₽/мес</span>, экономия <span>3 600 ₽</span></div>
+        <div class="sc-divider"></div>
+        <ul class="sc-features">
+          <li>2 диагностики в месяц</li>
+          <li>Скидка 10% на запчасти и работы</li>
+          <li>Приоритетное обслуживание + срочный ремонт</li>
+          <li>2 бесплатные замены масла</li>
+          <li>2 бесплатные мойки после ТО/ремонта</li>
+          <li>2 бесплатные эвакуации (до 30 км от Сочи)</li>
+          <li>1 выезд мастера на место поломки (в черте города)</li>
+          <li>Хранение скутера 2 недели бесплатно</li>
+        </ul>
+        <div style="margin-top:10px;font-size:.72rem;color:#999;line-height:1.4">Для активных райдеров — идеальный баланс цены и защиты</div>
+        <a class="sc-card-cta sc-card-cta--gold" href="javascript:void(0)" onclick="openServ()">Выбрать</a>
+      </div>
+
+      <!-- 3. Премиум -->
+      <div class="sc-card" data-index="2">
+        <div class="sc-card-title">Премиум</div>
+        <div class="sc-card-sub">12 месяцев</div>
+        <div class="sc-card-price">26 500 ₽</div>
+        <div class="sc-card-price-sub">или <span>2 208 ₽/мес</span>, экономия <span>11 900 ₽</span></div>
+        <div class="sc-divider"></div>
+        <ul class="sc-features">
+          <li>Неограниченные диагностики</li>
+          <li>Скидка 15% на запчасти и работы</li>
+          <li>Максимальный приоритет в очереди</li>
+          <li>4 бесплатные замены масла</li>
+          <li>4 бесплатные мойки</li>
+          <li>4 бесплатные эвакуации (до 50 км от Сочи)</li>
+          <li>2 выезда мастера на место</li>
+          <li>Хранение скутера 1 месяц бесплатно</li>
+          <li>Подарок: набор (цепь + фирменный баф)</li>
+          <li>Накопительные баллы (1 ₽ = 1 балл)</li>
+        </ul>
+        <div style="margin-top:10px;font-size:.72rem;color:#999;line-height:1.4">Для тех, кто ценит время, комфорт и максимальную безопасность</div>
+        <a class="sc-card-cta" href="javascript:void(0)" onclick="openServ()">Выбрать</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="sc-nav">
+    <button class="sc-nav-btn" id="scPrev" onclick="scScroll(-1)">‹</button>
+    <div class="sc-dots" id="scDots">
+      <button class="sc-dot active" onclick="scGo(0)"></button>
+      <button class="sc-dot" onclick="scGo(1)"></button>
+      <button class="sc-dot" onclick="scGo(2)"></button>
+    </div>
+    <button class="sc-nav-btn" id="scNext" onclick="scScroll(1)">›</button>
+  </div>
+
+  <div class="sc-footer-note">
+    Не подходит? <a href="javascript:void(0)" onclick="openServ()">Запишитесь на бесплатную консультацию</a>
+  </div>
+</section>
+
+<script>
+(function(){
+  var track = document.getElementById('scTrack');
+  var dots = document.querySelectorAll('.sc-dot');
+  var prev = document.getElementById('scPrev');
+  var next = document.getElementById('scNext');
+  if (!track) return;
+
+  function updateNav() {
+    var scrollLeft = track.scrollLeft;
+    var maxScroll = track.scrollWidth - track.clientWidth;
+    prev.disabled = scrollLeft <= 5;
+    next.disabled = scrollLeft >= maxScroll - 5;
+    var cardW = track.querySelector('.sc-card').offsetWidth + 12;
+    var idx = Math.round(scrollLeft / cardW);
+    dots.forEach(function(d, i) {
+      d.classList.toggle('active', i === idx);
+    });
+  }
+
+  window.scScroll = function(dir) {
+    var cardW = track.querySelector('.sc-card').offsetWidth + 12;
+    track.scrollBy({ left: cardW * dir, behavior: 'smooth' });
+    setTimeout(updateNav, 350);
+  };
+
+  window.scGo = function(idx) {
+    var cardW = track.querySelector('.sc-card').offsetWidth + 12;
+    track.scrollTo({ left: cardW * idx, behavior: 'smooth' });
+    setTimeout(updateNav, 350);
+  };
+
+  track.addEventListener('scroll', updateNav);
+  track.addEventListener('scrollend', updateNav);
+  setTimeout(updateNav, 500);
+  window.addEventListener('resize', updateNav);
+})();
+</script>
 
     <div class="serv-overlay" id="servSuccessOverlay" style="z-index:10000">
       <div class="serv-modal" style="max-width:440px;padding:2rem 1.5rem;border-radius:16px;text-align:center">
