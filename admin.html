@@ -130,27 +130,27 @@ tr.done td:not(:last-child){text-decoration:line-through!important;text-decorati
   <div class="modal-box">
     <button class="modal-close" onclick="closeAddForm()">&times;</button>
     <h3 style="margin-bottom:12px">Новая запись</h3>
-    <div style="margin-bottom:10px">
+    <div style="margin-bottom:10px;padding:0 4px">
       <label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Дата</label>
       <input type="date" id="addDate" onchange="renderTimeSlots()" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box">
     </div>
-    <div style="margin-bottom:10px">
+    <div style="margin-bottom:10px;padding:0 4px">
       <label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Время</label><div id="addTimeSlots" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px"></div>
       <input type="hidden" id="addTime" value="">
     </div>
-    <div style="margin-bottom:10px">
+    <div style="margin-bottom:10px;padding:0 4px">
       <label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Имя *</label>
       <input type="text" id="addName" placeholder="Имя" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box">
     </div>
-    <div style="margin-bottom:10px">
+    <div style="margin-bottom:10px;padding:0 4px">
       <label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Телефон</label>
       <input type="tel" id="addPhone" placeholder="Телефон" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box">
     </div>
-    <div style="margin-bottom:10px">
+    <div style="margin-bottom:10px;padding:0 4px">
       <label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Модель</label>
       <input type="text" id="addModel" placeholder="Модель" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box">
     </div>
-    <div style="margin-bottom:10px">
+    <div style="margin-bottom:10px;padding:0 4px">
       <label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Описание</label>
       <textarea id="addNotes" rows="2" placeholder="Описание" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box;resize:vertical"></textarea>
     </div>
@@ -342,7 +342,7 @@ function saveWork(){
     <button class="modal-close" onclick="closeWorkForm()">&times;</button>
     <h3 style="margin-bottom:12px">Какие виды работ были выполнены?</h3>
     <p style="font-size:14px;color:#888;margin:0 0 12px">Заполните информацию о выполненном обслуживании</p>
-    <div style="margin-bottom:10px">
+    <div style="margin-bottom:10px;padding:0 4px">
       <label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Пробег</label>
       <input type="text" id="workMileage" placeholder="км" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box">
     </div>
