@@ -193,8 +193,11 @@
 /* Градиентный заголовок Запись на сервис */
 #service-booking .section__title {
   font-size: 1.5rem;
-  font-weight: 600;
-  color: #1a1a1a;
+  font-weight: 700;
+  background: linear-gradient(135deg, #00d4ff, #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 /* Серая рамка для секции календаря */
