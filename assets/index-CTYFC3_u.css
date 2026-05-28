@@ -197,7 +197,7 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   font-weight: 700;
-  line-height: 1.2;
+  letter-spacing: -.02em;
   filter: brightness(1.2);
 }
 
