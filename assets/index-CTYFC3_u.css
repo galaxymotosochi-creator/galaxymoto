@@ -212,3 +212,12 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 20px 40px rgba(0,0,0,0.06);
   padding: 1.5rem;
 }
+
+/* Градиентный заголовок Каталог техники */
+#catalog .section__title {
+  background: linear-gradient(135deg, #00d4ff, #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: brightness(1.2);
+}
