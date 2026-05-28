@@ -216,3 +216,10 @@
   background-clip: text;
   filter: brightness(1.2);
 }
+
+/* Разделитель между Каталог и Запись на сервис */
+#catalog {
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 2rem;
+  margin-bottom: 1rem;
+}
