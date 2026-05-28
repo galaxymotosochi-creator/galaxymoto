@@ -210,18 +210,4 @@
 
 /* Разделитель между Каталог и Запись на сервис */
 
-/* Разделитель под Каталог техники */
-#catalog .section__title {
-  position: relative;
-  margin-bottom: 1.5rem;
-}
-#catalog .section__title::after {
-  content: '';
-  position: absolute;
-  bottom: -8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(100% + 60px);
-  height: 1px;
-  background: #d0d0d0;
-}
+
