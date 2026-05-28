@@ -330,6 +330,12 @@ function saveNewRecord(){
   d.collection('galaxymoto_bookings').doc(id).set(data).then(function(){closeAddForm();sendAdminTG(nm,ph,dt,tm,md,nt)}).catch(function(e){alert('Ошибка')})
 }
 function sendAdminTG(nm,ph,dt,tm,md,nt){
+  // Format date: YYYY-MM-DD -> DD Month (DayOfWeek)
+  var dd=new Date(dt);
+  var months=["\u044F\u043D\u0432\u0430\u0440\u044F","\u0444\u0435\u0432\u0440\u0430\u043B\u044F","\u043C\u0430\u0440\u0442\u0430","\u0430\u043F\u0440\u0435\u043B\u044F","\u043C\u0430\u044F","\u0438\u044E\u043D\u044F","\u0438\u044E\u043B\u044F","\u0430\u0432\u0433\u0443\u0441\u0442\u0430","\u0441\u0435\u043D\u0442\u044F\u0431\u0440\u044F","\u043E\u043A\u0442\u044F\u0431\u0440\u044F","\u043D\u043E\u044F\u0431\u0440\u044F","\u0434\u0435\u043A\u0430\u0431\u0440\u044F"];
+  var days=["\u0432\u043E\u0441\u043A\u0440\u0435\u0441\u0435\u043D\u044C\u0435","\u043F\u043E\u043D\u0435\u0434\u0435\u043B\u044C\u043D\u0438\u043A","\u0432\u0442\u043E\u0440\u043D\u0438\u043A","\u0441\u0440\u0435\u0434\u0430","\u0447\u0435\u0442\u0432\u0435\u0440\u0433","\u043F\u044F\u0442\u043D\u0438\u0446\u0430","\u0441\u0443\u0431\u0431\u043E\u0442\u0430"];
+  var dtf=dd.getDate()+" "+months[dd.getMonth()]+" ("+days[dd.getDay()]+")";
+  
   // Check client history
   window.db.collection("galaxymoto_bookings").where("phone","==",ph).get().then(function(snap){
     var prev=[];
@@ -338,9 +344,8 @@ function sendAdminTG(nm,ph,dt,tm,md,nt){
       if(d.workDone&&d.workDone.items&&d.workDone.items.length>0) prev.push(d);
     });
     prev.sort(function(a,b){return a.date.localeCompare(b.date)});
-    var msg="";
-    msg+="\xF0\x9F\x9B\xB5 \u041D\u043E\u0432\u0430\u044F \u0437\u0430\u043F\u0438\u0441\u044C \u043D\u0430 \u0441\u0435\u0440\u0432\u0438\u0441 \u0447\u0435\u0440\u0435\u0437 \u0430\u0434\u043C\u0438\u043D \u043F\u0430\u043D\u0435\u043B\u044C!\n\n";
-    msg+="\xF0\x9F\x93\x85 \u0414\u0430\u0442\u0430: "+dt+"\n";
+    var msg="\xF0\x9F\x9B\xB5 \u041D\u043E\u0432\u0430\u044F \u0437\u0430\u043F\u0438\u0441\u044C \u043D\u0430 \u0441\u0435\u0440\u0432\u0438\u0441 \u0447\u0435\u0440\u0435\u0437 \u0430\u0434\u043C\u0438\u043D \u043F\u0430\u043D\u0435\u043B\u044C!\n\n";
+    msg+="\xF0\x9F\x93\x85 \u0414\u0430\u0442\u0430: "+dtf+"\n";
     msg+="\u23F0 \u0412\u0440\u0435\u043C\u044F: "+tm+"\n";
     msg+="\xF0\x9F\x91\xA4 \u0418\u043C\u044F: "+nm+"\n";
     msg+="\xF0\x9F\x93\x9E \u0422\u0435\u043B\u0435\u0444\u043E\u043D: "+ph+"\n";
@@ -361,9 +366,8 @@ function sendAdminTG(nm,ph,dt,tm,md,nt){
     }
     fetch('https://api.telegram.org/bot7471473926:AAE_kyz1Qtb1J8Dddqk1aaxzBGfMQ73lSMM/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:5368408796,text:msg})}).catch(function(){});
   }).catch(function(){
-    // fallback
     var msg="\xF0\x9F\x9B\xB5 \u041D\u043E\u0432\u0430\u044F \u0437\u0430\u043F\u0438\u0441\u044C!\n\n";
-    msg+="\xF0\x9F\x93\x85 \u0414\u0430\u0442\u0430: "+dt+"\n\u23F0 \u0412\u0440\u0435\u043C\u044F: "+tm+"\n";
+    msg+="\xF0\x9F\x93\x85 "+dtf+"\n\u23F0 "+tm+"\n";
     msg+="\xF0\x9F\x91\xA4 "+nm+"\n\xF0\x9F\x93\x9E "+ph;
     if(md) msg+="\n\xF0\x9F\x9B\xB2 "+md;
     fetch('https://api.telegram.org/bot7471473926:AAE_kyz1Qtb1J8Dddqk1aaxzBGfMQ73lSMM/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:5368408796,text:msg})}).catch(function(){});
