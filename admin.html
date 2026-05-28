@@ -237,6 +237,83 @@ function saveNewRecord(){
   d.collection('galaxymoto_bookings').doc(id).set(data).then(function(){closeAddForm()}).catch(function(e){alert('Ошибка')})
 }
 
+
+var workBookingId = "";
+function openWorkForm(id){
+  workBookingId = id;
+  document.getElementById("workModal").classList.add("active");
+  document.getElementById("workMileage").value = "";
+  document.getElementById("workItems").innerHTML = "";
+  for(var i=0;i<3;i++) addWorkRow();
+  calcWorkTotal();
+}
+function closeWorkForm(){
+  document.getElementById("workModal").classList.remove("active");
+}
+function addWorkRow(){
+  var tb = document.getElementById("workItems");
+  var tr = document.createElement("tr");
+  tr.innerHTML = '<td style="padding:4px"><input class="wi-name" placeholder="Наименование" style="width:100%;padding:7px 8px;font-size:12px;font-family:Inter,sans-serif;border:1px solid #ddd;border-radius:6px;outline:none;box-sizing:border-box"></td><td style="padding:4px"><input class="wi-price" type="number" placeholder="0" oninput="calcWorkTotal()" style="width:100%;padding:7px 8px;font-size:12px;font-family:Inter,sans-serif;border:1px solid #ddd;border-radius:6px;outline:none;box-sizing:border-box;text-align:right"></td>';
+  tb.appendChild(tr);
+}
+function calcWorkTotal(){
+  var total = 0;
+  document.querySelectorAll(".wi-price").forEach(function(el){
+    total += parseFloat(el.value) || 0;
+  });
+  document.getElementById("workTotal").textContent = total;
+}
+function saveWork(){
+  var mileage = document.getElementById("workMileage").value.trim();
+  var items = [];
+  var names = document.querySelectorAll(".wi-name");
+  var prices = document.querySelectorAll(".wi-price");
+  for(var i=0;i<names.length;i++){
+    var n = names[i].value.trim();
+    var p = parseFloat(prices[i].value) || 0;
+    if(n || p) items.push({name:n||"-",price:p});
+  }
+  try{
+    var d = firebase.firestore();
+    d.collection("leads").doc(workBookingId).update({
+      status: "completed",
+      completedAt: new Date().toISOString(),
+      workDone: {mileage:mileage,items:items,total:document.getElementById("workTotal").textContent}
+    }).catch(function(){});
+    d.collection("galaxymoto_bookings").doc(workBookingId).update({
+      status: "completed",
+      completedAt: new Date().toISOString(),
+      workDone: {mileage:mileage,items:items,total:document.getElementById("workTotal").textContent}
+    }).catch(function(){});
+  }catch(e){}
+  closeWorkForm();
+  closeDet();
+}
+
 </script>
+
+<div class="modal-overlay" id="workModal">
+  <div class="modal-box" style="max-width:520px">
+    <button class="modal-close" onclick="closeWorkForm()">&times;</button>
+    <p style="font-size:16px;font-weight:700;color:#111;margin:0 0 4px">Какие виды работ были выполнены?</p>
+    <p style="font-size:13px;color:#888;margin:0 0 12px">Заполните информацию о выполненном обслуживании</p>
+    <div style="margin-bottom:10px">
+      <label style="font-size:12px;font-weight:600;color:#333;display:block;margin-bottom:4px">Пробег</label>
+      <input type="text" id="workMileage" placeholder="км" style="width:100%;padding:8px 10px;font-size:13px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box">
+    </div>
+    <table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:10px">
+      <thead><tr><th style="text-align:left;padding:6px;color:#888;font-weight:600;border-bottom:2px solid #eee;width:65%">Наименование работ</th><th style="text-align:right;padding:6px;color:#888;font-weight:600;border-bottom:2px solid #eee;width:35%">Стоимость, руб</th></tr></thead>
+      <tbody id="workItems"></tbody>
+    </table>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <a href="javascript:void(0)" onclick="addWorkRow()" style="color:#1983dd;font-weight:600;font-size:12px;text-decoration:none">+ Добавить строку</a>
+      <div style="font-size:14px;font-weight:700;color:#111">Итого: <span id="workTotal">0</span> руб</div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn-grad" style="flex:1;padding:10px;font-size:13px" onclick="saveWork()">Сохранить</button>
+      <button class="btn-grad-del" style="flex:1;padding:10px;font-size:13px;background:#333" onclick="closeWorkForm();closeDet()">Отмена</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
