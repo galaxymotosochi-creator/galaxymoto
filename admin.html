@@ -338,7 +338,7 @@ function sendAdminTG(nm,ph,dt,tm,md,nt){
   var dtf=dd.getDate()+" "+months[dd.getMonth()]+" ("+days[dd.getDay()]+")";
   
   // Check client history
-  window.db.collection("galaxymoto_bookings").get().then(function(snap){
+  firebase.firestore().collection("galaxymoto_bookings").get().then(function(snap){
     var prev=[];
     snap.forEach(function(doc){
       var d=doc.data(); if(d.phone!==ph)return;
