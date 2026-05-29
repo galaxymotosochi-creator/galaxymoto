@@ -415,10 +415,21 @@ function saveMasterSelect(){
 }
 function openWorkForm(id){
   workBookingId = id;
+  var b = BK.find(function(x){return x.id===id});
   document.getElementById("workModal").classList.add("active");
   document.getElementById("workMileage").value = "";
   document.getElementById("workItems").innerHTML = "";
   for(var i=0;i<3;i++) addWorkRow();
+  if(b && b.master){
+    var masters = b.master.split(", ");
+    var sels = document.querySelectorAll(".wi-master");
+    sels.forEach(function(s){
+      s.innerHTML = "<option value=\"\">—</option>";
+      for(var j=0;j<masters.length;j++){
+        s.innerHTML += "<option value=\""+masters[j]+"\">"+masters[j]+"</option>";
+      }
+    });
+  }
   calcWorkTotal();
 }
 function closeWorkForm(){
@@ -427,7 +438,7 @@ function closeWorkForm(){
 function addWorkRow(){
   var tb = document.getElementById("workItems");
   var tr = document.createElement("tr");
-  tr.innerHTML = '<td style="padding:4px"><input class="wi-name" placeholder="Наименование" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box"></td><td style="padding:4px"><input class="wi-price" type="number" placeholder="0" oninput="calcWorkTotal()" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box;text-align:right"></td>';
+  tr.innerHTML = '<td style="padding:4px"><input class="wi-name" placeholder="Наименование" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box"></td><td style="padding:4px"><input class="wi-price" type="number" placeholder="0" oninput="calcWorkTotal()" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box;text-align:right"></td><td style="padding:4px"><select class="wi-master" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box;cursor:pointer"></select></td>';
   tb.appendChild(tr);
 }
 function calcWorkTotal(){
@@ -442,10 +453,16 @@ function saveWork(){
   var items = [];
   var names = document.querySelectorAll(".wi-name");
   var prices = document.querySelectorAll(".wi-price");
+  var masters = document.querySelectorAll(".wi-master");
   for(var i=0;i<names.length;i++){
     var n = names[i].value.trim();
     var p = parseFloat(prices[i].value) || 0;
-    if(n || p) items.push({name:n||"-",price:p});
+    var m = masters[i] ? masters[i].value : "";
+    if(n || p){
+      var item = {name:n||"-",price:p};
+      if(m) item.master = m;
+      items.push(item);
+    }
   }
   try{
     var d = firebase.firestore();
