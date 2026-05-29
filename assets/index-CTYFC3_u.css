@@ -214,12 +214,16 @@
 
 /* Mobile: up to 480px */
 @media(max-width:480px){
-.catalog-page__grid{grid-template-columns:1fr!important}
-.house-card__image{height:220px}
-.section{padding:2rem 1rem}
-.container{padding-left:12px;padding-right:12px}
-.footer-new .fw{grid-template-columns:1fr 1fr!important}
-.footer-new .fc{min-width:0!important}}
+.catalog-page{padding-left:8px!important;padding-right:8px!important}
+.catalog-page__grid{grid-template-columns:1fr!important;gap:12px!important}
+.house-card__image{height:200px!important}
+.house-card__content{padding:12px!important}
+.section{padding:1.5rem .5rem}
+.container{padding-left:8px!important;padding-right:8px!important}
+.footer-new .fw{grid-template-columns:1fr 1fr!important;gap:6px!important}
+.footer-new .fc{min-width:0!important;padding:8px 10px!important}
+.footer-new .fl{font-size:8px!important}
+.footer-new .fv{font-size:11px!important}}
 /* Mobile: 481px to 767px */
 @media(min-width:481px) and (max-width:767px){
 .catalog-page__grid{grid-template-columns:1fr!important}
