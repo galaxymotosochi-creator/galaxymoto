@@ -415,14 +415,15 @@ function openWorkForm(id){
   if(b && b.master){
     var masters = b.master.split(", ");
     var sels = document.querySelectorAll(".wi-master");
-    sels.forEach(function(s){
-      s.innerHTML = "<option value=\"\">—</option>";
+    sels.forEach(function(s,i){
+      s.innerHTML = "<option value=\"\">\u2014</option>";
       for(var j=0;j<masters.length;j++){
         s.innerHTML += "<option value=\""+masters[j]+"\">"+masters[j]+"</option>";
       }
+      if(masters.length===1) s.value = masters[0];
+      else if(masters.length===2) s.value = i===0?masters[0]:masters[1];
     });
-  }
-  calcWorkTotal();
+calcWorkTotal();
 }
 function closeWorkForm(){
   document.getElementById("workModal").classList.remove("active");
@@ -486,7 +487,7 @@ function saveWork(){
     </div>
     <table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:10px">
       
-      <thead><tr><th style="text-align:left;padding:8px 6px;color:#888;font-weight:600;font-size:12px;border-bottom:2px solid #eee;width:40%">\u0412\u0438\u0434</th><th style="text-align:right;padding:8px 6px;color:#888;font-weight:600;font-size:12px;border-bottom:2px solid #eee;width:25%">\u0421\u0443\u043c\u043c\u0430</th><th style="text-align:center;padding:8px 6px;color:#888;font-weight:600;font-size:12px;border-bottom:2px solid #eee;width:35%">\u041c\u0430\u0441\u0442\u0435\u0440</th></tr></thead>
+      <thead><tr><th style="text-align:left;padding:6px;color:#888;font-weight:600;font-size:11px;border-bottom:2px solid #eee;width:55%">Вид</th><th style="text-align:right;padding:6px;color:#888;font-weight:600;font-size:11px;border-bottom:2px solid #eee;width:20%">Сумма</th><th style="text-align:center;padding:6px;color:#888;font-weight:600;font-size:11px;border-bottom:2px solid #eee;width:25%">Мастер</th></tr></thead>
     <tbody id="workItems"></tbody>
     </table>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
@@ -708,7 +709,7 @@ function saveWork(){
     </div>
     <table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:10px">
       
-      <thead><tr><th style="text-align:left;padding:8px 6px;color:#888;font-weight:600;font-size:12px;border-bottom:2px solid #eee;width:40%">\u0412\u0438\u0434</th><th style="text-align:right;padding:8px 6px;color:#888;font-weight:600;font-size:12px;border-bottom:2px solid #eee;width:25%">\u0421\u0443\u043c\u043c\u0430</th><th style="text-align:center;padding:8px 6px;color:#888;font-weight:600;font-size:12px;border-bottom:2px solid #eee;width:35%">\u041c\u0430\u0441\u0442\u0435\u0440</th></tr></thead>
+      <thead><tr><th style="text-align:left;padding:6px;color:#888;font-weight:600;font-size:11px;border-bottom:2px solid #eee;width:55%">Вид</th><th style="text-align:right;padding:6px;color:#888;font-weight:600;font-size:11px;border-bottom:2px solid #eee;width:20%">Сумма</th><th style="text-align:center;padding:6px;color:#888;font-weight:600;font-size:11px;border-bottom:2px solid #eee;width:25%">Мастер</th></tr></thead>
     <tbody id="workItems"></tbody>
     </table>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
