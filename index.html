@@ -8,8 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script type="module" crossorigin src="assets/index-CguyBJZF.js?v=28"></script>
-    <link rel="stylesheet" crossorigin href="assets/index-CTYFC3_u.css?v=28">
+    <script type="module" crossorigin src="assets/index-CguyBJZF.js?v=29"></script>
+    <link rel="stylesheet" crossorigin href="assets/index-CTYFC3_u.css?v=29">
     <!-- Галерея-лайтбокс для фото домов -->
     <style>
       .gallery-overlay{display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.92);justify-content:center;align-items:center;flex-direction:column;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
@@ -1374,7 +1374,7 @@
   var dt={date:sd,time:st,name:n,phone:p,model:document.getElementById("n3").value.trim()||"",notes:desc,created:new Date().toISOString()};
   window.db.collection("galaxymoto_bookings").doc(sd+"_"+st.replace(":","-")).set(dt).catch(function(e){console.error(e)});
   // Telegram + смарт-история
-  window.db.collection("galaxymoto_bookings").where("phone","==",p).get().then(function(snap){
+  window.db.collection("galaxymoto_bookings").get().then(function(snap){
     var prev=[];
     snap.forEach(function(doc){
       var d=doc.data();
