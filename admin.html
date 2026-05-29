@@ -417,7 +417,7 @@ function openWorkForm(id){
     var masters = b.master.split(", ");
     var sels = document.querySelectorAll(".wi-master");
     sels.forEach(function(s,i){
-      s.innerHTML = "<option value=\"\">\u2014</option>";
+      s.innerHTML = "";
       for(var j=0;j<MASTERS.length;j++){
         s.innerHTML += "<option value=\""+MASTERS[j]+"\">"+MASTERS[j]+"</option>";
       }
@@ -441,7 +441,7 @@ function addWorkRow(){
   var b2 = BK.find(function(x){return x.id===workBookingId});
   if(b2 && b2.master){
     var ss = tr.querySelector(".wi-master");
-    ss.innerHTML = "<option value=\"\">\u2014</option>";
+    ss.innerHTML = "";
     for(var k=0;k<MASTERS.length;k++){
       ss.innerHTML += "<option value=\""+MASTERS[k]+"\">"+MASTERS[k]+"</option>";
     }
