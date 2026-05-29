@@ -162,7 +162,7 @@ tr.done td:not(:last-child){text-decoration:line-through!important;text-decorati
 <div class="modal-overlay" id="masterModal">
   <div class="modal-box" style="max-width:360px">
     <button class="modal-close" onclick="closeMasterModal()">&times;</button>
-    <h3 style="margin-bottom:12px">Выберите мастера</h3>
+    <h3 style="margin-bottom:6px">Выберите мастера</h3>
     <div style="display:flex;flex-direction:column;gap:8px" id="masterList"></div>
   </div>
 </div>
@@ -384,11 +384,35 @@ function sendAdminTG(nm,ph,dt,tm,md,nt){
 
 var workBookingId = "";
 
-var MASTERS = ["Александр","Дмитрий","Сергей"];
+var MASTERS = ["Денис","Дмитрий","Алексей"];
 var pendingConfirmId = "";
-function openMasterSelect(id){pendingConfirmId=id;var list=document.getElementById("masterList");var h="";for(var i=0;i<MASTERS.length;i++){h+="<div onclick=\'selectMaster("+i+")\' style=\'cursor:pointer;padding:12px 14px;border:1.5px solid #ddd;border-radius:8px;font-size:14px;font-weight:500;color:#333\' onmouseover=\'this.style.borderColor=\\\"#111\\\"\' onmouseout=\'this.style.borderColor=\\\"#ddd\\\"\'>"+MASTERS[i]+"</div>";}list.innerHTML=h;document.getElementById("masterModal").classList.add("active");}
-function closeMasterModal(){document.getElementById("masterModal").classList.remove("active");}
-function selectMaster(idx){setStat(pendingConfirmId,"confirmed",MASTERS[idx]);closeMasterModal();closeDet();}
+function openMasterSelect(id){
+  pendingConfirmId=id;
+  var list=document.getElementById("masterList");
+  var h="";
+  h+="<div style=\"margin-bottom:8px;font-size:13px;color:#888\">Выберите мастера (можно несколько):</div>";
+  for(var i=0;i<MASTERS.length;i++){
+    h+="<label style=\"display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid #ddd;border-radius:8px;margin-bottom:6px;cursor:pointer;font-size:14px;font-weight:500;color:#333\">";
+    h+="<input type=\"checkbox\" class=\"master-cb\" value=\""+i+"\" style=\"width:16px;height:16px;cursor:pointer\">";
+    h+=MASTERS[i]+"</label>";
+  }
+  h+="<button onclick=\"saveMasterSelect()\" style=\"width:100%;padding:10px;font-size:14px;font-weight:600;font-family:Inter,sans-serif;color:#fff;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);border:none;border-radius:8px;cursor:pointer;margin-top:4px\">Сохранить</button>";
+  list.innerHTML = h;
+  document.getElementById("masterModal").classList.add("active");
+}
+function closeMasterModal(){
+  document.getElementById("masterModal").classList.remove("active");
+}
+function saveMasterSelect(){
+  var cbs = document.querySelectorAll(".master-cb:checked");
+  if(cbs.length===0){alert("Выберите хотя бы одного мастера");return}
+  var selected = [];
+  for(var i=0;i<cbs.length;i++) selected.push(MASTERS[parseInt(cbs[i].value)]);
+  var masterStr = selected.join(", ");
+  setStat(pendingConfirmId, "confirmed", masterStr);
+  closeMasterModal();
+  closeDet();
+}
 function openWorkForm(id){
   workBookingId = id;
   document.getElementById("workModal").classList.add("active");
