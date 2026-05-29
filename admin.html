@@ -418,11 +418,13 @@ function openWorkForm(id){
     var sels = document.querySelectorAll(".wi-master");
     sels.forEach(function(s,i){
       s.innerHTML = "<option value=\"\">\u2014</option>";
-      for(var j=0;j<masters.length;j++){
-        s.innerHTML += "<option value=\""+masters[j]+"\">"+masters[j]+"</option>";
+      for(var j=0;j<MASTERS.length;j++){
+        s.innerHTML += "<option value=\""+MASTERS[j]+"\">"+MASTERS[j]+"</option>";
       }
-      if(masters.length===1) s.value = masters[0];
-      else if(masters.length===2) s.value = i===0?masters[0]:masters[1];
+      // Auto-select based on assigned masters
+      var assigned = (b.master||"").split(", ");
+      if(assigned.length===1) s.value = assigned[0];
+      else if(assigned.length===2) s.value = i===0?assigned[0]:assigned[1];
     });
 }
 calcWorkTotal();
@@ -438,11 +440,10 @@ function addWorkRow(){
   // Populate master dropdown for new row
   var b2 = BK.find(function(x){return x.id===workBookingId});
   if(b2 && b2.master){
-    var ms = b2.master.split(", ");
     var ss = tr.querySelector(".wi-master");
     ss.innerHTML = "<option value=\"\">\u2014</option>";
-    for(var k=0;k<ms.length;k++){
-      ss.innerHTML += "<option value=\""+ms[k]+"\">"+ms[k]+"</option>";
+    for(var k=0;k<MASTERS.length;k++){
+      ss.innerHTML += "<option value=\""+MASTERS[k]+"\">"+MASTERS[k]+"</option>";
     }
   }
 }
