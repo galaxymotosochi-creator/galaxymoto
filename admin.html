@@ -602,7 +602,7 @@ function renderCarousel(id){
       h += '<div style="margin-top:8px;padding-top:8px;border-top:1px solid #eee">';
       for(var wi = 0; wi < v.workDone.items.length; wi++){
         var w = v.workDone.items[wi];
-        h += '<div class="work-item"><span class="wn">' + esc(w.name||'') + '</span><span class="wp">' + (w.price||'0') + ' руб</span></div>';
+        h += '<div class="work-item"><span class="wn">' + esc(w.name||'') + '</span><span style="color:#888;font-size:11px">' + (w.master||'') + '</span><span class="wp">' + (w.price||'0') + ' руб</span></div>';
       }
       h += '<div class="total-row"><span>Итого:</span><span>' + (v.workDone.total||'0') + ' руб</span></div>';
       h += '</div>';
