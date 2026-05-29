@@ -251,3 +251,5 @@ a{-webkit-tap-highlight-color:transparent}
 
 /* Calendar panel border */
 .section--calc>.container>div:nth-child(2){border:1px solid #eee;border-radius:14px}
+/* Hide FAQ */
+.home-faq{display:none!important}
