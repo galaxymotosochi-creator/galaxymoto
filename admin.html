@@ -435,6 +435,16 @@ function addWorkRow(){
   var tr = document.createElement("tr");
   tr.innerHTML = '<td style="padding:4px"><input class="wi-name" placeholder="Наименование" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box"></td><td style="padding:4px"><input class="wi-price" type="number" placeholder="0" oninput="calcWorkTotal()" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box;text-align:right"></td><td style="padding:4px"><select class="wi-master" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box;cursor:pointer"></select></td>';
   tb.appendChild(tr);
+  // Populate master dropdown for new row
+  var b2 = BK.find(function(x){return x.id===workBookingId});
+  if(b2 && b2.master){
+    var ms = b2.master.split(", ");
+    var ss = tr.querySelector(".wi-master");
+    ss.innerHTML = "<option value=\"\">\u2014</option>";
+    for(var k=0;k<ms.length;k++){
+      ss.innerHTML += "<option value=\""+ms[k]+"\">"+ms[k]+"</option>";
+    }
+  }
 }
 function calcWorkTotal(){
   var total = 0;
