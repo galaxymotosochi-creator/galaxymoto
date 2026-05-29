@@ -187,7 +187,7 @@ function doLogin(){var p=document.getElementById('pinInput').value;if(p===PIN){l
 function doLogout(){localStorage.removeItem('ga');if(US)US();if(US2)US2();document.getElementById('adminApp').classList.add('hidden');document.getElementById('loginScreen').classList.remove('hidden');document.getElementById('loginError').style.display='none'}
 function initFB(){try{var FC={apiKey:'AIzaSyDOZnESPJRJlEf3HTYqNyv1O0mYUZoPJzc',authDomain:'capsulehouse-1c0c9.firebaseapp.com',projectId:'capsulehouse-1c0c9',storageBucket:'capsulehouse-1c0c9.firebasestorage.app',messagingSenderId:'640070206939',appId:'1:640070206939:web:e7ba997ec68457be2893fe'};try{firebase.initializeApp(FC);}catch(e){}var db=firebase.firestore();window.db=db;db.settings({merge:true});if(US||US2)return;BK=[];US2=db.collection('galaxymoto_bookings').onSnapshot(function(s){s.docChanges().forEach(function(c){var x=c.doc.data(),id=c.doc.id;if(c.type==='removed'){BK=BK.filter(function(b){return b.id!==id});R();return}if(x.date&&x.name){var i=BK.findIndex(function(b){return b.id===id});var b={id:id,date:x.date,time:x.time||'',name:x.name,phone:x.phone||'',model:x.model||'',notes:x.notes||'',status:x.status||'new',workDone:x.workDone||null,master:x.master||'',workDone:x.workDone||null,master:x.master||''};if(i>=0)BK[i]=b;else BK.push(b);R()}})});US=db.collection('leads').onSnapshot(function(s){s.docChanges().forEach(function(c){var x=c.doc.data(),id=c.doc.id;if(c.type==='removed'){BK=BK.filter(function(b){return b.id!==id});R();return}if(x.date&&x.name){var i=BK.findIndex(function(b){return b.id===id});var b={id:id,date:x.date,time:x.time||'',name:x.name,phone:x.phone||'',model:x.model||'',notes:x.notes||'',status:x.status||'new',workDone:x.workDone||null};if(i>=0)BK[i]=b;else BK.push(b);R()}})});}catch(e){}}
 function R(){RSTAT();RCAL();RBOK()}
-function RSTAT(){var n=BK.length,p=BK.filter(function(b){return b.status==='new'}).length,c=BK.filter(function(b){return b.status==='confirmed'}).length;document.getElementById('statsRow').innerHTML='<div class="stat-card"><div class="stat-card__value">'+n+'</div><div class="stat-card__label">\u0412\u0441\u0435\u0433\u043e</div></div><div class="stat-card"><div class="stat-card__value">'+p+'</div><div class="stat-card__label">\u041d\u043e\u0432\u044b\u0435</div></div><div class="stat-card"><div class="stat-card__value">'+c+'</div><div class="stat-card__label">\u041f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043d\u044b</div></div><div class=\"stat-card\" style=\"cursor:pointer;background:#111;color:#fff\" onclick=\"openAddForm()\"><div class=\"stat-card__value\" style=\"color:#fff;font-size:28px\">+</div><div class=\"stat-card__label\" style=\"color:rgba(255,255,255,.7)\">\u041d\u043e\u0432\u0430\u044f \u0437\u0430\u043f\u0438\u0441\u044c</div></div>'}
+function RSTAT(){var n=BK.length,p=BK.filter(function(b){return b.status==='new'}).length,c=BK.filter(function(b){return b.status==='confirmed'}).length;document.getElementById('statsRow').innerHTML='<div class="stat-card"><div class="stat-card__value">'+n+'</div><div class="stat-card__label">\u0412\u0441\u0435\u0433\u043e</div></div><div class="stat-card"><div class="stat-card__value">'+p+'</div><div class="stat-card__label">\u041d\u043e\u0432\u044b\u0435</div></div><div class="stat-card"><div class="stat-card__value">'+c+'</div><div class="stat-card__label">\u041f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043d\u044b</div></div><div class=\"stat-card\" style=\"cursor:pointer;background:#111;color:#fff\" onclick=\"openAddForm()\"><div class=\"stat-card__value\" style=\"color:#fff;font-size:28px\">+</div><div class=\"stat-card__label\" style=\"color:rgba(255,255,255,.7)\">\u041d\u043e\u0432\u0430\u044f \u0437\u0430\u043f\u0438\u0441\u044c</div></div><div class=\"stat-card\" style=\"cursor:pointer;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff\" onclick=\"openStats()\"><div class=\"stat-card__value\" style=\"color:#fff;font-size:28px\">\u2206</div><div class=\"stat-card__label\" style=\"color:rgba(255,255,255,.7)\">\u0421\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043a\u0430</div></div>'}
 function RCAL(){var y=CV.getFullYear(),m=CV.getMonth();document.getElementById('calMonth').textContent=new Date(y,m).toLocaleDateString('ru',{month:'long',year:'numeric'});var fd=new Date(y,m,1).getDay();fd=(fd===0?6:fd-1);var ld=new Date(y,m+1,0).getDate(),pd=new Date(y,m,1-fd).getDate(),h='',td=new Date(),dw='\u041f\u043d,\u0412\u0442,\u0421\u0440,\u0427\u0442,\u041f\u0442,\u0421\u0431,\u0412\u0441'.split(',');dw.forEach(function(w){h+='<div class="cal-weekday">'+w+'</div>'});for(var i=0;i<fd;i++){h+='<div class="cal-day cal-day--other">'+pd+'</div>';pd++}for(var d=1;d<=ld;d++){var dt=new Date(y,m,d),ds=fmt(dt),cnt=BK.filter(function(b){return b.date===ds}).length,cl='cal-day';if(same(dt,td))cl+=' cal-day--today';if(SD1&&same(dt,SD1))cl+=' cal-day--selected';if(SD2&&same(dt,SD2))cl+=' cal-day--selected';if(cnt===1)cl+=' cal-day--green';else if(cnt===2)cl+=' cal-day--yellow';else if(cnt>=3)cl+=' cal-day--red';h+='<div class="'+cl+'" onclick="pickDate('+d+')"><span>'+d+'</span>'+(cnt>0?'<span class="cal-day__count">'+cnt+'</span>':'')+'</div>'}var rm=(7-(fd+ld)%7)%7;for(var i=0;i<rm;i++){h+='<div class="cal-day cal-day--other">'+(i+1)+'</div>'}document.getElementById('calGrid').innerHTML=h}
 function calMove(d){CV.setMonth(CV.getMonth()+d);RCAL()}
 function pickDate(d){var y=CV.getFullYear(),m=CV.getMonth();if(!SD1){SD1=new Date(y,m,d);SD2=null}else{if(SD2){SD1=new Date(y,m,d);SD2=null}else{var nt=new Date(y,m,d);if(nt>SD1)SD2=nt;else{SD2=SD1;SD1=nt}}}SD=SD1||SD2;TB=2;document.querySelectorAll('.tab-bar button').forEach(function(b){b.classList.remove('active')});document.getElementById('tab2').classList.add('active');RCAL();RBOK()}
@@ -345,19 +345,19 @@ function sendAdminTG(nm,ph,dt,tm,md,nt){
       if(d.workDone&&d.workDone.items&&d.workDone.items.length>0) prev.push(d);
     });
     prev.sort(function(a,b){return a.date.localeCompare(b.date)});
-    var msg="\xF0\x9F\x9B\xB5 \u041D\u043E\u0432\u0430\u044F \u0437\u0430\u043F\u0438\u0441\u044C \u043D\u0430 \u0441\u0435\u0440\u0432\u0438\u0441 \u0447\u0435\u0440\u0435\u0437 \u0430\u0434\u043C\u0438\u043D \u043F\u0430\u043D\u0435\u043B\u044C!\n\n";
-    msg+="\xF0\x9F\x93\x85 \u0414\u0430\u0442\u0430: "+dtf+"\n";
+    var msg="\uD83D\uDEF5 \u041D\u043E\u0432\u0430\u044F \u0437\u0430\u043F\u0438\u0441\u044C \u043D\u0430 \u0441\u0435\u0440\u0432\u0438\u0441 \u0447\u0435\u0440\u0435\u0437 \u0430\u0434\u043C\u0438\u043D \u043F\u0430\u043D\u0435\u043B\u044C!\n\n";
+    msg+="\uD83D\uDCC5 \u0414\u0430\u0442\u0430: "+dtf+"\n";
     msg+="\u23F0 \u0412\u0440\u0435\u043C\u044F: "+tm+"\n";
-    msg+="\xF0\x9F\x91\xA4 \u0418\u043C\u044F: "+nm+"\n";
-    msg+="\xF0\x9F\x93\x9E \u0422\u0435\u043B\u0435\u0444\u043E\u043D: "+ph+"\n";
-    msg+="\xF0\x9F\x9B\xB2 \u041C\u043E\u0434\u0435\u043B\u044C: "+(md||"-")+"\n";
-    if(nt) msg+="\xF0\x9F\x93\x9D \u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435: "+nt+"\n";
+    msg+="\uD83D\uDC64 \u0418\u043C\u044F: "+nm+"\n";
+    msg+="\uD83D\uDCDE \u0422\u0435\u043B\u0435\u0444\u043E\u043D: "+ph+"\n";
+    msg+="\uD83D\uDEF2 \u041C\u043E\u0434\u0435\u043B\u044C: "+(md||"-")+"\n";
+    if(nt) msg+="\uD83D\uDCDD \u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435: "+nt+"\n";
     if(prev.length>0){
       var last=prev[prev.length-1];
       
-      msg+="\xF0\x9F\x93\x85 \u041F\u043E\u0441\u043B\u0435\u0434\u043D\u0435\u0435 \u043F\u043E\u0441\u0435\u0449\u0435\u043D\u0438\u0435: "+last.date.split("-").reverse().join(".")+"\n";
-      if(last.workDone.mileage) msg+="\xF0\x9F\x93\x8F \u041F\u0440\u043E\u0431\u0435\u0433: "+last.workDone.mileage+" \u043A\u043C\n";
-      msg+="\xF0\x9F\x93\x8B \u041F\u043E\u0441\u043B\u0435\u0434\u043D\u0438\u0435 \u0440\u0430\u0431\u043E\u0442\u044B:";
+      msg+="\uD83D\uDCC5 \u041F\u043E\u0441\u043B\u0435\u0434\u043D\u0435\u0435 \u043F\u043E\u0441\u0435\u0449\u0435\u043D\u0438\u0435: "+last.date.split("-").reverse().join(".")+"\n";
+      if(last.workDone.mileage) msg+="\uD83D\uDCCF \u041F\u0440\u043E\u0431\u0435\u0433: "+last.workDone.mileage+" \u043A\u043C\n";
+      msg+="\uD83D\uDCCB \u041F\u043E\u0441\u043B\u0435\u0434\u043D\u0438\u0435 \u0440\u0430\u0431\u043E\u0442\u044B:";
       for(var i=0;i<last.workDone.items.length;i++){
         msg+="\n  - "+last.workDone.items[i].name+": "+last.workDone.items[i].price+" \u0440\u0443\u0431";
       }
@@ -367,10 +367,10 @@ function sendAdminTG(nm,ph,dt,tm,md,nt){
     }
     fetch('https://api.telegram.org/bot7471473926:AAE_kyz1Qtb1J8Dddqk1aaxzBGfMQ73lSMM/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:5368408796,text:msg})}).catch(function(){});
   }).catch(function(){
-    var msg="\xF0\x9F\x9B\xB5 \u041D\u043E\u0432\u0430\u044F \u0437\u0430\u043F\u0438\u0441\u044C!\n\n";
-    msg+="\xF0\x9F\x93\x85 "+dtf+"\n\u23F0 "+tm+"\n";
-    msg+="\xF0\x9F\x91\xA4 "+nm+"\n\xF0\x9F\x93\x9E "+ph;
-    if(md) msg+="\n\xF0\x9F\x9B\xB2 "+md;
+    var msg="\uD83D\uDEF5 \u041D\u043E\u0432\u0430\u044F \u0437\u0430\u043F\u0438\u0441\u044C!\n\n";
+    msg+="\uD83D\uDCC5 "+dtf+"\n\u23F0 "+tm+"\n";
+    msg+="\uD83D\uDC64 "+nm+"\n\uD83D\uDCDE "+ph;
+    if(md) msg+="\n\uD83D\uDEF5 "+md;
     fetch('https://api.telegram.org/bot7471473926:AAE_kyz1Qtb1J8Dddqk1aaxzBGfMQ73lSMM/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:5368408796,text:msg})}).catch(function(){});
   });
 }
@@ -488,34 +488,149 @@ function saveWork(){
 }
 
 
+/* \u0421\u0422\u0410\u0422\u0418\u0421\u0422\u0418\u041a\u0410 */
+var statsPeriod='today',statsMaster='all',statsDate1='',statsDate2='';
+function openStats(){
+  document.getElementById('statsModal').classList.add('active');
+  statsPeriod='today';
+  statsMaster='all';
+  statsDate1='';
+  statsDate2='';
+  renderStats();
+}
+function closeStats(){
+  document.getElementById('statsModal').classList.remove('active');
+}
+function setStatsPeriod(p,el){
+  statsPeriod=p;
+  document.querySelectorAll('.sp-btn').forEach(function(b){b.classList.remove('active')});
+  if(el)el.classList.add('active');
+  var dr=document.getElementById('statsDateRange');
+  if(p==='custom'){dr.classList.remove('hidden')}else{dr.classList.add('hidden')}
+  renderStats();
+}
+function setStatsMaster(el){
+  statsMaster=el.value;
+  renderStats();
+}
+function applyStatsCustom(){
+  statsDate1=document.getElementById('statsDate1').value;
+  statsDate2=document.getElementById('statsDate2').value;
+  renderStats();
+}
+function renderStats(){
+  var now=new Date();now.setHours(0,0,0,0);
+  var flt=[];
+  for(var i=0;i<BK.length;i++){
+    var b=BK[i],bd=new Date(b.date+'T00:00:00');
+    var ok=false;
+    if(statsPeriod==='today'){
+      ok=bd.getTime()===now.getTime();
+    }else if(statsPeriod==='week'){
+      var weekStart=new Date(now);weekStart.setDate(now.getDate()-now.getDay());
+      var weekEnd=new Date(weekStart);weekEnd.setDate(weekStart.getDate()+6);
+      ok=bd>=weekStart&&bd<=weekEnd;
+    }else if(statsPeriod==='month'){
+      ok=bd.getMonth()===now.getMonth()&&bd.getFullYear()===now.getFullYear();
+    }else if(statsPeriod==='custom'){
+      if(statsDate1&&statsDate2){
+        var d1=new Date(statsDate1+'T00:00:00'),d2=new Date(statsDate2+'T00:00:00');
+        ok=bd>=d1&&bd<=d2;
+      }else if(statsDate1){
+        var d1=new Date(statsDate1+'T00:00:00');
+        ok=bd.getTime()===d1.getTime();
+      }else{
+        ok=true;
+      }
+    }else{ok=true}
+    if(ok&&statsMaster!=='all'&&b.master&&b.master.indexOf(statsMaster)<0)ok=false;
+    if(ok&&statsMaster!=='all'&&!b.master)ok=false;
+    if(ok)flt.push(b);
+  }
+  // \u0421\u0447\u0451\u0442\u0447\u0438\u043a\u0438
+  var tc=flt.length;
+  var nc=flt.filter(function(x){return x.status==='new'}).length;
+  var cf=flt.filter(function(x){return x.status==='confirmed'}).length;
+  var dn=flt.filter(function(x){return x.status==='completed'}).length;
+  var cn=flt.filter(function(x){return x.status==='cancelled'}).length;
+  var rev=0,cnt=0;
+  flt.forEach(function(x){if(x.workDone&&x.workDone.total){rev+=parseInt(x.workDone.total)||0;cnt++}});
+  var avg=cnt>0?Math.round(rev/cnt):0;
+  var h='';
+  h+='<div class="stats" style="margin-bottom:16px">';
+  h+='<div class="stat-card"><div class="stat-card__value">'+tc+'</div><div class="stat-card__label">\u0412\u0441\u0435\u0433\u043e</div></div>';
+  h+='<div class="stat-card"><div class="stat-card__value">'+nc+'</div><div class="stat-card__label">\u041d\u043e\u0432\u044b\u0435</div></div>';
+  h+='<div class="stat-card"><div class="stat-card__value">'+cf+'</div><div class="stat-card__label">\u041f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043d\u044b</div></div>';
+  h+='<div class="stat-card"><div class="stat-card__value">'+dn+'</div><div class="stat-card__label">\u0412\u044b\u043f\u043e\u043b\u043d\u0435\u043d\u043e</div></div>';
+  h+='<div class="stat-card"><div class="stat-card__value">'+cn+'</div><div class="stat-card__label">\u041e\u0442\u043c\u0435\u043d\u0435\u043d\u043e</div></div>';
+  h+='</div>';
+  h+='<div class="stats" style="margin-bottom:16px">';
+  h+='<div class="stat-card" style="background:#fff8e1;border-color:#ffe082"><div class="stat-card__value" style="color:#e65100">'+rev.toLocaleString()+' \u0440\u0443\u0431</div><div class="stat-card__label">\u0412\u044b\u0440\u0443\u0447\u043a\u0430</div></div>';
+  h+='<div class="stat-card" style="background:#e8f5e9;border-color:#c8e6c9"><div class="stat-card__value" style="color:#2e7d32">'+avg.toLocaleString()+' \u0440\u0443\u0431</div><div class="stat-card__label">\u0421\u0440\u0435\u0434\u043d\u0438\u0439 \u0447\u0435\u043a</div></div>';
+  h+='</div>';
+  // \u0420\u0430\u0437\u0431\u0438\u0432\u043a\u0430 \u043f\u043e \u043c\u0430\u0441\u0442\u0435\u0440\u0430\u043c
+  var mStats={};
+  flt.forEach(function(x){
+    if(x.master){
+      var ms=x.master.split(', ');
+      ms.forEach(function(m){
+        if(!mStats[m])mStats[m]={total:0,count:0,revenue:0};
+        mStats[m].count++;
+        if(x.workDone&&x.workDone.total)mStats[m].revenue+=parseInt(x.workDone.total)||0;
+      });
+    }
+  });
+  var mk=Object.keys(mStats);
+  if(mk.length>0){
+    h+='<div style="background:#fff;border-radius:12px;border:1.5px solid #eee;padding:12px;margin-bottom:16px">';
+    
+    h+='<div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#888;margin-bottom:8px">\u0420\u0430\u0437\u0431\u0438\u0432\u043a\u0430 \u043f\u043e \u0441\u043e\u0442\u0440\u0443\u0434\u043d\u0438\u043a\u0430\u043c</div>';
+    h+='<div style="display:flex;flex-direction:column;gap:6px">';
+    mk.sort().forEach(function(m){
+      var ms=mStats[m];
+      h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:#fafafa;border-radius:8px;font-size:13px">';
+      h+='<span style="font-weight:600">'+m+'</span>';
+      h+='<span style="color:#888">'+ms.count+' записей, выручка: <strong style="color:#111">'+ms.revenue.toLocaleString()+' руб</strong></span>';
+      h+='</div>';
+    });
+    h+='</div></div>';
+  }
+  // Детальная таблица
+  h+='<div class="bookings-table"><table><thead><tr><td>Дата</td><td>Имя</td><td>Телефон</td><td>Модель</td><td>Мастер</td><td style="text-align:right">Статус</td></tr></thead><tbody>';
+  flt.sort(function(a,b){return a.date.localeCompare(b.date)||a.time.localeCompare(b.time)}).forEach(function(b){
+    var st=b.status||'new';
+    h+='<tr style="cursor:default" onclick="closeStats();openDet(\''+b.id+'\')"><td>'+b.date.split('-').reverse().join('.')+(b.time?' '+b.time:'')+'</td><td>'+esc(b.name)+'</td><td>'+(b.phone||'-')+'</td><td>'+(b.model?esc(b.model):'-')+'</td><td>'+(b.master||'-')+'</td><td style="text-align:right"><span class="booking-status '+SC[st]+'">'+SL[st]+'</span></td></tr>';
+  });
+  h+='</tbody></table></div>';
+  document.getElementById('statsBody').innerHTML = h;
+}
 </script>
 
-<div class="modal-overlay" id="workModal">
-  <div class="modal-box" style="max-width:520px">
-    <button class="modal-close" onclick="closeWorkForm()">&times;</button>
-    <h3 style="margin-bottom:12px">Какие виды работ были выполнены?</h3>
-    <p style="font-size:14px;color:#888;margin:0 0 12px">Заполните информацию о выполненном обслуживании</p>
-    <div style="margin-bottom:10px;padding:0 4px">
-      <label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Пробег</label>
-      <input type="text" id="workMileage" placeholder="км" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box">
+<div class="modal-overlay" id="statsModal" style="z-index:200">
+  <div class="modal-box" style="max-width:860px">
+    <button class="modal-close" onclick="closeStats()">&times;</button>
+    <h3 style="margin-bottom:12px">Статистика</h3>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
+      <button class="sp-btn active" style="padding:6px 14px;font-size:11px;font-weight:600;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;cursor:pointer;background:#111;color:#fff" onclick="setStatsPeriod('today',this)">Сегодня</button>
+      <button class="sp-btn" style="padding:6px 14px;font-size:11px;font-weight:600;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;cursor:pointer;background:#fff;color:#333" onclick="setStatsPeriod('week',this)">Неделя</button>
+      <button class="sp-btn" style="padding:6px 14px;font-size:11px;font-weight:600;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;cursor:pointer;background:#fff;color:#333" onclick="setStatsPeriod('month',this)">Месяц</button>
+      <button class="sp-btn" style="padding:6px 14px;font-size:11px;font-weight:600;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;cursor:pointer;background:#fff;color:#333" onclick="setStatsPeriod('custom',this)">Свои даты</button>
+      <select onchange="setStatsMaster(this)" style="padding:6px 10px;font-size:11px;font-weight:600;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;cursor:pointer;background:#fff;color:#333;outline:none;margin-left:auto">
+        <option value="all">Все сотрудники</option>
+        <option value="Денис">Денис</option>
+        <option value="Дмитрий">Дмитрий</option>
+        <option value="Алексей">Алексей</option>
+      </select>
     </div>
-    <table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:10px">
-      
-      <thead><tr><th style="text-align:left;padding:6px;color:#888;font-weight:600;font-size:11px;border-bottom:2px solid #eee;width:60%">Вид</th><th style="text-align:right;padding:6px;color:#888;font-weight:600;font-size:11px;border-bottom:2px solid #eee;width:15%">Сумма</th><th style="text-align:center;padding:6px;color:#888;font-weight:600;font-size:11px;border-bottom:2px solid #eee;width:25%">Мастер</th></tr></thead>
-    <tbody id="workItems"></tbody>
-    </table>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-      <a href="javascript:void(0)" onclick="addWorkRow()" style="color:#1983dd;font-weight:600;font-size:12px;text-decoration:none">+ Добавить строку</a>
-      <div style="font-size:14px;font-weight:700;color:#111">Итого: <span id="workTotal">0</span> руб</div>
+    <div id="statsDateRange" class="hidden" style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
+      <input type="date" id="statsDate1" style="padding:8px 10px;font-size:13px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;flex:1">
+      <span style="color:#888;font-size:12px">—</span>
+      <input type="date" id="statsDate2" style="padding:8px 10px;font-size:13px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;flex:1">
+      <button onclick="applyStatsCustom()" style="padding:8px 16px;font-size:12px;font-weight:600;font-family:Inter,sans-serif;background:#111;color:#fff;border:none;border-radius:8px;cursor:pointer">Применить</button>
     </div>
-    <div style="display:flex;gap:8px">
-      <button class="btn-grad-del" style="flex:1;padding:10px;font-size:13px;background:#333" onclick="closeWorkForm();closeDet()">Отмена</button>
-      <button class="btn-grad" style="flex:1;padding:10px;font-size:13px" onclick="saveWork()">Сохранить</button>
-    </div>
+    <div id="statsBody"></div>
   </div>
 </div>
-</body>>
-
 
 <div class="modal-overlay" id="workModal">
   <div class="modal-box" style="max-width:520px">
@@ -527,7 +642,6 @@ function saveWork(){
       <input type="text" id="workMileage" placeholder="км" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box">
     </div>
     <table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:10px">
-      
       <thead><tr><th style="text-align:left;padding:6px;color:#888;font-weight:600;font-size:11px;border-bottom:2px solid #eee;width:60%">Вид</th><th style="text-align:right;padding:6px;color:#888;font-weight:600;font-size:11px;border-bottom:2px solid #eee;width:15%">Сумма</th><th style="text-align:center;padding:6px;color:#888;font-weight:600;font-size:11px;border-bottom:2px solid #eee;width:25%">Мастер</th></tr></thead>
     <tbody id="workItems"></tbody>
     </table>
