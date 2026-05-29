@@ -217,7 +217,10 @@
 .catalog-page{padding-left:8px!important;padding-right:8px!important}
 .catalog-page__grid{grid-template-columns:1fr!important;gap:12px!important}
 .house-card__image{height:200px!important}
-.house-card__content{padding:12px!important}
+.house-card__content{padding:10px 12px 6px!important}
+.house-card__specs{gap:2px!important}
+.house-card__spec{padding:3px 0!important}
+.house-card__footer{display:none!important}
 .section{padding:1.5rem .5rem}
 .container{padding-left:8px!important;padding-right:8px!important}
 .footer-grid{grid-template-columns:1fr 1fr!important;gap:6px!important}
