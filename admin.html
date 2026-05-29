@@ -87,22 +87,24 @@ body{font-family:Inter,sans-serif;background:#f5f5f5;color:#111;min-height:100vh
 tr.done td:not(:last-child){text-decoration:line-through!important;text-decoration-thickness:1px!important;opacity:.55}
 
 /* Carousel */
-.carousel-wrap{position:relative;overflow:hidden;width:100%;border-radius:12px;background:#fafafa;touch-action:pan-y}
-.carousel-track{display:flex;transition:transform .3s ease;will-change:transform}
-.carousel-card{flex:0 0 100%;min-width:100%;padding:16px;box-sizing:border-box;background:#fff;border:1.5px solid #eee;border-radius:12px}
+.carousel-wrap{position:relative;overflow:hidden;width:100%;border-radius:14px;background:#f5f5f5;touch-action:pan-y}
+.carousel-track{display:flex;transition:transform .35s cubic-bezier(.25,.46,.45,.94);will-change:transform}
+.carousel-card{flex:0 0 100%;min-width:100%;padding:20px;box-sizing:border-box;background:#fff;border:1.5px solid #e8e8e8;border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,.04)}
 .carousel-card+.carousel-card{margin-left:0}
-.carousel-card h4{font-size:14px;font-weight:700;margin:0 0 4px;color:#111}
-.carousel-card .sub{font-size:11px;color:#888;margin-bottom:10px}
-.carousel-card .row{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid #f0f0f0}
-.carousel-card .row .lbl{color:#888;width:80px;flex-shrink:0}
-.carousel-card .row .val{font-weight:500;color:#333;text-align:right;flex:1}
-.carousel-card .work-item{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid #f0f0f0}
-.carousel-card .work-item .wn{color:#555}
-.carousel-card .work-item .wp{font-weight:600;color:#111}
-.carousel-card .total-row{display:flex;justify-content:space-between;font-size:14px;font-weight:700;color:#111;padding:6px 0;margin-top:4px;border-top:2px solid #333}
-.carousel-dots{display:flex;justify-content:center;gap:6px;padding:10px 0 4px}
-.carousel-dot{width:8px;height:8px;border-radius:50%;background:#ddd;cursor:pointer;border:none;padding:0;transition:background .2s}
-.carousel-dot.active{background:#111;width:20px;border-radius:4px}
+.carousel-card h4{font-size:22px;font-weight:800;margin:0 0 2px;color:#111;letter-spacing:-.3px}
+.carousel-card .sub{font-size:13px;color:#888;margin-bottom:14px;font-weight:500}
+.carousel-card .row{display:flex;justify-content:space-between;font-size:14px;padding:6px 0;border-bottom:1px solid #f0f0f0}
+.carousel-card .row .lbl{color:#888;width:90px;flex-shrink:0;font-weight:500}
+.carousel-card .row .val{font-weight:600;color:#111;text-align:right;flex:1}
+.carousel-card .section-title{font-size:11px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:.8px;margin:12px 0 6px}
+.carousel-card .work-item{display:flex;justify-content:space-between;align-items:center;font-size:14px;padding:6px 0;border-bottom:1px solid #f0f0f0}
+.carousel-card .work-item .wn{color:#333;font-weight:500;flex:1}
+.carousel-card .work-item .wm{color:#999;font-size:12px;margin:0 8px;white-space:nowrap}
+.carousel-card .work-item .wp{font-weight:700;color:#111;white-space:nowrap}
+.carousel-card .total-row{display:flex;justify-content:space-between;font-size:16px;font-weight:800;color:#111;padding:10px 0 4px;margin-top:6px;border-top:2px solid #111}
+.carousel-dots{display:flex;justify-content:center;gap:8px;padding:14px 0 6px}
+.carousel-dot{width:8px;height:8px;border-radius:50%;background:#ddd;cursor:pointer;border:none;padding:0;transition:all .3s ease}
+.carousel-dot.active{background:linear-gradient(135deg,#0bc5ea,#8b5cf6);width:24px;border-radius:5px}
 
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
@@ -599,7 +601,7 @@ function renderCarousel(id){
       if(v.workDone.mileage){
         h += '<div class="row" style="margin-top:6px"><span class="lbl">Пробег</span><span class="val">' + v.workDone.mileage + ' км</span></div>';
       }
-      h += '<div style="margin-top:8px;padding-top:8px;border-top:1px solid #eee">';
+      h += '<div class="section-title">\u0420\u0430\u0431\u043e\u0442\u044b</div>'; h += '<div style="margin-top:0">';
       for(var wi = 0; wi < v.workDone.items.length; wi++){
         var w = v.workDone.items[wi];
         h += '<div class="work-item"><span class="wn">' + esc(w.name||'') + '</span><span style="color:#888;font-size:11px">' + (w.master||'') + '</span><span class="wp">' + (w.price||'0') + ' руб</span></div>';
