@@ -214,7 +214,7 @@ function RCAL(){var y=CV.getFullYear(),m=CV.getMonth();document.getElementById('
 function calMove(d){CV.setMonth(CV.getMonth()+d);RCAL()}
 function pickDate(d){var y=CV.getFullYear(),m=CV.getMonth();if(!SD1){SD1=new Date(y,m,d);SD2=null}else{if(SD2){SD1=new Date(y,m,d);SD2=null}else{var nt=new Date(y,m,d);if(nt>SD1)SD2=nt;else{SD2=SD1;SD1=nt}}}SD=SD1||SD2;TB=2;document.querySelectorAll('.tab-bar button').forEach(function(b){b.classList.remove('active')});document.getElementById('tab2').classList.add('active');RCAL();RBOK()}
 function switchTab(t){TB=t;if(t===2){SD1=null;SD2=null;SD=null}document.querySelectorAll('.tab-bar button').forEach(function(b){b.classList.remove('active')});document.getElementById('tab'+t).classList.add('active');if(t===2)RCAL();RBOK()}
-function RBOK(){var d=new Date(),tm=new Date(d);tm.setDate(tm.getDate()+1);var f=[];if(TB===0)f=BK.filter(function(b){var bd=new Date(b.date);return same(bd,d)});else if(TB===1)f=BK.filter(function(b){var bd=new Date(b.date);return same(bd,tm)});else if(TB===2&&SD2)f=BK.filter(function(b){var bd=new Date(b.date);return bd>=SD1&&bd<=SD2});else if(TB===2&&SD1)f=BK.filter(function(b){var bd=new Date(b.date);return same(bd,SD1)});else f=[].concat(BK);f.sort(function(a,b){return a.date.localeCompare(b.date)||a.time.localeCompare(b.time)});var h='',tt='\u0412\u0441\u0435 \u0437\u0430\u043f\u0438\u0441\u0438';if(TB===0)tt='\u0421\u0435\u0433\u043e\u0434\u043d\u044f';else if(TB===1)tt='\u0417\u0430\u0432\u0442\u0440\u0430';else if(SD2){var wr=f.length==1?'запись':(f.length>=2&&f.length<=4?'записи':'записей');tt=SD1.getDate()+' '+MN[SD1.getMonth()]+' — '+SD2.getDate()+' '+MN[SD2.getMonth()]+' — '+f.length+' '+wr}else if(SD1){var wr=f.length==1?'запись':(f.length>=2&&f.length<=4?'записи':'записей');tt=SD1.getDate()+' '+MN[SD1.getMonth()]+' — '+f.length+' '+wr}h+='<h3>'+tt+'</h3>';if(f.length===0){h+='<div class="empty-state">\u041d\u0435\u0442 \u0437\u0430\u043f\u0438\u0441\u0435\u0439</div>'}else{h+='<div class="bookings-table"><table style="table-layout:fixed"><thead><tr><td>\u0414\u0430\u0442\u0430</td><td>\u0418\u043c\u044f</td><td>\u0422\u0435\u043b\u0435\u0444\u043e\u043d</td><td>\u041c\u043e\u0434\u0435\u043b\u044c</td><td style="width:12%">\u041c\u0430\u0441\u0442\u0435\u0440</td><td style="width:12%">\u0421\u0443\u043c\u043c\u0430</td><td style="width:12%">\u0421\u0442\u0430\u0442\u0443\u0441</td></tr></thead><tbody>';for(var i=0;i<f.length;i++){var b=f[i];var st=b.status||'new';var bg=i%2===0?'#fff':'#fafafa';var dc='';if(st==='completed'||st==='cancelled')dc=' class="done"';h+='<tr'+dc+' style="background:'+bg+'" onclick="'+(st==='in_progress'?'openWorkForm(\u0027'+b.id+'\u0027)':'openDet(\u0027'+b.id+'\u0027)')+'"><td>'+b.date.split('-').reverse().join('.')+(b.time?' '+b.time:'')+'</td><td>'+esc(b.name)+'</td><td>'+(b.phone||'-')+'</td><td>'+(b.model?esc(b.model):'-')+'</td><td>'+(b.master||'-')+'</td><td>'+(b.workDone&&b.workDone.total?b.workDone.total+' руб':'-')+'</td><td><span class="booking-status '+SC[st]+'">'+SL[st]+'</span></td></tr>'}h+='</tbody></table></div>'}document.getElementById('bookingsList').innerHTML=h}
+function RBOK(){var d=new Date(),tm=new Date(d);tm.setDate(tm.getDate()+1);var f=[];if(TB===0)f=BK.filter(function(b){var bd=new Date(b.date);return same(bd,d)});else if(TB===1)f=BK.filter(function(b){var bd=new Date(b.date);return same(bd,tm)});else if(TB===2&&SD2)f=BK.filter(function(b){var bd=new Date(b.date);return bd>=SD1&&bd<=SD2});else if(TB===2&&SD1)f=BK.filter(function(b){var bd=new Date(b.date);return same(bd,SD1)});else f=[].concat(BK);f.sort(function(a,b){return a.date.localeCompare(b.date)||a.time.localeCompare(b.time)});var h='',tt='\u0412\u0441\u0435 \u0437\u0430\u043f\u0438\u0441\u0438';if(TB===0)tt='\u0421\u0435\u0433\u043e\u0434\u043d\u044f';else if(TB===1)tt='\u0417\u0430\u0432\u0442\u0440\u0430';else if(SD2){var wr=f.length==1?'запись':(f.length>=2&&f.length<=4?'записи':'записей');tt=SD1.getDate()+' '+MN[SD1.getMonth()]+' — '+SD2.getDate()+' '+MN[SD2.getMonth()]+' — '+f.length+' '+wr}else if(SD1){var wr=f.length==1?'запись':(f.length>=2&&f.length<=4?'записи':'записей');tt=SD1.getDate()+' '+MN[SD1.getMonth()]+' — '+f.length+' '+wr}h+='<h3>'+tt+'</h3>';if(f.length===0){h+='<div class="empty-state">\u041d\u0435\u0442 \u0437\u0430\u043f\u0438\u0441\u0435\u0439</div>'}else{h+='<div class="bookings-table"><table style="table-layout:fixed"><thead><tr><td>\u0414\u0430\u0442\u0430</td><td>\u0418\u043c\u044f</td><td>\u0422\u0435\u043b\u0435\u0444\u043e\u043d</td><td>\u041c\u043e\u0434\u0435\u043b\u044c</td><td style="width:12%">\u041c\u0430\u0441\u0442\u0435\u0440</td><td style="width:12%">\u0421\u0443\u043c\u043c\u0430</td><td style="width:12%">\u0421\u0442\u0430\u0442\u0443\u0441</td></tr></thead><tbody>';for(var i=0;i<f.length;i++){var b=f[i];var st=b.status||'new';var bg=i%2===0?'#fff':'#fafafa';var dc='';if(st==='completed'||st==='cancelled')dc=' class="done"';h+='<tr'+dc+' style="background:'+bg+'" onclick="'+(st==='in_progress'?'openWorkForm(\u0027'+b.id+'\u0027)':'openDet(\u0027'+b.id+'\u0027)')+'"><td>'+b.date.split('-').reverse().join('.')+(b.time?' '+b.time:'')+'</td><td>'+esc(b.name)+'</td><td>'+(b.phone||'-')+'</td><td>'+(b.model?esc(b.model):'-')+'</td><td>'+(b.master||'-')+'</td><td>'+(b.workDone&&b.workDone.total?b.workDone.total+' ₽':'-')+'</td><td><span class="booking-status '+SC[st]+'">'+SL[st]+'</span></td></tr>'}h+='</tbody></table></div>'}document.getElementById('bookingsList').innerHTML=h}
 function openDet(id){
   var b=BK.find(function(x){return x.id===id});if(!b)return;
   var st=b.status||"new";
@@ -263,9 +263,9 @@ function openDet(id){
     h+="<div style=\"background:#fafafa;border-radius:8px;padding:10px 12px\">";
     for(var wi=0;wi<b.workDone.items.length;wi++){
       var w=b.workDone.items[wi];
-      if(w.name||w.price) h+="<div style=\"display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid #eee\"><span style=\"color:#333\">"+esc(w.name)+"</span><span style=\"font-weight:600;color:#111\">"+w.price+" \u0440\u0443\u0431</span></div>";
+      if(w.name||w.price) h+="<div style=\"display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid #eee\"><span style=\"color:#333\">"+esc(w.name)+"</span><span style=\"font-weight:600;color:#111\">"+w.price+" \u20BD</span></div>";
     }
-    h+="<div style=\"display:flex;justify-content:space-between;font-size:14px;font-weight:700;color:#111;padding-top:6px;margin-top:2px;border-top:2px solid #333\"><span>\u0418\u0442\u043e\u0433\u043e:</span><span>"+b.workDone.total+" \u0440\u0443\u0431</span></div>";
+    h+="<div style=\"display:flex;justify-content:space-between;font-size:14px;font-weight:700;color:#111;padding-top:6px;margin-top:2px;border-top:2px solid #333\"><span>\u0418\u0442\u043e\u0433\u043e:</span><span>"+b.workDone.total+" \u20BD</span></div>";
     h+="</div>";
     h+="<div style=\"text-align:right;margin-top:6px\"><a href=\"javascript:void(0)\" onclick=\"editWork(\u0027"+b.id+"\u0027)\" style=\"color:#1983dd;font-weight:600;font-size:12px;text-decoration:none\">\u270f \u0420\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u0442\u044c</a></div>";
     h+="</div>";
@@ -284,9 +284,9 @@ if(b.phone){
         if(pv.workDone.mileage) h+="<div style=\"color:#888;margin-bottom:6px\">\u041f\u0440\u043e\u0431\u0435\u0433: <strong style=\"color:#333\">"+pv.workDone.mileage+" \u043a\u043c</strong></div>";
                 for(var wi=0;wi<pv.workDone.items.length;wi++){
           var w=pv.workDone.items[wi];
-          h+="<div style=\"display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid #f0f0f0\"><span style=\"color:#555\">"+esc(w.name)+"</span><span style=\"font-weight:600;color:#111\">"+w.price+" \u0440\u0443\u0431</span></div>";
+          h+="<div style=\"display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid #f0f0f0\"><span style=\"color:#555\">"+esc(w.name)+"</span><span style=\"font-weight:600;color:#111\">"+w.price+" \u20BD</span></div>";
         }
-        h+="<div style=\"display:flex;justify-content:space-between;font-size:14px;font-weight:700;color:#111;margin-top:8px;padding-top:8px;border-top:2px solid #333\"><span>\u0418\u0442\u043e\u0433\u043e:</span><span>"+pv.workDone.total+" \u0440\u0443\u0431</span></div>";
+        h+="<div style=\"display:flex;justify-content:space-between;font-size:14px;font-weight:700;color:#111;margin-top:8px;padding-top:8px;border-top:2px solid #333\"><span>\u0418\u0442\u043e\u0433\u043e:</span><span>"+pv.workDone.total+" \u20BD</span></div>";
         h+="</div>";
       }
       h+="</div></div>";
@@ -412,9 +412,9 @@ function sendAdminTG(nm,ph,dt,tm,md,nt){
       if(last.workDone.mileage) msg+="\uD83D\uDCCF \u041F\u0440\u043E\u0431\u0435\u0433: "+last.workDone.mileage+" \u043A\u043C\n";
       msg+="\uD83D\uDCCB \u041F\u043E\u0441\u043B\u0435\u0434\u043D\u0438\u0435 \u0440\u0430\u0431\u043E\u0442\u044B:";
       for(var i=0;i<last.workDone.items.length;i++){
-        msg+="\n  - "+last.workDone.items[i].name+": "+last.workDone.items[i].price+" \u0440\u0443\u0431";
+        msg+="\n  - "+last.workDone.items[i].name+": "+last.workDone.items[i].price+" \u20BD";
       }
-      msg+="\n\u0421\u0443\u043C\u043C\u0430: "+last.workDone.total+" \u0440\u0443\u0431";
+      msg+="\n\u0421\u0443\u043C\u043C\u0430: "+last.workDone.total+" \u20BD";
     }else{
       msg+="\n\u041F\u043E\u0441\u043B\u0435\u0434\u043D\u0435\u0435 \u043F\u043E\u0441\u0435\u0449\u0435\u043D\u0438\u0435 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u043E";
     }
@@ -590,9 +590,9 @@ function renderCarousel(id){
       h += '<div class="wl">Работы</div>';
       for(var wi = 0; wi < v.workDone.items.length; wi++){
         var w = v.workDone.items[wi];
-        h += '<div class="wi"><span class="n">' + esc(w.name||'') + '</span><span class="p">' + (w.price||'0') + ' руб</span></div>';
+        h += '<div class="wi"><span class="n">' + esc(w.name||'') + '</span><span class="p">' + (w.price||'0') + ' ₽</span></div>';
       }
-      h += '<div class="t"><span>Итого</span><span>' + (v.workDone.total||'0') + ' руб</span></div>';
+      h += '<div class="t"><span>Итого</span><span>' + (v.workDone.total||'0') + ' ₽</span></div>';
     }
     h += '</div>';
   }
@@ -716,8 +716,8 @@ function renderStats(){
   h+='<div class="stat-card"><div class="stat-card__value">'+cn+'</div><div class="stat-card__label">\u041e\u0442\u043c\u0435\u043d\u0435\u043d\u043e</div></div>';
   h+='</div>';
   h+='<div class="stats" style="margin-bottom:16px">';
-  h+='<div class="stat-card" style="background:#fff8e1;border-color:#ffe082"><div class="stat-card__value" style="color:#e65100">'+rev.toLocaleString()+' \u0440\u0443\u0431</div><div class="stat-card__label">\u0412\u044b\u0440\u0443\u0447\u043a\u0430</div></div>';
-  h+='<div class="stat-card" style="background:#e8f5e9;border-color:#c8e6c9"><div class="stat-card__value" style="color:#2e7d32">'+avg.toLocaleString()+' \u0440\u0443\u0431</div><div class="stat-card__label">\u0421\u0440\u0435\u0434\u043d\u0438\u0439 \u0447\u0435\u043a</div></div>';
+  h+='<div class="stat-card" style="background:#fff8e1;border-color:#ffe082"><div class="stat-card__value" style="color:#e65100">'+rev.toLocaleString()+' \u20BD</div><div class="stat-card__label">\u0412\u044b\u0440\u0443\u0447\u043a\u0430</div></div>';
+  h+='<div class="stat-card" style="background:#e8f5e9;border-color:#c8e6c9"><div class="stat-card__value" style="color:#2e7d32">'+avg.toLocaleString()+' \u20BD</div><div class="stat-card__label">\u0421\u0440\u0435\u0434\u043d\u0438\u0439 \u0447\u0435\u043a</div></div>';
   h+='</div>';
   // \u0420\u0430\u0437\u0431\u0438\u0432\u043a\u0430 \u043f\u043e \u043c\u0430\u0441\u0442\u0435\u0440\u0430\u043c
   var mStats={};
@@ -741,7 +741,7 @@ function renderStats(){
       var ms=mStats[m];
       h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:#fafafa;border-radius:8px;font-size:13px">';
       h+='<span style="font-weight:600">'+m+'</span>';
-      h+='<span style="color:#888">'+ms.count+' записей, выручка: <strong style="color:#111">'+ms.revenue.toLocaleString()+' руб</strong></span>';
+      h+='<span style="color:#888">'+ms.count+' записей, выручка: <strong style="color:#111">'+ms.revenue.toLocaleString()+' ₽</strong></span>';
       h+='</div>';
     });
     h+='</div></div>';
@@ -819,7 +819,7 @@ function renderStats(){
     </table>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
       <a href="javascript:void(0)" onclick="addWorkRow()" style="color:#1983dd;font-weight:600;font-size:12px;text-decoration:none">+ Добавить строку</a>
-      <div style="font-size:14px;font-weight:700;color:#111">Итого: <span id="workTotal">0</span> руб</div>
+      <div style="font-size:14px;font-weight:700;color:#111">Итого: <span id="workTotal">0</span> ₽</div>
     </div>
     <div style="display:flex;gap:8px">
       <button class="btn-grad" style="flex:1;padding:10px;font-size:13px;background:linear-gradient(135deg,#0bc5ea,#8b5cf6)" onclick="saveWork('complete')">Завершить</button>
