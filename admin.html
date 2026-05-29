@@ -274,7 +274,7 @@ document.getElementById("detBody").innerHTML=h;
     a+="<button class=\"btn-grad-del\" style=\"flex:1;padding:10px;font-size:13px\" onclick=\"setStat('"+b.id+"','cancelled');closeDet()\"> ОТМЕНИТЬ</button>";
   }else if(st==='in_progress'){
     a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px\" onclick=\"openWorkEdit('"+b.id+"')\"> РЕДАКТИРОВАТЬ РАБОТЫ</button>";
-    a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px;background:#e65100\" onclick=\"openWorkForm('"+b.id+"','complete')\"> ЗАВЕРШИТЬ</button>";
+    a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px;background:linear-gradient(135deg,#0bc5ea,#8b5cf6)\" onclick=\"openWorkForm('"+b.id+"','complete')\"> ЗАВЕРШИТЬ</button>";
   }else if(st==='completed'&&b.workDone){
     a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px\" onclick=\"editWork('"+b.id+"')\"> ✏ РЕДАКТИРОВАТЬ</button>";
   }
@@ -439,7 +439,15 @@ function openWorkForm(id){
   document.getElementById("workModal").classList.add("active");
   document.getElementById("workMileage").value = "";
   document.getElementById("workItems").innerHTML = "";
-  for(var i=0;i<3;i++) addWorkRow();
+  if(b && b.workDone && b.workDone.items && b.workDone.items.length > 0){
+    // Load existing work data
+    if(b.workDone.mileage) document.getElementById("workMileage").value = b.workDone.mileage;
+    var existing = b.workDone.items;
+    for(var wi=0; wi<existing.length; wi++) addWorkRow(wi);
+    calcWorkTotal();
+  } else {
+    for(var i=0;i<3;i++) addWorkRow();
+  }
   if(b && b.master){
     var masters = b.master.split(", ");
     var sels = document.querySelectorAll(".wi-master");
@@ -456,14 +464,27 @@ function openWorkForm(id){
 }
 calcWorkTotal();
 }
+function editWork(id){
+  openWorkForm(id);
+}
 function closeWorkForm(){
   document.getElementById("workModal").classList.remove("active");
 }
-function addWorkRow(){
+function addWorkRow(idx){
   var tb = document.getElementById("workItems");
   var tr = document.createElement("tr");
   tr.innerHTML = '<td style="padding:4px"><input class="wi-name" placeholder="Наименование" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box"></td><td style="padding:4px"><input class="wi-price" type="number" placeholder="0" oninput="calcWorkTotal()" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box;text-align:right"></td><td style="padding:4px"><select class="wi-master" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box;cursor:pointer"></select></td>';
   tb.appendChild(tr);
+  // If index is provided, look up data from the current booking
+  if(typeof idx !== 'undefined'){
+    var b2 = BK.find(function(x){return x.id===workBookingId});
+    if(b2 && b2.workDone && b2.workDone.items && b2.workDone.items[idx]){
+      var item = b2.workDone.items[idx];
+      tr.querySelector(".wi-name").value = item.name || '';
+      tr.querySelector(".wi-price").value = item.price || 0;
+      if(item.master) tr.querySelector(".wi-master").value = item.master;
+    }
+  }
   // Populate master dropdown for new row
   var b2 = BK.find(function(x){return x.id===workBookingId});
   if(b2 && b2.master){
@@ -698,7 +719,7 @@ function renderStats(){
       <div style="font-size:14px;font-weight:700;color:#111">Итого: <span id="workTotal">0</span> руб</div>
     </div>
     <div style="display:flex;gap:8px">
-      <button class="btn-grad" style="flex:1;padding:10px;font-size:13px;background:#e65100" onclick="saveWork('complete')">Завершить</button>
+      <button class="btn-grad" style="flex:1;padding:10px;font-size:13px;background:linear-gradient(135deg,#0bc5ea,#8b5cf6)" onclick="saveWork('complete')">Завершить</button>
       <button class="btn-grad" style="flex:1;padding:10px;font-size:13px;background:#333" onclick="saveWork();closeWorkForm()">Сохранить</button>
     </div>
   </div>
