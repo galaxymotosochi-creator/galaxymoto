@@ -1455,8 +1455,11 @@ function init(){var e=document.getElementById("servInlineCalendar");if(e){ld(fun
       <div style="margin-bottom:12px">
         <input type="text" id="consultName" placeholder="Имя" style="width:100%;padding:12px 14px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:10px;color:#333;background:#fff;box-sizing:border-box;outline:none" onfocus="this.style.borderColor='#111'" onblur="this.style.borderColor='#ddd'">
       </div>
-      <div style="margin-bottom:16px">
+      <div style="margin-bottom:8px">
         <input type="tel" id="consultPhone" placeholder="Номер телефона" style="width:100%;padding:12px 14px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:10px;color:#333;background:#fff;box-sizing:border-box;outline:none" onfocus="this.style.borderColor='#111'" onblur="this.style.borderColor='#ddd'">
+      </div>
+      <div style="margin-bottom:16px">
+        <input type="text" id="consultTime" placeholder="Удобное время звонка" style="width:100%;padding:12px 14px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:10px;color:#333;background:#fff;box-sizing:border-box;outline:none" onfocus="this.style.borderColor='#111'" onblur="this.style.borderColor='#ddd'">
       </div>
       
       <button id="consultSubmitBtn" onclick="submitConsult()" style="width:100%;padding:12px;font-size:15px;font-weight:600;font-family:Inter,sans-serif;color:#fff;background:#111;border:none;border-radius:10px;cursor:pointer">Записаться</button>
@@ -1502,6 +1505,7 @@ window.closeConsult = function() {
 window.submitConsult = function() {
   var name = document.getElementById('consultName').value.trim();
   var phone = document.getElementById('consultPhone').value.trim();
+  var time = document.getElementById('consultTime').value.trim();
   if (!name || !phone) { alert('Заполните имя и телефон'); return; }
   var btn = document.getElementById('consultSubmitBtn');
   if (btn) { btn.textContent = 'Отправка...'; btn.disabled = true; }
