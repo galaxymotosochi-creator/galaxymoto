@@ -473,6 +473,16 @@ function saveMasterSelect(){
   for(var i=0;i<cbs.length;i++) selected.push(MASTERS[parseInt(cbs[i].value)]);
   var masterStr = selected.join(", ");
   setStat(pendingConfirmId, "in_progress", masterStr);
+  var bk = BK.find(function(x){return x.id===pendingConfirmId});
+  if(bk){
+    var msg = "\uD83D\uDEF5 \u0417\u0430\u043F\u0438\u0441\u044C \u0432\u0437\u044F\u0442\u0430 \u0432 \u0440\u0430\u0431\u043E\u0442\u0443!\n\n";
+    msg += "\uD83D\uDCC5 " + bk.date.split('-').reverse().join('.') + (bk.time?' '+bk.time:'') + "\n";
+    msg += "\uD83D\uDC64 " + bk.name + "\n";
+    msg += "\uD83D\uDC68\u200D\uD83D\uDD27 \u041C\u0430\u0441\u0442\u0435\u0440: " + masterStr + "\n";
+    if(bk.phone) msg += "\uD83D\uDCDE " + bk.phone + "\n";
+    if(bk.model) msg += "\uD83D\uDEE2 " + bk.model + "\n";
+    fetch('https://api.telegram.org/bot7471473926:AAE_kyz1Qtb1J8Dddqk1aaxzBGfMQ73lSMM/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:5368408796,text:msg})}).catch(function(){});
+  }
   closeMasterModal();
   closeDet();
 }
