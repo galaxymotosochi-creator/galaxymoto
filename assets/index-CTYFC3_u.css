@@ -248,3 +248,6 @@ a:active,button:active,.house-card:active,.card:active{box-shadow:0 2px 8px rgba
 a{-webkit-tap-highlight-color:transparent}
 
 .house-card__footer .house-card__price{display:flex!important;align-items:baseline;gap:4px;font-size:18px!important;font-weight:600!important;color:#111!important}
+
+/* Calendar panel border */
+.section--calc>.container>div:nth-child(2){border:1px solid #eee;border-radius:14px}
