@@ -733,10 +733,10 @@ function renderStats(){
     h+='</div></div>';
   }
   // Детальная таблица
-  h+='<div class="bookings-table"><table><thead><tr><td>Дата</td><td>Имя</td><td>Телефон</td><td>Модель</td><td>Сумма</td><td>Мастер</td><td>Статус</td></tr></thead><tbody>';
+  h+='<div class="bookings-table"><table style="table-layout:fixed"><thead><tr><td style="width:14%">Дата</td><td style="width:18%">Имя</td><td style="width:16%">Телефон</td><td style="width:13%">Модель</td><td style="width:13%;text-align:left">Мастер</td><td style="width:13%;text-align:left">Сумма</td><td style="width:13%;text-align:left">Статус</td></tr></thead><tbody>';
   flt.sort(function(a,b){return a.date.localeCompare(b.date)||a.time.localeCompare(b.time)}).forEach(function(b){
     var st=b.status||'new';
-    h+='<tr style="cursor:default" onclick="closeStats();openDet(\''+b.id+'\')"><td>'+b.date.split('-').reverse().join('.')+(b.time?' '+b.time:'')+'</td><td>'+esc(b.name)+'</td><td>'+(b.phone||'-')+'</td><td>'+(b.model?esc(b.model):'-')+'</td><td>'+(b.master||'-')+'</td><td style="text-align:right"><span class="booking-status '+SC[st]+'">'+SL[st]+'</span></td></tr>';
+    h+='<tr style="cursor:default" onclick="closeStats();openDet(\''+b.id+'\')"><td>'+b.date.split('-').reverse().join('.')+(b.time?' '+b.time:'')+'</td><td>'+esc(b.name)+'</td><td>'+(b.phone||'-')+'</td><td>'+(b.model?esc(b.model):'-')+'</td><td>'+(b.master||'-')+'</td><td>'+(b.workDone&&b.workDone.total?b.workDone.total+' ₽':'-')+'</td><td><span class="booking-status '+SC[st]+'">'+SL[st]+'</span></td></tr>';
   });
   h+='</tbody></table></div>';
   document.getElementById('statsBody').innerHTML = h;
