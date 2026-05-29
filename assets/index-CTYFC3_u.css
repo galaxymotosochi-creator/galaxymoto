@@ -211,3 +211,30 @@
 /* Разделитель между Каталог и Запись на сервис */
 
 
+
+/* Mobile: up to 480px */
+@media(max-width:480px){
+.house-card__grid{grid-template-columns:1fr!important}
+.house-card{min-width:0!important}
+.house-card__image{height:200px}
+.section{padding:2rem 1rem}
+.container{padding-left:12px;padding-right:12px}
+.footer__grid{grid-template-columns:1fr!important;padding:20px 0}
+.footer__col--menu,.footer__col--contacts{border-left:none!important;border-top:1px solid #e0e0e0;padding:12px 0!important}
+.footer__col--brand{display:block!important}
+.footer__legal-block--desktop{display:none!important}
+.footer__legal-block--mobile{display:flex!important}
+.house-card__info{grid-template-columns:1fr!important}
+.features-grid{grid-template-columns:1fr!important}
+}
+/* Mobile: 481px to 767px */
+@media(min-width:481px) and (max-width:767px){
+.house-card__grid{grid-template-columns:1fr 1fr!important}
+.section{padding:2rem 1.5rem}
+.container{padding-left:16px;padding-right:16px}
+}
+/* Mobile: up to 767px general */
+@media(max-width:767px){
+.house-card__image{height:220px}
+.house-card__info{grid-template-columns:1fr!important}
+}
