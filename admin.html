@@ -85,6 +85,25 @@ body{font-family:Inter,sans-serif;background:#f5f5f5;color:#111;min-height:100vh
 .ts-slot{text-align:center;padding:8px 4px;font-size:13px;font-weight:500;color:#333;border:1px solid #ddd;border-radius:8px;cursor:pointer}
 .ts-taken{color:#aaa;background:#f5f5f5;cursor:default}
 tr.done td:not(:last-child){text-decoration:line-through!important;text-decoration-thickness:1px!important;opacity:.55}
+
+/* Carousel */
+.carousel-wrap{position:relative;overflow:hidden;width:100%;border-radius:12px;background:#fafafa;touch-action:pan-y}
+.carousel-track{display:flex;transition:transform .3s ease;will-change:transform}
+.carousel-card{flex:0 0 100%;min-width:100%;padding:16px;box-sizing:border-box;background:#fff;border:1.5px solid #eee;border-radius:12px}
+.carousel-card+.carousel-card{margin-left:0}
+.carousel-card h4{font-size:14px;font-weight:700;margin:0 0 4px;color:#111}
+.carousel-card .sub{font-size:11px;color:#888;margin-bottom:10px}
+.carousel-card .row{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid #f0f0f0}
+.carousel-card .row .lbl{color:#888;width:80px;flex-shrink:0}
+.carousel-card .row .val{font-weight:500;color:#333;text-align:right;flex:1}
+.carousel-card .work-item{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid #f0f0f0}
+.carousel-card .work-item .wn{color:#555}
+.carousel-card .work-item .wp{font-weight:600;color:#111}
+.carousel-card .total-row{display:flex;justify-content:space-between;font-size:14px;font-weight:700;color:#111;padding:6px 0;margin-top:4px;border-top:2px solid #333}
+.carousel-dots{display:flex;justify-content:center;gap:6px;padding:10px 0 4px}
+.carousel-dot{width:8px;height:8px;border-radius:50%;background:#ddd;cursor:pointer;border:none;padding:0;transition:background .2s}
+.carousel-dot.active{background:#111;width:20px;border-radius:4px}
+
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
@@ -197,6 +216,11 @@ function RBOK(){var d=new Date(),tm=new Date(d);tm.setDate(tm.getDate()+1);var f
 function openDet(id){
   var b=BK.find(function(x){return x.id===id});if(!b)return;
   var st=b.status||"new";
+  if(st==='completed' && b.workDone && b.workDone.items && b.workDone.items.length > 0 && b.phone){
+    renderCarousel(id);
+    return;
+  }
+
   document.getElementById("detTitle").textContent="\u0414\u0435\u0442\u0430\u043b\u0438 \u0437\u0430\u043f\u0438\u0441\u0438";
   var h="";
   h+="<div style=\"display:flex;gap:10px;margin-bottom:10px\">";
@@ -534,6 +558,124 @@ function saveWork(mode){
   closeWorkForm();
   closeDet();
 }
+
+function renderCarousel(id){
+  var b = BK.find(function(x){return x.id===id});
+  if(!b || !b.phone) return;
+  
+  // Find all completed records with workDone for this phone
+  var visits = BK.filter(function(x){
+    return x.phone === b.phone && x.workDone && x.workDone.items && x.workDone.items.length > 0;
+  });
+  // Sort by date ascending
+  visits.sort(function(a, b){return a.date.localeCompare(b.date) || a.time.localeCompare(b.time)});
+  
+  if(visits.length === 0){
+    openDet(id);
+    return;
+  }
+  
+  var h = '<div style="margin-bottom:8px">';
+  h += '<div style="font-size:16px;font-weight:800;color:#111">Детали записи</div>';
+  h += '<div style="font-size:12px;color:#888;margin-top:2px">Все записи клиента за период &mdash; ' + visits.length + '</div>';
+  h += '</div>';
+  
+  h += '<div class="carousel-wrap" id="carouselWrap">';
+  h += '<div class="carousel-track" id="carouselTrack">';
+  
+  for(var vi = 0; vi < visits.length; vi++){
+    var v = visits[vi];
+    var visitNum = visits.length - vi;
+    h += '<div class="carousel-card">';
+    h += '<h4>Посещение №' + visitNum + '</h4>';
+    h += '<div class="sub">' + v.date.split('-').reverse().join('.') + (v.time ? ' ' + v.time : '') + '</div>';
+    
+    h += '<div class="row"><span class="lbl">Имя</span><span class="val">' + esc(v.name) + '</span></div>';
+    h += '<div class="row"><span class="lbl">Телефон</span><span class="val">' + (v.phone||'-') + '</span></div>';
+    if(v.model) h += '<div class="row"><span class="lbl">Модель</span><span class="val">' + esc(v.model) + '</span></div>';
+    if(v.master) h += '<div class="row"><span class="lbl">Мастер</span><span class="val">' + v.master + '</span></div>';
+    
+    if(v.workDone){
+      if(v.workDone.mileage){
+        h += '<div class="row" style="margin-top:6px"><span class="lbl">Пробег</span><span class="val">' + v.workDone.mileage + ' км</span></div>';
+      }
+      h += '<div style="margin-top:8px;padding-top:8px;border-top:1px solid #eee">';
+      for(var wi = 0; wi < v.workDone.items.length; wi++){
+        var w = v.workDone.items[wi];
+        h += '<div class="work-item"><span class="wn">' + esc(w.name||'') + '</span><span class="wp">' + (w.price||'0') + ' руб</span></div>';
+      }
+      h += '<div class="total-row"><span>Итого:</span><span>' + (v.workDone.total||'0') + ' руб</span></div>';
+      h += '</div>';
+    }
+    
+    h += '</div>';
+  }
+  
+  h += '</div></div>'; // track + wrap
+  
+  // Dots
+  h += '<div class="carousel-dots" id="carouselDots">';
+  for(var di = 0; di < visits.length; di++){
+    h += '<button class="carousel-dot' + (di===visits.length-1?' active':'') + '" onclick="carouselGoTo(' + di + ')"></button>';
+  }
+  h += '</div>';
+  
+  document.getElementById("detBody").innerHTML = h;
+  document.getElementById("detTitle").textContent = "История";
+  document.getElementById("detActions").innerHTML = '';
+  document.getElementById("detailModal").classList.add("active");
+  
+  // Set initial position
+  window._carouselCurrent = visits.length - 1;
+  window._carouselTotal = visits.length;
+  carouselGoTo(window._carouselCurrent);
+
+  initCarouselTouch();
+}
+// Carousel touch events
+function initCarouselTouch(){
+  var wrap = document.getElementById("carouselWrap");
+  if(!wrap) return;
+  wrap.addEventListener("touchstart", function(e){
+    _carouselTouchX = e.touches[0].clientX;
+    _carouselTouchStart = Date.now();
+  }, {passive:true});
+  wrap.addEventListener("touchmove", function(e){
+    if(_carouselTouchStart === null) return;
+    var dx = e.touches[0].clientX - _carouselTouchX;
+    var track = document.getElementById("carouselTrack");
+    if(track) track.style.transform = "translateX(-" + (_carouselCurrent * 100 + dx/wrap.offsetWidth*100) + "%)";
+  }, {passive:true});
+  wrap.addEventListener("touchend", function(e){
+    if(_carouselTouchStart === null) return;
+    var dx = e.changedTouches[0].clientX - _carouselTouchX;
+    var dt = Date.now() - _carouselTouchStart;
+    if(Math.abs(dx) > 50 || (Math.abs(dx) > 20 && dt < 300)){
+      if(dx < 0 && _carouselCurrent < window._carouselTotal - 1) carouselGoTo(window._carouselCurrent + 1);
+      else if(dx > 0 && _carouselCurrent > 0) carouselGoTo(window._carouselCurrent - 1);
+      else carouselGoTo(window._carouselCurrent);
+    } else {
+      carouselGoTo(window._carouselCurrent);
+    }
+    _carouselTouchStart = null;
+  }, {passive:true});
+}
+
+
+var _carouselTouchStart = null;
+var _carouselTouchX = 0;
+function carouselGoTo(idx){
+  if(idx < 0) idx = 0;
+  if(idx >= window._carouselTotal) idx = window._carouselTotal - 1;
+  window._carouselCurrent = idx;
+  var track = document.getElementById("carouselTrack");
+  if(track) track.style.transform = 'translateX(-' + (idx * 100) + '%)';
+  var dots = document.querySelectorAll(".carousel-dot");
+  dots.forEach(function(d, i){
+    d.classList.toggle("active", i === idx);
+  });
+}
+
 
 
 /* \u0421\u0422\u0410\u0422\u0418\u0421\u0422\u0418\u041a\u0410 */
