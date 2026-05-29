@@ -216,7 +216,14 @@ function openDet(id){
     h+="<div style=\"width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;background:#f9f9f9\"><span class=\"booking-status status-"+st+"\">"+SL[st]+"</span></div>";
     h+="</div>";
   }
-if(b.workDone && b.workDone.items && b.workDone.items.length > 0){
+
+  if(b.notes){
+    h+="<div style=\"margin-bottom:10px\">";
+    h+="<label style=\"font-size:12px;color:#888;display:block;margin-bottom:3px\">\u041e\u043f\u0438\u0441\u0430\u043d\u0438\u0435</label>";
+    h+="<div style=\"width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;background:#f9f9f9;color:#333\">"+esc(b.notes)+"</div>";
+    h+="</div>";
+  }
+  if(b.workDone && b.workDone.items && b.workDone.items.length > 0){
     h+="<div style=\"margin-top:14px;padding-top:12px;border-top:2px solid #ddd\">";
     h+="<div style=\"font-size:12px;color:#888;font-weight:600;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px\">\u0412\u044b\u043f\u043e\u043b\u043d\u0435\u043d\u043d\u044b\u0435 \u0440\u0430\u0431\u043e\u0442\u044b</div>";
     if(b.workDone.mileage){
@@ -272,6 +279,228 @@ document.getElementById("detBody").innerHTML=h;
 document.getElementById("detActions").innerHTML=a;
   document.getElementById("detailModal").classList.add("active");
 }function closeDet(){document.getElementById('detailModal').classList.remove('active')}
+function setStat(id,st,master){try{var d=firebase.firestore();var upd={status:st,updatedAt:new Date().toISOString()};if(master)upd.master=master;d.collection('leads').doc(id).update(upd).catch(function(){});d.collection('galaxymoto_bookings').doc(id).update(upd).catch(function(){})}catch(e){}}
+function delRec(id){try{var d=firebase.firestore();d.collection('leads').doc(id).delete().catch(function(){});d.collection('galaxymoto_bookings').doc(id).delete().catch(function(){})}catch(e){}}
+
+
+function openAddForm(){
+  document.getElementById('addModal').classList.add('active');
+  document.getElementById('addDate').valueAsDate=new Date();
+  renderTimeSlots();
+}
+function closeAddForm(){
+  document.getElementById('addModal').classList.remove('active');
+  document.getElementById('addTime').value='';
+}
+function renderTimeSlots(){
+  var dt=document.getElementById("addDate").value;
+  var cont=document.getElementById("addTimeSlots");
+  if(!dt||!cont)return;
+  var h="";
+  for(var hh=11;hh<19;hh++){
+    for(var mm=0;mm<60;mm+=30){
+      var ti=String(hh).padStart(2,"0")+":"+String(mm).padStart(2,"0");
+      var taken=BK.some(function(b){return b.date===dt&&b.time===ti});
+      if(taken){
+        h+="<div class='ts-slot ts-taken'>"+ti+"</div>";
+      }else{
+        h+="<div class='ts-slot ts-free' onclick=\"selectSlot(this,'"+ti+"')\">"+ti+"</div>";
+      }
+    }
+  }
+  cont.innerHTML=h;
+}
+function selectSlot(el,ti){
+  document.getElementById("addTime").value=ti;
+  var x=document.getElementById("addTimeSlots").children;
+  for(var i=0;i<x.length;i++){x[i].style.borderColor="#ddd";x[i].style.background="#fff"};
+  el.style.borderColor="#111";el.style.background="#eee";
+}
+function saveNewRecord(){
+  var dt=document.getElementById('addDate').value;
+  var tm=document.getElementById('addTime').value;
+  var nm=document.getElementById('addName').value.trim();
+  var ph=document.getElementById('addPhone').value.trim();
+  var md=document.getElementById('addModel').value.trim();
+  var nt=document.getElementById('addNotes').value.trim();
+  if(!dt||!nm){alert('Заполните дату и имя');return}
+  var id=dt+'_'+(tm?tm.replace(':','-'):'00-00');
+  var data={date:dt,time:tm||'',name:nm,phone:ph||'',model:md||'',notes:nt||'',status:'new',createdAt:new Date().toISOString()};
+  var d=firebase.firestore();
+  d.collection('galaxymoto_bookings').doc(id).set(data).then(function(){closeAddForm();sendAdminTG(nm,ph,dt,tm,md,nt)}).catch(function(e){alert('Ошибка')})
+}
+function sendAdminTG(nm,ph,dt,tm,md,nt){
+  // Format date: YYYY-MM-DD -> DD Month (DayOfWeek)
+  var dd=new Date(dt);
+  var months=["\u044F\u043D\u0432\u0430\u0440\u044F","\u0444\u0435\u0432\u0440\u0430\u043B\u044F","\u043C\u0430\u0440\u0442\u0430","\u0430\u043F\u0440\u0435\u043B\u044F","\u043C\u0430\u044F","\u0438\u044E\u043D\u044F","\u0438\u044E\u043B\u044F","\u0430\u0432\u0433\u0443\u0441\u0442\u0430","\u0441\u0435\u043D\u0442\u044F\u0431\u0440\u044F","\u043E\u043A\u0442\u044F\u0431\u0440\u044F","\u043D\u043E\u044F\u0431\u0440\u044F","\u0434\u0435\u043A\u0430\u0431\u0440\u044F"];
+  var days=["\u0432\u043E\u0441\u043A\u0440\u0435\u0441\u0435\u043D\u044C\u0435","\u043F\u043E\u043D\u0435\u0434\u0435\u043B\u044C\u043D\u0438\u043A","\u0432\u0442\u043E\u0440\u043D\u0438\u043A","\u0441\u0440\u0435\u0434\u0430","\u0447\u0435\u0442\u0432\u0435\u0440\u0433","\u043F\u044F\u0442\u043D\u0438\u0446\u0430","\u0441\u0443\u0431\u0431\u043E\u0442\u0430"];
+  var dtf=dd.getDate()+" "+months[dd.getMonth()]+" ("+days[dd.getDay()]+")";
+  
+  // Check client history
+  window.db.collection("galaxymoto_bookings").where("phone","==",ph).get().then(function(snap){
+    var prev=[];
+    snap.forEach(function(doc){
+      var d=doc.data();
+      if(d.workDone&&d.workDone.items&&d.workDone.items.length>0) prev.push(d);
+    });
+    prev.sort(function(a,b){return a.date.localeCompare(b.date)});
+    var msg="\xF0\x9F\x9B\xB5 \u041D\u043E\u0432\u0430\u044F \u0437\u0430\u043F\u0438\u0441\u044C \u043D\u0430 \u0441\u0435\u0440\u0432\u0438\u0441 \u0447\u0435\u0440\u0435\u0437 \u0430\u0434\u043C\u0438\u043D \u043F\u0430\u043D\u0435\u043B\u044C!\n\n";
+    msg+="\xF0\x9F\x93\x85 \u0414\u0430\u0442\u0430: "+dtf+"\n";
+    msg+="\u23F0 \u0412\u0440\u0435\u043C\u044F: "+tm+"\n";
+    msg+="\xF0\x9F\x91\xA4 \u0418\u043C\u044F: "+nm+"\n";
+    msg+="\xF0\x9F\x93\x9E \u0422\u0435\u043B\u0435\u0444\u043E\u043D: "+ph+"\n";
+    msg+="\xF0\x9F\x9B\xB2 \u041C\u043E\u0434\u0435\u043B\u044C: "+(md||"-")+"\n";
+    if(nt) msg+="\xF0\x9F\x93\x9D \u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435: "+nt+"\n";
+    if(prev.length>0){
+      var last=prev[prev.length-1];
+      
+      msg+="\xF0\x9F\x93\x85 \u041F\u043E\u0441\u043B\u0435\u0434\u043D\u0435\u0435 \u043F\u043E\u0441\u0435\u0449\u0435\u043D\u0438\u0435: "+last.date.split("-").reverse().join(".")+"\n";
+      if(last.workDone.mileage) msg+="\xF0\x9F\x93\x8F \u041F\u0440\u043E\u0431\u0435\u0433: "+last.workDone.mileage+" \u043A\u043C\n";
+      msg+="\xF0\x9F\x93\x8B \u041F\u043E\u0441\u043B\u0435\u0434\u043D\u0438\u0435 \u0440\u0430\u0431\u043E\u0442\u044B:";
+      for(var i=0;i<last.workDone.items.length;i++){
+        msg+="\n  - "+last.workDone.items[i].name+": "+last.workDone.items[i].price+" \u0440\u0443\u0431";
+      }
+      msg+="\n\u0421\u0443\u043C\u043C\u0430: "+last.workDone.total+" \u0440\u0443\u0431";
+    }else{
+      msg+="\n\u041F\u043E\u0441\u043B\u0435\u0434\u043D\u0435\u0435 \u043F\u043E\u0441\u0435\u0449\u0435\u043D\u0438\u0435 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u043E";
+    }
+    fetch('https://api.telegram.org/bot7471473926:AAE_kyz1Qtb1J8Dddqk1aaxzBGfMQ73lSMM/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:5368408796,text:msg})}).catch(function(){});
+  }).catch(function(){
+    var msg="\xF0\x9F\x9B\xB5 \u041D\u043E\u0432\u0430\u044F \u0437\u0430\u043F\u0438\u0441\u044C!\n\n";
+    msg+="\xF0\x9F\x93\x85 "+dtf+"\n\u23F0 "+tm+"\n";
+    msg+="\xF0\x9F\x91\xA4 "+nm+"\n\xF0\x9F\x93\x9E "+ph;
+    if(md) msg+="\n\xF0\x9F\x9B\xB2 "+md;
+    fetch('https://api.telegram.org/bot7471473926:AAE_kyz1Qtb1J8Dddqk1aaxzBGfMQ73lSMM/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:5368408796,text:msg})}).catch(function(){});
+  });
+}
+
+var workBookingId = "";
+
+var MASTERS = ["Денис","Дмитрий","Алексей"];
+var pendingConfirmId = "";
+function openMasterSelect(id){
+  pendingConfirmId=id;
+  var list=document.getElementById("masterList");
+  var h="";
+  h+="<div style=\"margin-bottom:8px;font-size:13px;color:#888\">Выберите мастера (можно несколько):</div>";
+  for(var i=0;i<MASTERS.length;i++){
+    h+="<label style=\"display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid #ddd;border-radius:8px;margin-bottom:6px;cursor:pointer;font-size:14px;font-weight:500;color:#333\">";
+    h+="<input type=\"checkbox\" class=\"master-cb\" value=\""+i+"\" style=\"width:16px;height:16px;cursor:pointer\">";
+    h+=MASTERS[i]+"</label>";
+  }
+  h+="<button onclick=\"saveMasterSelect()\" style=\"width:100%;padding:10px;font-size:14px;font-weight:600;font-family:Inter,sans-serif;color:#fff;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);border:none;border-radius:8px;cursor:pointer;margin-top:4px\">Сохранить</button>";
+  list.innerHTML = h;
+  document.getElementById("masterModal").classList.add("active");
+}
+function closeMasterModal(){
+  document.getElementById("masterModal").classList.remove("active");
+}
+function saveMasterSelect(){
+  var cbs = document.querySelectorAll(".master-cb:checked");
+  if(cbs.length===0){alert("Выберите хотя бы одного мастера");return}
+  var selected = [];
+  for(var i=0;i<cbs.length;i++) selected.push(MASTERS[parseInt(cbs[i].value)]);
+  var masterStr = selected.join(", ");
+  setStat(pendingConfirmId, "confirmed", masterStr);
+  closeMasterModal();
+  closeDet();
+}
+function openWorkForm(id){
+  workBookingId = id;
+  var b = BK.find(function(x){return x.id===id});
+  document.getElementById("workModal").classList.add("active");
+  document.getElementById("workMileage").value = "";
+  document.getElementById("workItems").innerHTML = "";
+  for(var i=0;i<3;i++) addWorkRow();
+  if(b && b.master){
+    var masters = b.master.split(", ");
+    var sels = document.querySelectorAll(".wi-master");
+    sels.forEach(function(s){
+      s.innerHTML = "<option value=\"\">—</option>";
+      for(var j=0;j<masters.length;j++){
+        s.innerHTML += "<option value=\""+masters[j]+"\">"+masters[j]+"</option>";
+      }
+    });
+  }
+  calcWorkTotal();
+}
+function closeWorkForm(){
+  document.getElementById("workModal").classList.remove("active");
+}
+function addWorkRow(){
+  var tb = document.getElementById("workItems");
+  var tr = document.createElement("tr");
+  tr.innerHTML = '<td style="padding:4px"><input class="wi-name" placeholder="Наименование" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box"></td><td style="padding:4px"><input class="wi-price" type="number" placeholder="0" oninput="calcWorkTotal()" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box;text-align:right"></td><td style="padding:4px"><select class="wi-master" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box;cursor:pointer"></select></td>';
+  tb.appendChild(tr);
+}
+function calcWorkTotal(){
+  var total = 0;
+  document.querySelectorAll(".wi-price").forEach(function(el){
+    total += parseFloat(el.value) || 0;
+  });
+  document.getElementById("workTotal").textContent = total;
+}
+function saveWork(){
+  var mileage = document.getElementById("workMileage").value.trim();
+  var items = [];
+  var names = document.querySelectorAll(".wi-name");
+  var prices = document.querySelectorAll(".wi-price");
+  var masters = document.querySelectorAll(".wi-master");
+  for(var i=0;i<names.length;i++){
+    var n = names[i].value.trim();
+    var p = parseFloat(prices[i].value) || 0;
+    var m = masters[i] ? masters[i].value : "";
+    if(n || p){
+      var item = {name:n||"-",price:p};
+      if(m) item.master = m;
+      items.push(item);
+    }
+  }
+  try{
+    var d = firebase.firestore();
+    d.collection("leads").doc(workBookingId).update({
+      status: "completed",
+      completedAt: new Date().toISOString(),
+      workDone: {mileage:mileage,items:items,total:document.getElementById("workTotal").textContent}
+    }).catch(function(){});
+    d.collection("galaxymoto_bookings").doc(workBookingId).update({
+      status: "completed",
+      completedAt: new Date().toISOString(),
+      workDone: {mileage:mileage,items:items,total:document.getElementById("workTotal").textContent}
+    }).catch(function(){});
+  }catch(e){}
+  closeWorkForm();
+  closeDet();
+}
+
+</script>
+
+<div class="modal-overlay" id="workModal">
+  <div class="modal-box" style="max-width:520px">
+    <button class="modal-close" onclick="closeWorkForm()">&times;</button>
+    <h3 style="margin-bottom:12px">Какие виды работ были выполнены?</h3>
+    <p style="font-size:14px;color:#888;margin:0 0 12px">Заполните информацию о выполненном обслуживании</p>
+    <div style="margin-bottom:10px;padding:0 4px">
+      <label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Пробег</label>
+      <input type="text" id="workMileage" placeholder="км" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box">
+    </div>
+    <table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:10px">
+      
+      <thead><tr><th style="text-align:left;padding:8px 6px;color:#888;font-weight:600;font-size:12px;border-bottom:2px solid #eee;width:40%">\u0412\u0438\u0434</th><th style="text-align:right;padding:8px 6px;color:#888;font-weight:600;font-size:12px;border-bottom:2px solid #eee;width:25%">\u0421\u0443\u043c\u043c\u0430</th><th style="text-align:center;padding:8px 6px;color:#888;font-weight:600;font-size:12px;border-bottom:2px solid #eee;width:35%">\u041c\u0430\u0441\u0442\u0435\u0440</th></tr></thead>
+    <tbody id="workItems"></tbody>
+    </table>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <a href="javascript:void(0)" onclick="addWorkRow()" style="color:#1983dd;font-weight:600;font-size:12px;text-decoration:none">+ Добавить строку</a>
+      <div style="font-size:14px;font-weight:700;color:#111">Итого: <span id="workTotal">0</span> руб</div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn-grad-del" style="flex:1;padding:10px;font-size:13px;background:#333" onclick="closeWorkForm();closeDet()">Отмена</button>
+      <button class="btn-grad" style="flex:1;padding:10px;font-size:13px" onclick="saveWork()">Сохранить</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>function closeDet(){document.getElementById('detailModal').classList.remove('active')}
 function setStat(id,st,master){try{var d=firebase.firestore();var upd={status:st,updatedAt:new Date().toISOString()};if(master)upd.master=master;d.collection('leads').doc(id).update(upd).catch(function(){});d.collection('galaxymoto_bookings').doc(id).update(upd).catch(function(){})}catch(e){}}
 function delRec(id){try{var d=firebase.firestore();d.collection('leads').doc(id).delete().catch(function(){});d.collection('galaxymoto_bookings').doc(id).delete().catch(function(){})}catch(e){}}
 
