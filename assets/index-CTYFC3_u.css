@@ -229,8 +229,8 @@
 .container{padding-left:8px!important;padding-right:8px!important}
 .footer-grid{grid-template-columns:1fr 1fr!important;gap:6px!important}
 .footer-card{padding:8px 10px!important}
-.footer-card .l{font-size:8px!important;letter-spacing:.4px!important}
-.footer-card .v{font-size:11px!important}}
+.footer-card .l{font-size:13.6px!important;font-weight:500!important;color:#000!important;text-transform:uppercase!important;letter-spacing:.5px!important}
+.footer-card .v{font-size:13.6px!important;font-weight:400!important;color:#111!important}}
 /* Mobile: 481px to 767px */
 @media(min-width:481px) and (max-width:767px){
 .catalog-page__grid{grid-template-columns:1fr!important}
