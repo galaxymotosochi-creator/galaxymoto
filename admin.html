@@ -501,7 +501,8 @@ function saveWork(){
   </div>
 </div>
 </body>
-</html>function closeDet(){document.getElementById('detailModal').classList.remove('active')}
+<script>
+function closeDet(){document.getElementById('detailModal').classList.remove('active')}
 function setStat(id,st,master){try{var d=firebase.firestore();var upd={status:st,updatedAt:new Date().toISOString()};if(master)upd.master=master;d.collection('leads').doc(id).update(upd).catch(function(){});d.collection('galaxymoto_bookings').doc(id).update(upd).catch(function(){})}catch(e){}}
 function delRec(id){try{var d=firebase.firestore();d.collection('leads').doc(id).delete().catch(function(){});d.collection('galaxymoto_bookings').doc(id).delete().catch(function(){})}catch(e){}}
 
@@ -696,7 +697,9 @@ function saveWork(){
   closeDet();
 }
 
+
 </script>
+
 
 <div class="modal-overlay" id="workModal">
   <div class="modal-box" style="max-width:520px">
