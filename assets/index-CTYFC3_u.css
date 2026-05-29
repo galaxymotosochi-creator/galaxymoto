@@ -216,7 +216,7 @@
 @media(max-width:480px){
 .catalog-page{padding-left:8px!important;padding-right:8px!important}
 .catalog-page__grid{grid-template-columns:1fr!important;gap:12px!important}
-.house-card__image{height:200px!important}
+.house-card__image{width:100%!important;height:200px!important}
 .house-card__content{padding:10px 12px 6px!important}
 .house-card__specs{gap:2px!important}
 .house-card__spec{padding:3px 0!important}
