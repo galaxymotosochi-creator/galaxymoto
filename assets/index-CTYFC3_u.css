@@ -262,3 +262,6 @@ a{-webkit-tap-highlight-color:transparent}
 /* FAQ page header */
 .faq-page__title{font-size:1.15rem!important;font-weight:700!important;color:#111!important}
 .faq-page__subtitle{font-size:.85rem!important;color:#888!important;font-weight:400!important;line-height:1.5!important}
+
+/* FAQ shadows */
+.home-faq__item{border:1px solid #eee;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.04);margin-bottom:12px;overflow:hidden;cursor:pointer}
