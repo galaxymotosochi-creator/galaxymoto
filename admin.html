@@ -88,23 +88,19 @@ tr.done td:not(:last-child){text-decoration:line-through!important;text-decorati
 
 /* Carousel Minimal */
 /* Carousel Minimal White */
-.car-wrap{position:relative;overflow:hidden;border-radius:14px;background:#fff;box-shadow:0 4px 20px rgba(0,0,0,.05)}
-.car-track{display:flex;transition:transform .4s cubic-bezier(.25,.46,.45,.94)}
-.car-card{flex:0 0 100%;min-width:100%;padding:20px;box-sizing:border-box}
-.car-card h4{font-size:22px;font-weight:300;margin:0 0 2px;color:#111;letter-spacing:-.5px}
-.car-card .sub{font-size:13px;color:#bbb;margin-bottom:14px}
-.car-card .r{display:flex;padding:7px 0;font-size:14px;position:relative}
-.car-card .r::after{content:"";position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(to right,#e0e0e0,transparent)}
-.car-card .r .l{color:#aaa;width:80px;flex-shrink:0;font-weight:500}
-.car-card .r .v{font-weight:400;color:#333;flex:1}
-.car-card .wl{font-size:10px;font-weight:700;color:#ccc;text-transform:uppercase;letter-spacing:2px;margin:12px 0 6px}
-.car-card .wi{display:flex;justify-content:space-between;padding:5px 0;font-size:14px;border-bottom:1px solid #f0f0f0}
-.car-card .wi .n{color:#555;flex:1}
-.car-card .wi .p{font-weight:600;color:#111}
-.car-card .t{display:flex;justify-content:space-between;font-size:16px;font-weight:700;padding:8px 0 0;margin-top:2px}
-.car-dots{display:flex;justify-content:center;gap:6px;margin-top:10px}
-.car-dots button{width:8px;height:8px;border-radius:50%;background:#e0e0e0;border:none;cursor:pointer;padding:0;transition:all .2s}
-.car-dots button.active{background:#111;width:22px;border-radius:5px}
+/* Timeline */
+.tl-wrap{padding:0 0 0 24px;position:relative}
+.tl-wrap::before{content:"";position:absolute;left:7px;top:4px;bottom:4px;width:2px;background:#eee}
+.tl-item{position:relative;padding:10px 0 10px 14px}
+.tl-item::before{content:"";position:absolute;left:-17px;top:14px;width:10px;height:10px;border-radius:50%;background:#e0e0e0;border:2px solid #fff;box-shadow:0 0 0 2px #e0e0e0;transition:all .2s}
+.tl-item.active::before{background:linear-gradient(135deg,#0bc5ea,#8b5cf6);border-color:#fff;box-shadow:0 0 0 3px rgba(11,197,234,.2)}
+.tl-item .tl-date{font-size:11px;color:#999;font-weight:600;margin-bottom:2px;letter-spacing:.3px}
+.tl-item .tl-date s{color:#ddd;font-weight:400}
+.tl-item .tl-title{font-size:14px;font-weight:700;color:#111;margin-bottom:2px}
+.tl-item .tl-meta{font-size:12px;color:#888;margin-bottom:1px}
+.tl-item .tl-works{font-size:12px;color:#aaa;margin-top:2px}
+.tl-item .tl-total{font-size:13px;font-weight:700;color:#0bc5ea;margin-top:3px}
+.tl-item .tl-total grad{background:linear-gradient(135deg,#0bc5ea,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
@@ -569,66 +565,32 @@ function renderCarousel(id){
   });
   visits.sort(function(a, b){return a.date.localeCompare(b.date) || a.time.localeCompare(b.time)});
   if(visits.length === 0){ openDet(id); return; }
-  var h = '';
-  if(visits.length > 1){
-    h += '<div class="car-wrap" style="background:#fff;box-shadow:0 4px 20px rgba(0,0,0,.05);border:none;border-radius:14px">';
-  } else {
-    h += '<div class="car-wrap" style="background:#fff;box-shadow:0 4px 20px rgba(0,0,0,.05);border:none;border-radius:14px">';
-  }
-  h += '<div class="car-track" id="carTrack">';
+  var h = '<div class="tl-wrap">';
   for(var vi = visits.length - 1; vi >= 0; vi--){
     var v = visits[vi];
     var visitNum = visits.length - vi;
-    h += '<div class="car-card">';
-    h += '<h4>#' + visitNum + ' — ' + v.date.split('-').reverse().join('.') + (v.time ? ' ' + v.time : '') + '</h4>';
-    h += '<div class="sub">' + esc(v.name||'') + '</div>';
-    h += '<div class="r"><span class="l">Тел.</span><span class="v">' + (v.phone||'-') + '</span></div>';
-    if(v.model) h += '<div class="r"><span class="l">Модель</span><span class="v">' + esc(v.model) + '</span></div>';
-    if(v.master) h += '<div class="r"><span class="l">Мастер</span><span class="v">' + v.master + '</span></div>';
-    if(v.workDone && v.workDone.mileage) h += '<div class="r"><span class="l">Пробег</span><span class="v">' + v.workDone.mileage + ' км</span></div>';
+    var isActive = v.id === id;
+    h += '<div class="tl-item' + (isActive ? ' active' : '') + '">';
+    h += '<div class="tl-date">' + v.date.split('-').reverse().join('.') + (v.time ? ' ' + v.time : '') + (isActive ? ' <s>· сейчас</s>' : '') + '</div>';
+    h += '<div class="tl-title">#' + visitNum + ' — ' + esc(v.name||'') + '</div>';
+    h += '<div class="tl-meta">' + (v.model ? esc(v.model) : '') + (v.master ? ' · ' + v.master : '') + (v.workDone && v.workDone.mileage ? ' · ' + v.workDone.mileage + ' км' : '') + '</div>';
     if(v.workDone && v.workDone.items && v.workDone.items.length > 0){
-      h += '<div class="wl">Работы</div>';
+      var works = '';
       for(var wi = 0; wi < v.workDone.items.length; wi++){
-        var w = v.workDone.items[wi];
-        h += '<div class="wi"><span class="n">' + esc(w.name||'') + '</span><span class="p">' + (w.price||'0') + ' ₽</span></div>';
+        works += (wi > 0 ? ' · ' : '') + esc(v.workDone.items[wi].name||'');
       }
-      h += '<div class="t"><span>Итого</span><span>' + (v.workDone.total||'0') + ' ₽</span></div>';
+      h += '<div class="tl-works">' + works + '</div>';
+      h += '<div class="tl-total">' + (v.workDone.total||'0') + ' ₽</div>';
     }
     h += '</div>';
   }
-  h += '</div></div>';
-  if(visits.length > 1){
-    h += '<div class="car-dots" id="carDots">';
-    for(var di = 0; di < visits.length; di++){
-      h += '<button class="' + (di===visits.length-1?'active':'') + '" onclick="carGoTo(' + di + ',' + visits.length + ')"></button>';
-    }
-    h += '</div>';
-  }
+  h += '</div>';
   document.getElementById("detBody").innerHTML = h;
-  document.getElementById("detTitle").textContent = "Детали записи";
+  document.getElementById("detTitle").textContent = "История визитов";
   document.getElementById("detActions").innerHTML = '';
   document.getElementById("detailModal").classList.add("active");
-  if(visits.length > 1){
-    window._carTotal = visits.length;
-    carGoTo(visits.length - 1, visits.length);
-  }
 }
-function carGoTo(idx, total){
-  idx = Math.max(0, Math.min(idx, total - 1));
-  var track = document.getElementById("carTrack");
-  if(track) track.style.transform = 'translateX(-' + (idx * 100) + '%)';
-  var dots = document.querySelectorAll("#carDots button");
-  dots.forEach(function(d, i){ d.className = i === idx ? 'active' : ''; });
-  // Touch support
-  var wrap = track && track.parentElement;
-  if(wrap && !wrap._touchInit){
-    wrap._touchInit = true;
-    var sx = 0, cx = 0, sw = 0;
-    wrap.addEventListener("touchstart", function(e){ sx = e.touches[0].clientX; cx = idx; sw = wrap.offsetWidth; }, {passive:true});
-    wrap.addEventListener("touchmove", function(e){ var dx = e.touches[0].clientX - sx; if(track) track.style.transform = 'translateX(-' + ((cx * 100) - dx/sw*100) + '%)'; }, {passive:true});
-    wrap.addEventListener("touchend", function(e){ var dx = e.changedTouches[0].clientX - sx; if(Math.abs(dx) > 40){ var ni = dx < 0 ? cx + 1 : cx - 1; carGoTo(Math.max(0, Math.min(ni, total - 1)), total); } else { carGoTo(cx, total); } }, {passive:true});
-  }
-}
+
 // Carousel touch events
 
 
