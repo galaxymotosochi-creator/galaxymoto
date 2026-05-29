@@ -28,7 +28,9 @@
         .gallery-nav--next{right:8px}
         .gallery-close{top:12px;right:12px}
       }
-    </style>
+    
+.footer{display:none!important}
+</style>
     <!-- Стили: стеклянная кнопка Telegram (как в первой версии) -->
     <style>
       .telegram-glass-btn {
@@ -55,7 +57,9 @@
         color: #fff;
         transform: translateY(-2px);
       }
-    </style>
+    
+.footer{display:none!important}
+</style>
     <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
@@ -224,7 +228,9 @@
       .calc-toggle input:checked + .calc-toggle__slider{background:#000}
       .calc-toggle input:checked + .calc-toggle__slider::before{transform:translateX(20px)}
       #citySearch:focus{outline:1px solid #333!important;outline-offset:0!important;box-shadow:none!important}
-    </style>
+    
+.footer{display:none!important}
+</style>
 
     <div class="calc-overlay" id="calcOverlay">
       <div class="calc-modal">
@@ -812,7 +818,9 @@
       .serv-success-icon{font-size:3rem;margin-bottom:.5rem}
       .serv-success h3{font-size:1.1rem;font-weight:600;margin:0 0 .3rem;color:#111}
       .serv-success p{font-size:.85rem;color:#888;margin:0}
-    </style>
+    
+.footer{display:none!important}
+</style>
 
     <div class="serv-overlay" id="servOverlay">
       <div class="serv-modal">
@@ -1339,7 +1347,9 @@
       .ssc div{font-size:2.5rem;margin-bottom:8px}
       .ssc h3{font-size:1rem;font-weight:600;margin:0 0 4px;color:#111}
       .ssc p{font-size:.82rem;color:#888;margin:0}
-    </style>
+    
+.footer{display:none!important}
+</style>
 <script>
     var sn=["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"];
     var sc=new Date(),sd=null,st=null,sl=[];
@@ -1461,6 +1471,8 @@ function init(){var e=document.getElementById("servInlineCalendar");if(e){ld(fun
 <style>
 @media(max-width:1023px){.sc-cards-inline>div>div>div{flex:0 0 calc(50% - 10px)!important;min-width:220px!important}}
 @media(max-width:640px){.sc-cards-inline>div>div>div{flex:0 0 calc(100% - 10px)!important;min-width:0!important}}
+
+.footer{display:none!important}
 </style>
 <script>
 window.scScroll2 = function(dir) {
@@ -1507,6 +1519,39 @@ window.submitConsult = function() {
   });
 };
 </script>
+
+
+<style>
+.footer-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;max-width:420px;margin:0 auto;padding:24px 16px}
+.footer-card{background:#f8f9fa;border-radius:10px;padding:10px 12px;border:1px solid #eee}
+.footer-card .l{font-size:9px;color:#999;text-transform:uppercase;letter-spacing:.6px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.footer-card .v{font-size:12px;font-weight:600;color:#333;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.footer-card .v a{color:#1983dd;text-decoration:none;font-weight:500}
+.footer-card .v a:hover{text-decoration:underline}
+.footer-socs{display:flex;justify-content:center;gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid #eee;max-width:420px;margin-left:auto;margin-right:auto}
+.footer-socs a{width:34px;height:34px;border-radius:8px;background:#f0f0f0;border:1px solid #e0e0e0;display:flex;align-items:center;justify-content:center;transition:all .2s;color:#555}
+.footer-socs a:hover{background:#111;color:#fff;border-color:#111}
+.footer-socs a svg{width:16px;height:16px;fill:currentColor}
+.footer-copy{text-align:center;padding:16px;font-size:12px;color:#999;border-top:1px solid #eee;margin-top:12px}
+
+.footer{display:none!important}
+</style>
+<footer style="background:#fff;border-top:1px solid #e0e0e0">
+<div class="footer-grid">
+<div class="footer-card"><div class="l">📍 Адрес</div><div class="v">Пластунская 52з/2</div></div>
+<div class="footer-card"><div class="l">🧭 Карты</div><div class="v"><a href="https://yandex.ru/maps/org/galaxy_moto_service/172501949586" target="_blank">Яндекс.Карты</a></div></div>
+<div class="footer-card"><div class="l">🕐 График</div><div class="v">ежедневно 10:00–19:00</div></div>
+<div class="footer-card"><div class="l">📞 Продажи</div><div class="v"><a href="tel:+79000008023">+7 900 000-80-23</a></div></div>
+<div class="footer-card"><div class="l">🔧 Сервис</div><div class="v"><a href="tel:+79000018023">+7 900 001-80-23</a></div></div>
+<div class="footer-card"><div class="l">✉️ Почта</div><div class="v"><a href="mailto:galaxymoto@mail.ru">galaxymoto@mail.ru</a></div></div>
+</div>
+<div class="footer-socs">
+<a href="#" aria-label="VK"><svg viewBox="0 0 24 24"><path d="M15.1 3H8.9C5.8 3 4.3 3 3.2 3.9c-.8.6-1.1 1.5-1.2 2.8L2 8v8l.1 1.3c.1 1.3.4 2.2 1.2 2.8 1.1.9 2.6.9 5.7.9h6.1c3.1 0 4.6 0 5.7-.9.8-.6 1.1-1.5 1.2-2.8L22 17V9l-.1-1.3c-.1-1.3-.4-2.2-1.2-2.8C19.6 4 18.1 4 15 4zM10.7 16.2c-2.2 0-3.8-1.5-4-3.9h1.2c.1 1.7 1 2.6 1.8 2.7v-3h1.2v1.7c.8-.1 1.7-.8 1.9-1.7h1.2c-.2 1.4-1.2 2.5-2.1 2.7.6.4 1.5 1.2 1.9 2.1H12c-.4-.8-1.1-1.4-2-1.5v1.5h-.1-.1zm5.3-4.1h-1v-1.1h1v1.1zm0-1.7h-1V9.3h1v1.1z"/></svg></a>
+<a href="#" aria-label="Telegram"><svg viewBox="0 0 24 24"><path d="M6 12.2l3.2 1.2 1.2 3.8 2.5-2.4 3.8 2.8c.5.3.8 0 .7-.5L15.5 6.6c-.1-.5-.4-.6-.9-.3L6 11.8c-.4.2-.4.6 0 .8z"/></svg></a>
+<a href="#" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M12 5.5c-3.6 0-6.5 2.9-6.5 6.5 0 1.2.3 2.3.9 3.3L5.8 18l3.1-1.5c1 .6 2 .9 3.1.9 3.6 0 6.5-2.9 6.5-6.5S15.6 5.5 12 5.5zm0 11.8c-1 0-2-.3-2.8-.7l-.2-.1-1.9.5.5-1.8-.1-.2c-.5-.8-.7-1.8-.7-2.8 0-2.9 2.4-5.3 5.3-5.3s5.3 2.4 5.3 5.3-2.4 5.3-5.3 5.3zm2.9-4l-1.5-.5c-.2-.1-.3-.1-.5.1l-.2.3c-.1.1-.2.2-.4.1s-.7-.3-1.4-.9c-.5-.5-.9-1.1-1-1.3s0-.3.1-.4l.2-.2.1-.2c0-.1.1-.2 0-.3l-.5-1.5c-.1-.2-.2-.2-.3-.2h-.3c-.1 0-.3 0-.4.2-.2.2-.5.6-.5 1.2s.4 1.4.6 1.7c.1.2 1 1.6 2.5 2.2.4.2.6.3.9.4.3.1.5.1.7.1.2 0 .6-.1.8-.2.2-.1.4-.2.5-.4.1-.2.2-.3.2-.5.1-.2 0-.3 0-.3z"/></svg></a>
+</div>
+<div class="footer-copy">© 2026 GALAXY MOTO. Все права защищены.</div>
+</footer>
 
 </body>
 </html>
