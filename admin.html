@@ -87,22 +87,24 @@ body{font-family:Inter,sans-serif;background:#f5f5f5;color:#111;min-height:100vh
 tr.done td:not(:last-child){text-decoration:line-through!important;text-decoration-thickness:1px!important;opacity:.55}
 
 /* Carousel Minimal */
-.car-wrap{position:relative;overflow:hidden;border-radius:10px}
+/* Carousel Minimal White */
+.car-wrap{position:relative;overflow:hidden;border-radius:14px;background:#fff;box-shadow:0 4px 20px rgba(0,0,0,.05)}
 .car-track{display:flex;transition:transform .4s cubic-bezier(.25,.46,.45,.94)}
-.car-card{flex:0 0 100%;min-width:100%;padding:14px;box-sizing:border-box}
-.car-card h4{font-size:13px;font-weight:400;color:#fff;letter-spacing:.5px;margin:0 0 1px}
-.car-card .sub{font-size:9px;color:#444;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
-.car-card .r{display:flex;padding:3px 0;font-size:11px;border-bottom:1px solid #111}
-.car-card .r .l{color:#444;width:65px;flex-shrink:0;font-weight:500}
-.car-card .r .v{font-weight:400;color:#888;flex:1}
-.car-card .wl{font-size:8px;color:#333;text-transform:uppercase;letter-spacing:2px;margin:8px 0 4px}
-.car-card .wi{display:flex;justify-content:space-between;padding:3px 0;font-size:11px;border-bottom:1px solid #111}
+.car-card{flex:0 0 100%;min-width:100%;padding:20px;box-sizing:border-box}
+.car-card h4{font-size:22px;font-weight:300;margin:0 0 2px;color:#111;letter-spacing:-.5px}
+.car-card .sub{font-size:13px;color:#bbb;margin-bottom:14px}
+.car-card .r{display:flex;padding:7px 0;font-size:14px;position:relative}
+.car-card .r::after{content:"";position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(to right,#e0e0e0,transparent)}
+.car-card .r .l{color:#aaa;width:80px;flex-shrink:0;font-weight:500}
+.car-card .r .v{font-weight:400;color:#333;flex:1}
+.car-card .wl{font-size:10px;font-weight:700;color:#ccc;text-transform:uppercase;letter-spacing:2px;margin:12px 0 6px}
+.car-card .wi{display:flex;justify-content:space-between;padding:5px 0;font-size:14px;border-bottom:1px solid #f0f0f0}
 .car-card .wi .n{color:#555;flex:1}
-.car-card .wi .p{font-weight:600;color:#aaa}
-.car-card .t{display:flex;justify-content:space-between;font-size:12px;font-weight:400;color:#fff;padding:3px 0 0;border-top:1px solid #333;margin-top:2px;letter-spacing:.3px}
-.car-dots{display:flex;justify-content:center;gap:4px;margin-top:6px}
-.car-dots button{width:6px;height:6px;border-radius:50%;background:#222;border:none;cursor:pointer;padding:0;transition:all .2s}
-.car-dots button.active{background:#fff;width:14px;border-radius:3px}
+.car-card .wi .p{font-weight:600;color:#111}
+.car-card .t{display:flex;justify-content:space-between;font-size:16px;font-weight:700;padding:8px 0 0;margin-top:2px}
+.car-dots{display:flex;justify-content:center;gap:6px;margin-top:10px}
+.car-dots button{width:8px;height:8px;border-radius:50%;background:#e0e0e0;border:none;cursor:pointer;padding:0;transition:all .2s}
+.car-dots button.active{background:#111;width:22px;border-radius:5px}
 
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
@@ -569,9 +571,9 @@ function renderCarousel(id){
   if(visits.length === 0){ openDet(id); return; }
   var h = '';
   if(visits.length > 1){
-    h += '<div class="car-wrap" style="background:#000;border:1px solid #222;border-radius:10px">';
+    h += '<div class="car-wrap" style="background:#fff;box-shadow:0 4px 20px rgba(0,0,0,.05);border:none;border-radius:14px">';
   } else {
-    h += '<div class="car-wrap" style="background:#000;border:1px solid #222;border-radius:10px">';
+    h += '<div class="car-wrap" style="background:#fff;box-shadow:0 4px 20px rgba(0,0,0,.05);border:none;border-radius:14px">';
   }
   h += '<div class="car-track" id="carTrack">';
   for(var vi = visits.length - 1; vi >= 0; vi--){
