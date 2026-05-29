@@ -197,41 +197,32 @@ function openDet(id){
   var st=b.status||"new";
   document.getElementById("detTitle").textContent="Детали записи";
   var h="";
-  h+="<div style=\"margin-bottom:10px\">";
-  h+="<label style=\"font-size:12px;color:#888;display:block;margin-bottom:3px\">Дата</label>";
-  h+="<div style=\"width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;background:#f9f9f9;color:#333\">"+b.date.split("-").reverse().join(".")+"</div>";
-  h+="</div>";
-  if(b.time){
-    h+="<div style=\"margin-bottom:10px\">";
-    h+="<label style=\"font-size:12px;color:#888;display:block;margin-bottom:3px\">Время</label>";
-    h+="<div style=\"width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;background:#f9f9f9;color:#333\">"+b.time+"</div>";
+  h+="<div style="display:flex;gap:10px;margin-bottom:10px">";
+    h+="<div style="flex:1"><label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Дата</label><div style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;background:#f9f9f9;color:#333">"+b.date.split("-").reverse().join(".")+"</div></div>";
+    if(b.time){h+="<div style="flex:1"><label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Время</label><div style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;background:#f9f9f9;color:#333">"+b.time+"</div></div>";}else{h+="<div style="flex:1"></div>";}
     h+="</div>";
-  }
-  h+="<div style=\"margin-bottom:10px\">";
-  h+="<label style=\"font-size:12px;color:#888;display:block;margin-bottom:3px\">Имя</label>";
-  h+="<div style=\"width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;background:#f9f9f9;color:#333\">"+esc(b.name)+"</div>";
-  h+="</div>";
-  h+="<div style=\"margin-bottom:10px\">";
-  h+="<label style=\"font-size:12px;color:#888;display:block;margin-bottom:3px\">Телефон</label>";
-  h+="<div style=\"width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;background:#f9f9f9;color:#333\">"+(b.phone||"-")+"</div>";
-  h+="</div>";
+  h+="<div style="display:flex;gap:10px;margin-bottom:10px">";
+    h+="<div style="flex:1"><label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Имя</label><div style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;background:#f9f9f9;color:#333">"+esc(b.name)+"</div></div>";
+    h+="<div style="flex:1"><label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Телефон</label><div style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;background:#f9f9f9;color:#333">"+(b.phone||"-")+"</div></div>";
+    h+="</div>";
   if(b.model){
-    h+="<div style=\"margin-bottom:10px\">";
-    h+="<label style=\"font-size:12px;color:#888;display:block;margin-bottom:3px\">Модель</label>";
-    h+="<div style=\"width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;background:#f9f9f9;color:#333\">"+esc(b.model)+"</div>";
+    h+="<div style="display:flex;gap:10px;margin-bottom:10px">";
+    h+="<div style="flex:1"><label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Модель</label><div style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;background:#f9f9f9;color:#333">"+esc(b.model)+"</div></div>";
+    h+="<div style="flex:1"><label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Статус</label><div style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;background:#f9f9f9"><span class="booking-status status-"+st+"">"+SL[st]+"</span></div></div>";
+    h+="</div>";
+  }else{
+    h+="<div style="margin-bottom:10px">";
+    h+="<label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Статус</label>";
+    h+="<div style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;background:#f9f9f9"><span class="booking-status status-"+st+"">"+SL[st]+"</span></div>";
     h+="</div>";
   }
   if(b.notes){
-    h+="<div style=\"margin-bottom:10px\">";
-    h+="<label style=\"font-size:12px;color:#888;display:block;margin-bottom:3px\">Описание</label>";
-    h+="<div style=\"width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;background:#f9f9f9;color:#333\">"+esc(b.notes)+"</div>";
+    h+="<div style="margin-bottom:10px">";
+    h+="<label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Описание</label>";
+    h+="<div style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;background:#f9f9f9;color:#333">"+esc(b.notes)+"</div>";
     h+="</div>";
   }
-  h+="<div style=\"margin-bottom:6px\">";
-  h+="<label style=\"font-size:12px;color:#888;display:block;margin-bottom:3px\">Статус</label>";
-  h+="<div style=\"width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;background:#f9f9f9\"><span class=\"booking-status status-"+st+"\">"+SL[st]+"</span></div>";
-  h+="</div>";
-    if(b.workDone && b.workDone.items && b.workDone.items.length > 0){
+if(b.workDone && b.workDone.items && b.workDone.items.length > 0){
     h+="<div style=\"margin-top:14px;padding-top:12px;border-top:2px solid #ddd\">";
     h+="<div style=\"font-size:12px;color:#888;font-weight:600;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px\">\u0412\u044b\u043f\u043e\u043b\u043d\u0435\u043d\u043d\u044b\u0435 \u0440\u0430\u0431\u043e\u0442\u044b</div>";
     if(b.workDone.mileage){
