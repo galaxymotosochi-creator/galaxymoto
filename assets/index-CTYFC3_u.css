@@ -238,3 +238,8 @@
 .house-card__image{height:220px}
 .house-card__info{grid-template-columns:1fr!important}
 }
+
+/* Fix mobile overflow */
+@media(max-width:767px){
+body{overflow-x:hidden!important}
+}
