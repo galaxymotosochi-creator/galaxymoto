@@ -158,7 +158,7 @@
   flex-wrap: wrap;
 }
 
-.house-card__btn{font-size:14px;font-weight:700;font-family:Inter;color:#fff;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);border:none;border-radius:8px;padding:10px 20px;cursor:pointer}
+.house-card__btn{font-size:10.4px;font-weight:600;font-family:Inter;color:#fff;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);border:none;border-radius:8px;padding:3px 14px;cursor:pointer;text-transform:uppercase;letter-spacing:.52px;line-height:1.6}
 
 
 /* Градиентная кнопка Запись на сервис */
