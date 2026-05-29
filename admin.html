@@ -274,7 +274,6 @@ document.getElementById("detBody").innerHTML=h;
     a+="<button class=\"btn-grad-del\" style=\"flex:1;padding:10px;font-size:13px\" onclick=\"setStat('"+b.id+"','cancelled');closeDet()\"> ОТМЕНИТЬ</button>";
   }else if(st==='in_progress'){
     a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px\" onclick=\"openWorkEdit('"+b.id+"')\"> РЕДАКТИРОВАТЬ РАБОТЫ</button>";
-    a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px;background:#555\" onclick=\"openMoveBooking('"+b.id+"')\"> ПЕРЕНЕСТИ</button>";
     a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px;background:#e65100\" onclick=\"openWorkForm('"+b.id+"','complete')\"> ЗАВЕРШИТЬ</button>";
   }else if(st==='completed'&&b.workDone){
     a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px\" onclick=\"editWork('"+b.id+"')\"> ✏ РЕДАКТИРОВАТЬ</button>";
