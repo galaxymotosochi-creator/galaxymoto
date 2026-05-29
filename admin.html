@@ -51,6 +51,7 @@ body{font-family:Inter,sans-serif;background:#f5f5f5;color:#111;min-height:100vh
 .status-confirmed{background:#e8f5e9;color:#2e7d32}
 .status-completed{background:#f5f5f5;color:#888}
 .status-cancelled{background:#ffebee;color:#e53935}
+.status-progress{background:#e3f2fd;color:#1565c0}
 .empty-state{text-align:center;padding:30px 20px;color:#888;font-size:13px}
 .tab-bar{display:flex;background:#fff;border-radius:12px;border:1.5px solid #eee;margin-bottom:16px;overflow:hidden}
 .tab-bar button{flex:1;padding:10px;font-size:12px;font-weight:600;font-family:Inter,sans-serif;border:none;cursor:pointer;background:transparent;color:#888}
@@ -178,8 +179,8 @@ tr.done td:not(:last-child){text-decoration:line-through!important;text-decorati
 <script>
 
 var PIN='8888',BK=[],TB=0,CV=new Date(),SD=null,SD1=null,SD2=null,US=null,US2=null;
-var SL={'new':'\u041d\u041e\u0412\u0410\u042f','confirmed':'\u041f\u041e\u0414\u0422\u0412\u0415\u0420\u0416\u0414\u0415\u041d\u0410','completed':'\u0412\u042b\u041f\u041e\u041b\u041d\u0415\u041d\u0410','cancelled':'\u041e\u0422\u041c\u0415\u041d\u0415\u041d\u0410'};
-var MN=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];var SC={'new':'status-new','confirmed':'status-confirmed','completed':'status-completed','cancelled':'status-cancelled'};
+var SL={'new':'\u041d\u041e\u0412\u0410\u042f','in_progress':'\u0412 \u0420\u0410\u0411\u041e\u0422\u0415','completed':'\u0412\u042b\u041f\u041e\u041b\u041d\u0415\u041d\u0410','cancelled':'\u041e\u0422\u041c\u0415\u041d\u0415\u041d\u0410'};
+var MN=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];var SC={'new':'status-new','in_progress':'status-progress','completed':'status-completed','cancelled':'status-cancelled'};
 function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function fmt(d){var y=d.getFullYear(),m=(d.getMonth()+1+'').padStart(2,'0'),dd=(d.getDate()+'').padStart(2,'0');return y+'-'+m+'-'+dd}
 function same(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate()}
@@ -187,7 +188,7 @@ function doLogin(){var p=document.getElementById('pinInput').value;if(p===PIN){l
 function doLogout(){localStorage.removeItem('ga');if(US)US();if(US2)US2();document.getElementById('adminApp').classList.add('hidden');document.getElementById('loginScreen').classList.remove('hidden');document.getElementById('loginError').style.display='none'}
 function initFB(){try{var FC={apiKey:'AIzaSyDOZnESPJRJlEf3HTYqNyv1O0mYUZoPJzc',authDomain:'capsulehouse-1c0c9.firebaseapp.com',projectId:'capsulehouse-1c0c9',storageBucket:'capsulehouse-1c0c9.firebasestorage.app',messagingSenderId:'640070206939',appId:'1:640070206939:web:e7ba997ec68457be2893fe'};try{firebase.initializeApp(FC);}catch(e){}var db=firebase.firestore();window.db=db;db.settings({merge:true});if(US||US2)return;BK=[];US2=db.collection('galaxymoto_bookings').onSnapshot(function(s){s.docChanges().forEach(function(c){var x=c.doc.data(),id=c.doc.id;if(c.type==='removed'){BK=BK.filter(function(b){return b.id!==id});R();return}if(x.date&&x.name){var i=BK.findIndex(function(b){return b.id===id});var b={id:id,date:x.date,time:x.time||'',name:x.name,phone:x.phone||'',model:x.model||'',notes:x.notes||'',status:x.status||'new',workDone:x.workDone||null,master:x.master||'',workDone:x.workDone||null,master:x.master||''};if(i>=0)BK[i]=b;else BK.push(b);R()}})});US=db.collection('leads').onSnapshot(function(s){s.docChanges().forEach(function(c){var x=c.doc.data(),id=c.doc.id;if(c.type==='removed'){BK=BK.filter(function(b){return b.id!==id});R();return}if(x.date&&x.name){var i=BK.findIndex(function(b){return b.id===id});var b={id:id,date:x.date,time:x.time||'',name:x.name,phone:x.phone||'',model:x.model||'',notes:x.notes||'',status:x.status||'new',workDone:x.workDone||null};if(i>=0)BK[i]=b;else BK.push(b);R()}})});}catch(e){}}
 function R(){RSTAT();RCAL();RBOK()}
-function RSTAT(){var n=BK.length,p=BK.filter(function(b){return b.status==='new'}).length,c=BK.filter(function(b){return b.status==='confirmed'}).length;document.getElementById('statsRow').innerHTML='<div class="stat-card"><div class="stat-card__value">'+n+'</div><div class="stat-card__label">\u0412\u0441\u0435\u0433\u043e</div></div><div class="stat-card"><div class="stat-card__value">'+p+'</div><div class="stat-card__label">\u041d\u043e\u0432\u044b\u0435</div></div><div class="stat-card"><div class="stat-card__value">'+c+'</div><div class="stat-card__label">\u041f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043d\u044b</div></div><div class=\"stat-card\" style=\"cursor:pointer;background:#111;color:#fff\" onclick=\"openAddForm()\"><div class=\"stat-card__value\" style=\"color:#fff;font-size:28px\">+</div><div class=\"stat-card__label\" style=\"color:rgba(255,255,255,.7)\">\u041d\u043e\u0432\u0430\u044f \u0437\u0430\u043f\u0438\u0441\u044c</div></div><div class=\"stat-card\" style=\"cursor:pointer;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff\" onclick=\"openStats()\"><div class=\"stat-card__value\" style=\"color:#fff;font-size:28px\">\u2206</div><div class=\"stat-card__label\" style=\"color:rgba(255,255,255,.7)\">\u0421\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043a\u0430</div></div>'}
+function RSTAT(){var n=BK.length,p=BK.filter(function(b){return b.status==='new'}).length,w=BK.filter(function(b){return b.status==='in_progress'}).length;document.getElementById('statsRow').innerHTML='<div class="stat-card"><div class="stat-card__value">'+n+'</div><div class="stat-card__label">\u0412\u0441\u0435\u0433\u043e</div></div><div class="stat-card"><div class="stat-card__value">'+p+'</div><div class="stat-card__label">\u041d\u043e\u0432\u044b\u0435</div></div><div class="stat-card"><div class="stat-card__value">'+w+'</div><div class="stat-card__label">\u0412\u0020\u0440\u0430\u0431\u043e\u0442\u0435</div></div><div class=\"stat-card\" style=\"cursor:pointer;background:#111;color:#fff\" onclick=\"openAddForm()\"><div class=\"stat-card__value\" style=\"color:#fff;font-size:28px\">+</div><div class=\"stat-card__label\" style=\"color:rgba(255,255,255,.7)\">\u041d\u043e\u0432\u0430\u044f \u0437\u0430\u043f\u0438\u0441\u044c</div></div><div class=\"stat-card\" style=\"cursor:pointer;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff\" onclick=\"openStats()\"><div class=\"stat-card__value\" style=\"color:#fff;font-size:28px\">\u2206</div><div class=\"stat-card__label\" style=\"color:rgba(255,255,255,.7)\">\u0421\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043a\u0430</div></div>'}
 function RCAL(){var y=CV.getFullYear(),m=CV.getMonth();document.getElementById('calMonth').textContent=new Date(y,m).toLocaleDateString('ru',{month:'long',year:'numeric'});var fd=new Date(y,m,1).getDay();fd=(fd===0?6:fd-1);var ld=new Date(y,m+1,0).getDate(),pd=new Date(y,m,1-fd).getDate(),h='',td=new Date(),dw='\u041f\u043d,\u0412\u0442,\u0421\u0440,\u0427\u0442,\u041f\u0442,\u0421\u0431,\u0412\u0441'.split(',');dw.forEach(function(w){h+='<div class="cal-weekday">'+w+'</div>'});for(var i=0;i<fd;i++){h+='<div class="cal-day cal-day--other">'+pd+'</div>';pd++}for(var d=1;d<=ld;d++){var dt=new Date(y,m,d),ds=fmt(dt),cnt=BK.filter(function(b){return b.date===ds}).length,cl='cal-day';if(same(dt,td))cl+=' cal-day--today';if(SD1&&same(dt,SD1))cl+=' cal-day--selected';if(SD2&&same(dt,SD2))cl+=' cal-day--selected';if(cnt===1)cl+=' cal-day--green';else if(cnt===2)cl+=' cal-day--yellow';else if(cnt>=3)cl+=' cal-day--red';h+='<div class="'+cl+'" onclick="pickDate('+d+')"><span>'+d+'</span>'+(cnt>0?'<span class="cal-day__count">'+cnt+'</span>':'')+'</div>'}var rm=(7-(fd+ld)%7)%7;for(var i=0;i<rm;i++){h+='<div class="cal-day cal-day--other">'+(i+1)+'</div>'}document.getElementById('calGrid').innerHTML=h}
 function calMove(d){CV.setMonth(CV.getMonth()+d);RCAL()}
 function pickDate(d){var y=CV.getFullYear(),m=CV.getMonth();if(!SD1){SD1=new Date(y,m,d);SD2=null}else{if(SD2){SD1=new Date(y,m,d);SD2=null}else{var nt=new Date(y,m,d);if(nt>SD1)SD2=nt;else{SD2=SD1;SD1=nt}}}SD=SD1||SD2;TB=2;document.querySelectorAll('.tab-bar button').forEach(function(b){b.classList.remove('active')});document.getElementById('tab2').classList.add('active');RCAL();RBOK()}
@@ -268,18 +269,45 @@ if(b.phone){
 document.getElementById("detBody").innerHTML=h;
     var a="";
   if(st==='new'){
-    a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px\" onclick=\"openMasterSelect(\u0027"+b.id+"\u0027)\"> \u041f\u043e\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044c</button>";
-    a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px\" onclick=\"openWorkForm(\u0027"+b.id+"\u0027)\"> \u0412\u044b\u043f\u043e\u043b\u043d\u0435\u043d\u0430</button>";
-    a+="<button class=\"btn-grad-del\" style=\"flex:1;padding:10px;font-size:13px\" onclick=\"setStat(\u0027"+b.id+"\u0027,\u0027cancelled\u0027);closeDet()\"> \u041e\u0442\u043c\u0435\u043d\u0438\u0442\u044c</button>";
-  }else if(st==='confirmed'){
-    a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px\" onclick=\"openWorkForm(\u0027"+b.id+"\u0027)\"> \u0412\u044b\u043f\u043e\u043b\u043d\u0435\u043d\u0430</button>";
-    a+="<button class=\"btn-grad-del\" style=\"flex:1;padding:10px;font-size:13px\" onclick=\"setStat(\u0027"+b.id+"\u0027,\u0027cancelled\u0027);closeDet()\"> \u041e\u0442\u043c\u0435\u043d\u0438\u0442\u044c</button>";
+    a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px\" onclick=\"openMasterSelect('"+b.id+"')\"> ВЗЯТЬ В РАБОТУ</button>";
+    a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px;background:#555\" onclick=\"openMoveBooking('"+b.id+"')\"> ПЕРЕНЕСТИ</button>";
+    a+="<button class=\"btn-grad-del\" style=\"flex:1;padding:10px;font-size:13px\" onclick=\"setStat('"+b.id+"','cancelled');closeDet()\"> ОТМЕНИТЬ</button>";
+  }else if(st==='in_progress'){
+    a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px\" onclick=\"openWorkEdit('"+b.id+"')\"> РЕДАКТИРОВАТЬ РАБОТЫ</button>";
+    a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px;background:#555\" onclick=\"openMoveBooking('"+b.id+"')\"> ПЕРЕНЕСТИ</button>";
+    a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px;background:#e65100\" onclick=\"openWorkForm('"+b.id+"','complete')\"> ЗАВЕРШИТЬ</button>";
   }else if(st==='completed'&&b.workDone){
-    a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px\" onclick=\"editWork(\u0027"+b.id+"\u0027)\"> \u270f \u0420\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u0442\u044c</button>";
+    a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px\" onclick=\"editWork('"+b.id+"')\"> ✏ РЕДАКТИРОВАТЬ</button>";
   }
 document.getElementById("detActions").innerHTML=a;
   document.getElementById("detailModal").classList.add("active");
 }function closeDet(){document.getElementById('detailModal').classList.remove('active')}
+function openWorkEdit(id){
+  openWorkForm(id);
+}
+function openMoveBooking(id){
+  document.getElementById('moveBookingId').value = id;
+  var b = BK.find(function(x){return x.id===id});
+  if(b){
+    document.getElementById('moveDate').value = b.date;
+    document.getElementById('moveTime').value = b.time || '';
+  }
+  document.getElementById('moveModal').classList.add('active');
+}
+function saveMoveBooking(){
+  var id = document.getElementById('moveBookingId').value;
+  var newDate = document.getElementById('moveDate').value;
+  var newTime = document.getElementById('moveTime').value;
+  if(!newDate){alert('Выберите дату');return}
+  try{
+    var d = firebase.firestore();
+    var upd = {date: newDate, time: newTime, updatedAt: new Date().toISOString()};
+    d.collection('leads').doc(id).update(upd).catch(function(){});
+    d.collection('galaxymoto_bookings').doc(id).update(upd).catch(function(){});
+  }catch(e){}
+  document.getElementById('moveModal').classList.remove('active');
+  closeDet();
+}
 function setStat(id,st,master){try{var d=firebase.firestore();var upd={status:st,updatedAt:new Date().toISOString()};if(master)upd.master=master;d.collection('leads').doc(id).update(upd).catch(function(){});d.collection('galaxymoto_bookings').doc(id).update(upd).catch(function(){})}catch(e){}}
 function delRec(id){try{var d=firebase.firestore();d.collection('leads').doc(id).delete().catch(function(){});d.collection('galaxymoto_bookings').doc(id).delete().catch(function(){})}catch(e){}}
 
@@ -402,7 +430,7 @@ function saveMasterSelect(){
   var selected = [];
   for(var i=0;i<cbs.length;i++) selected.push(MASTERS[parseInt(cbs[i].value)]);
   var masterStr = selected.join(", ");
-  setStat(pendingConfirmId, "confirmed", masterStr);
+  setStat(pendingConfirmId, "in_progress", masterStr);
   closeMasterModal();
   closeDet();
 }
@@ -454,7 +482,7 @@ function calcWorkTotal(){
   });
   document.getElementById("workTotal").textContent = total;
 }
-function saveWork(){
+function saveWork(mode){
   var mileage = document.getElementById("workMileage").value.trim();
   var items = [];
   var names = document.querySelectorAll(".wi-name");
@@ -473,7 +501,7 @@ function saveWork(){
   try{
     var d = firebase.firestore();
     d.collection("leads").doc(workBookingId).update({
-      status: "completed",
+      status: (mode==="complete" ? "completed" : "in_progress"),
       completedAt: new Date().toISOString(),
       workDone: {mileage:mileage,items:items,total:document.getElementById("workTotal").textContent}
     }).catch(function(){});
@@ -550,7 +578,7 @@ function renderStats(){
   // \u0421\u0447\u0451\u0442\u0447\u0438\u043a\u0438
   var tc=flt.length;
   var nc=flt.filter(function(x){return x.status==='new'}).length;
-  var cf=flt.filter(function(x){return x.status==='confirmed'}).length;
+  var ip=flt.filter(function(x){return x.status==='in_progress'}).length;
   var dn=flt.filter(function(x){return x.status==='completed'}).length;
   var cn=flt.filter(function(x){return x.status==='cancelled'}).length;
   var rev=0,cnt=0;
@@ -560,7 +588,7 @@ function renderStats(){
   h+='<div class="stats" style="margin-bottom:16px">';
   h+='<div class="stat-card"><div class="stat-card__value">'+tc+'</div><div class="stat-card__label">\u0412\u0441\u0435\u0433\u043e</div></div>';
   h+='<div class="stat-card"><div class="stat-card__value">'+nc+'</div><div class="stat-card__label">\u041d\u043e\u0432\u044b\u0435</div></div>';
-  h+='<div class="stat-card"><div class="stat-card__value">'+cf+'</div><div class="stat-card__label">\u041f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043d\u044b</div></div>';
+  h+='<div class="stat-card"><div class="stat-card__value">'+ip+'</div><div class="stat-card__label">\u0412 \u0440\u0430\u0431\u043e\u0442\u0435</div></div>';
   h+='<div class="stat-card"><div class="stat-card__value">'+dn+'</div><div class="stat-card__label">\u0412\u044b\u043f\u043e\u043b\u043d\u0435\u043d\u043e</div></div>';
   h+='<div class="stat-card"><div class="stat-card__value">'+cn+'</div><div class="stat-card__label">\u041e\u0442\u043c\u0435\u043d\u0435\u043d\u043e</div></div>';
   h+='</div>';
@@ -629,6 +657,27 @@ function renderStats(){
       <button onclick="applyStatsCustom()" style="padding:8px 16px;font-size:12px;font-weight:600;font-family:Inter,sans-serif;background:#111;color:#fff;border:none;border-radius:8px;cursor:pointer">Применить</button>
     </div>
     <div id="statsBody"></div>
+  </div>
+</div>
+
+
+<div class="modal-overlay" id="moveModal" style="z-index:210">
+  <div class="modal-box" style="max-width:400px">
+    <input type="hidden" id="moveBookingId">
+    <button class="modal-close" onclick="document.getElementById('moveModal').classList.remove('active')">&times;</button>
+    <h3 style="margin-bottom:12px">Перенести запись</h3>
+    <div style="margin-bottom:10px;padding:0 4px">
+      <label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Новая дата</label>
+      <input type="date" id="moveDate" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box">
+    </div>
+    <div style="margin-bottom:10px;padding:0 4px">
+      <label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Новое время</label>
+      <input type="time" id="moveTime" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box">
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn-grad-del" style="flex:1;padding:10px;font-size:13px;background:#333" onclick="document.getElementById('moveModal').classList.remove('active')">Отмена</button>
+      <button class="btn-grad" style="flex:1;padding:10px;font-size:13px" onclick="saveMoveBooking()">Сохранить</button>
+    </div>
   </div>
 </div>
 
