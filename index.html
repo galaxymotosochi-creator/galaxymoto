@@ -13,6 +13,7 @@
     <!-- Галерея-лайтбокс для фото домов -->
     <style>
 .footer{display:none!important}
+.footer-new{background:#fff;border-top:1px solid #eee;display:flex;justify-content:center;width:100%}
       .gallery-overlay{display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.92);justify-content:center;align-items:center;flex-direction:column;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
       .gallery-overlay--open{display:flex}
       .gallery-overlay img{max-width:92vw;max-height:85vh;object-fit:contain;border-radius:8px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
@@ -34,6 +35,7 @@
     <!-- Стили: стеклянная кнопка Telegram (как в первой версии) -->
     <style>
 .footer{display:none!important}
+.footer-new{background:#fff;border-top:1px solid #eee;display:flex;justify-content:center;width:100%}
       .telegram-glass-btn {
         display: inline-flex;
         align-items: center;
@@ -199,6 +201,7 @@
     <!-- ====== Калькулятор (тест) ====== -->
     <style>
 .footer{display:none!important}
+.footer-new{background:#fff;border-top:1px solid #eee;display:flex;justify-content:center;width:100%}
       .calc-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;justify-content:center;align-items:center;padding:1rem}
       .calc-overlay.active{display:flex}
       .calc-modal{background:#fff;max-width:560px;width:100%;border-radius:12px;padding:2rem;position:relative;box-shadow:0 10px 40px rgba(0,0,0,.2);max-height:90vh;overflow-y:auto}
@@ -778,6 +781,7 @@
 <!-- ====== Календарь записи на сервис ====== -->
     <style>
 .footer{display:none!important}
+.footer-new{background:#fff;border-top:1px solid #eee;display:flex;justify-content:center;width:100%}
       .serv-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;justify-content:center;align-items:center;padding:1rem}
       .serv-overlay.active{display:flex}
       .serv-modal{background:#fff;max-width:520px;width:100%;border-radius:16px;padding:2rem;position:relative;box-shadow:0 10px 40px rgba(0,0,0,.2);max-height:90vh;overflow-y:auto}
@@ -1317,6 +1321,7 @@
 <!-- Activity Tracking -->
     <style>
 .footer{display:none!important}
+.footer-new{background:#fff;border-top:1px solid #eee;display:flex;justify-content:center;width:100%}
       .siw{max-width:600px;margin:0 auto;padding:0 0 20px}
       .sim{display:flex;align-items:center;justify-content:center;gap:20px;margin-bottom:16px}
       .sim button{background:none;border:1px solid #ddd;border-radius:8px;width:34px;height:34px;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#333}
@@ -1470,6 +1475,7 @@ function init(){var e=document.getElementById("servInlineCalendar");if(e){ld(fun
 
 <style>
 .footer{display:none!important}
+.footer-new{background:#fff;border-top:1px solid #eee;display:flex;justify-content:center;width:100%}
 @media(max-width:1023px){.sc-cards-inline>div>div>div{flex:0 0 calc(50% - 10px)!important;min-width:220px!important}}
 @media(max-width:640px){.sc-cards-inline>div>div>div{flex:0 0 calc(100% - 10px)!important;min-width:0!important}}
 
@@ -1523,6 +1529,7 @@ window.submitConsult = function() {
 
 <style>
 .footer{display:none!important}
+.footer-new{background:#fff;border-top:1px solid #eee;display:flex;justify-content:center;width:100%}
 .footer-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;max-width:480px;margin:0 auto;padding:32px 16px}
 .footer-card{background:#fff;border-radius:14px;padding:14px 16px;border:1.5px solid #eee;box-shadow:0 2px 8px rgba(0,0,0,.04)}
 .footer-card .l{font-size:10px;color:#999;text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -1533,7 +1540,7 @@ window.submitConsult = function() {
 .footer-copy{text-align:center;padding:16px;font-size:13px;color:#999;margin-top:8px}
 
 </style>
-<footer style="background:#fff;border-top:1px solid #eee;display:flex;justify-content:center">
+<div class="footer-new">
 <div class="footer-grid">
 <div class="footer-card"><div class="l">📍 Адрес</div><div class="v">Пластунская 52з/2</div></div>
 <div class="footer-card"><div class="l">🧭 Карты</div><div class="v"><a href="https://yandex.ru/maps/org/galaxy_moto_service/172501949586" target="_blank">Яндекс.Карты</a></div></div>
@@ -1544,7 +1551,7 @@ window.submitConsult = function() {
 </div>
 
 <div class="footer-copy">© 2026 GALAXY MOTO. Все права защищены.</div>
-</footer>
+</div>
 
 </body>
 </html>
