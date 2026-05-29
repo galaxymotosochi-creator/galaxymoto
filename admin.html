@@ -334,12 +334,13 @@ function delRec(id){try{var d=firebase.firestore();d.collection('leads').doc(id)
 
 
 
+function normPh(s){return s.replace(/\D/g,'').slice(-10)}
 function autoFillClient(){
-  var ph=document.getElementById("addPhone").value.trim();
+  var ph=normPh(document.getElementById("addPhone").value);
   if(!ph) return;
   for(var i=BK.length-1;i>=0;i--){
     var b=BK[i];
-    if(b.phone===ph && b.status!=='new' && b.workDone && b.workDone.items && b.workDone.items.length>0){
+    if(normPh(b.phone)===ph && b.status!=='new' && b.workDone && b.workDone.items && b.workDone.items.length>0){
       document.getElementById("addName").value = b.name;
       if(b.model) document.getElementById("addModel").value = b.model;
       return;
@@ -347,7 +348,7 @@ function autoFillClient(){
   }
   for(var i=BK.length-1;i>=0;i--){
     var b=BK[i];
-    if(b.phone===ph && b.name){
+    if(normPh(b.phone)===ph && b.name){
       document.getElementById("addName").value = b.name;
       if(b.model) document.getElementById("addModel").value = b.model;
       return;
