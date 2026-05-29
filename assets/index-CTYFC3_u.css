@@ -253,3 +253,15 @@ a{-webkit-tap-highlight-color:transparent}
 .section--calc>.container>div:nth-child(2){border:1px solid #eee;border-radius:14px}
 /* Hide FAQ */
 .home-faq{display:none!important}
+
+/* FAQ - стиль как подзаголовок сервисных карт */
+.home-faq__question span,
+.home-faq__answer,
+.faq-page__question span,
+.faq-page__answer,
+.faq-item__question span,
+.faq-item__answer{font-size:.85rem!important;color:#888!important;font-weight:400!important;line-height:1.5!important}
+.home-faq__question,.faq-page__question{-webkit-tap-highlight-color:transparent}
+/* FAQ page header */
+.faq-page__title{font-size:1.15rem!important;font-weight:700!important;color:#111!important}
+.faq-page__subtitle{font-size:.85rem!important;color:#888!important;font-weight:400!important;line-height:1.5!important}
