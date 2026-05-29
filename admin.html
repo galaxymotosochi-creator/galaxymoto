@@ -291,8 +291,8 @@ document.getElementById("detBody").innerHTML=h;
     var a="";
   if(st==='new'){
     a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px\" onclick=\"openMasterSelect('"+b.id+"')\"> ВЗЯТЬ В РАБОТУ</button>";
-    a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px;background:#555\" onclick=\"openMoveBooking('"+b.id+"')\"> ПЕРЕНЕСТИ</button>";
-    a+="<button class=\"btn-grad-del\" style=\"flex:1;padding:10px;font-size:13px\" onclick=\"setStat('"+b.id+"','cancelled');closeDet()\"> ОТМЕНИТЬ</button>";
+    a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px;background:#111;color:#fff\" onclick=\"openMoveBooking('"+b.id+"')\"> ПЕРЕНЕСТИ</button>";
+    a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px;background:#111;color:#fff\" onclick=\"setStat('"+b.id+"','cancelled');closeDet()\"> ОТМЕНИТЬ</button>";
   }else if(st==='in_progress'){
     a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px\" onclick=\"openWorkEdit('"+b.id+"')\"> РЕДАКТИРОВАТЬ РАБОТЫ</button>";
     a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px;background:linear-gradient(135deg,#0bc5ea,#8b5cf6)\" onclick=\"openWorkForm('"+b.id+"','complete')\"> ЗАВЕРШИТЬ</button>";
