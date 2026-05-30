@@ -13,63 +13,6 @@
     <!-- Галерея-лайтбокс для фото домов -->
     <style>
 
-<!-- Модалка тест-драйва -->
-<div class="serv-overlay" id="tdOverlay">
-  <div class="serv-modal" style="max-width:400px;padding:2rem;border-radius:16px">
-    <button class="serv-close" onclick="closeTD()">&times;</button>
-    
-    <div id="tdForm">
-      <p style="font-size:1.05rem;font-weight:700;color:#111;margin:0 0 2px;text-align:center">Тест-драйв</p>
-      <p style="font-size:.85rem;color:#888;margin:0 0 1.2rem;text-align:center">Бесплатно &middot; 15 минут &middot; Без обязательств</p>
-      
-      <p style="font-size:.9rem;font-weight:500;color:#111;margin:0 0 12px;text-align:center" id="tdModelDisplay"></p>
-      
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
-        <div>
-          <p style="font-size:11px;color:#888;margin:0 0 4px">Дата</p>
-          <input type="date" id="tdDate" style="width:100%;padding:10px 12px;font-size:13px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:10px;color:#111;background:#fff;box-sizing:border-box;outline:none" onfocus="this.style.borderColor='#111'" onblur="this.style.borderColor='#ddd'">
-        </div>
-        <div>
-          <p style="font-size:11px;color:#888;margin:0 0 4px">Время</p>
-          <select id="tdTime" style="width:100%;padding:10px 12px;font-size:13px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:10px;color:#111;background:#fff;box-sizing:border-box;outline:none" onfocus="this.style.borderColor='#111'" onblur="this.style.borderColor='#ddd'">
-            <option value="">Выберите время</option>
-            <option value="10:00">10:00</option>
-            <option value="11:00">11:00</option>
-            <option value="12:00">12:00</option>
-            <option value="13:00">13:00</option>
-            <option value="14:00">14:00</option>
-            <option value="15:00">15:00</option>
-            <option value="16:00">16:00</option>
-            <option value="17:00">17:00</option>
-            <option value="18:00">18:00</option>
-          </select>
-        </div>
-      </div>
-      
-      <div style="margin-bottom:10px">
-        <p style="font-size:11px;color:#888;margin:0 0 4px">Имя</p>
-        <input type="text" id="tdName" placeholder="" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:10px;color:#333;background:#fff;box-sizing:border-box;outline:none" onfocus="this.style.borderColor='#111'" onblur="this.style.borderColor='#ddd'">
-      </div>
-      <div style="margin-bottom:16px">
-        <p style="font-size:11px;color:#888;margin:0 0 4px">Номер телефона</p>
-        <input type="tel" id="tdPhone" placeholder="" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:10px;color:#333;background:#fff;box-sizing:border-box;outline:none" onfocus="this.style.borderColor='#111'" onblur="this.style.borderColor='#ddd'">
-      </div>
-      
-      <button id="tdSubmitBtn" onclick="submitTD()" style="width:100%;padding:12px;font-size:15px;font-weight:600;font-family:Inter,sans-serif;color:#fff;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);border:none;border-radius:10px;cursor:pointer">Записаться на тест-драйв</button>
-      
-      <p style="font-size:.72rem;color:#999;margin:10px 0 0;text-align:center">Нажимая кнопку, вы соглашаетесь с обработкой персональных данных</p>
-    </div>
-    
-    <div id="tdSuccess" style="display:none;text-align:center;padding:1.5rem 0">
-      <p style="font-size:1rem;font-weight:600;color:#111;margin:0 0 4px">Вы записаны!</p>
-      <p style="font-size:.85rem;color:#666;margin:0 0 6px;line-height:1.5">Приезжайте в шоурум</p>
-      <p style="font-size:.82rem;color:#333;margin:0 0 4px">Пластунская 52з/2, Сочи</p>
-      <p style="font-size:.82rem;color:#333;margin:0 0 20px">За 5 минут до начала</p>
-      <button onclick="closeTD()" style="padding:10px 32px;font-size:14px;font-weight:600;font-family:Inter,sans-serif;color:#fff;background:#111;border:none;border-radius:10px;cursor:pointer">Хорошо</button>
-    </div>
-  </div>
-</div>
-
 .footer{display:none!important}
 .footer-new{background:#fff;border-top:1px solid #eee;padding:32px 16px 20px;text-align:center}
       .gallery-overlay{display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.92);justify-content:center;align-items:center;flex-direction:column;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
@@ -90,6 +33,63 @@
       }
     
 </style>
+<!-- Модалка тест-драйва -->
+<div class="serv-overlay" id="tdOverlay">
+  <div class="serv-modal" style="max-width:400px;padding:2rem;border-radius:16px">
+    <button class="serv-close" onclick="closeTD()">&times;</button>
+    
+    <div id="tdForm">
+      <p style="font-size:1.05rem;font-weight:700;color:#111;margin:0 0 2px;text-align:center">Тест-драйв</p>
+      <p style="font-size:.85rem;color:#888;margin:0 0 1.2rem;text-align:center">Бесплатно · 15 минут · Без обязательств</p>
+      
+      <p style="font-size:.9rem;font-weight:500;color:#111;margin:0 0 12px;text-align:center" id="tdModelDisplay"></p>
+      
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+        <div>
+          <p style="font-size:11px;color:#888;margin:0 0 4px">Дата</p>
+          <input type="date" id="tdDate" style="width:100%;padding:10px 12px;font-size:13px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:10px;color:#111;background:#fff;box-sizing:border-box;outline:none" onfocus="this.style.borderColor=\'#111\'" onblur="this.style.borderColor=\'#ddd\'">
+        </div>
+        <div>
+          <p style="font-size:11px;color:#888;margin:0 0 4px">Время</p>
+          <select id="tdTime" style="width:100%;padding:10px 12px;font-size:13px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:10px;color:#111;background:#fff;box-sizing:border-box;outline:none" onfocus="this.style.borderColor=\'#111\'" onblur="this.style.borderColor=\'#ddd\'">
+            <option value="">Выберите время</option>
+            <option value="10:00">10:00</option>
+            <option value="11:00">11:00</option>
+            <option value="12:00">12:00</option>
+            <option value="13:00">13:00</option>
+            <option value="14:00">14:00</option>
+            <option value="15:00">15:00</option>
+            <option value="16:00">16:00</option>
+            <option value="17:00">17:00</option>
+            <option value="18:00">18:00</option>
+          </select>
+        </div>
+      </div>
+      
+      <div style="margin-bottom:10px">
+        <p style="font-size:11px;color:#888;margin:0 0 4px">Имя</p>
+        <input type="text" id="tdName" placeholder="" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:10px;color:#333;background:#fff;box-sizing:border-box;outline:none" onfocus="this.style.borderColor=\'#111\'" onblur="this.style.borderColor=\'#ddd\'">
+      </div>
+      <div style="margin-bottom:16px">
+        <p style="font-size:11px;color:#888;margin:0 0 4px">Номер телефона</p>
+        <input type="tel" id="tdPhone" placeholder="" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:10px;color:#333;background:#fff;box-sizing:border-box;outline:none" onfocus="this.style.borderColor=\'#111\'" onblur="this.style.borderColor=\'#ddd\'">
+      </div>
+      
+      <button id="tdSubmitBtn" onclick="submitTD()" style="width:100%;padding:12px;font-size:15px;font-weight:600;font-family:Inter,sans-serif;color:#fff;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);border:none;border-radius:10px;cursor:pointer">Записаться на тест-драйв</button>
+      
+      <p style="font-size:.72rem;color:#999;margin:10px 0 0;text-align:center">Нажимая кнопку, вы соглашаетесь с обработкой персональных данных</p>
+    </div>
+    
+    <div id="tdSuccess" style="display:none;text-align:center;padding:1.5rem 0">
+      <p style="font-size:1rem;font-weight:600;color:#111;margin:0 0 4px">Вы записаны!</p>
+      <p style="font-size:.85rem;color:#666;margin:0 0 6px;line-height:1.5">Приезжайте в шоурум</p>
+      <p style="font-size:.82rem;color:#333;margin:0 0 4px">Пластунская 52з/2, Сочи</p>
+      <p style="font-size:.82rem;color:#333;margin:0 0 20px">За 5 минут до начала</p>
+      <button onclick="closeTD()" style="padding:10px 32px;font-size:14px;font-weight:600;font-family:Inter,sans-serif;color:#fff;background:#111;border:none;border-radius:10px;cursor:pointer">Хорошо</button>
+    </div>
+  </div>
+</div>
+
     <!-- Стили: стеклянная кнопка Telegram (как в первой версии) -->
     <style>
 .footer{display:none!important}
