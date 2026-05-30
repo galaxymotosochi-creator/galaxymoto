@@ -8,7 +8,25 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script type="module" crossorigin src="assets/index-CguyBJZF.js?v=39"></script>
+    
+<script>
+// Хук для кнопки Тест-драйв (подхватывает клик через делегирование)
+document.addEventListener('click', function(e) {
+  var btn = e.target.closest('.house-card__btn');
+  if (btn) {
+    e.preventDefault();
+    var card = btn.closest('.house-card');
+    var title = card ? card.querySelector('.house-card__title') : null;
+    var name = title ? title.textContent.trim() : '';
+    if (typeof window.openTestDrive === 'function') {
+      window.openTestDrive(name);
+    } else {
+      console.log('openTestDrive not ready yet');
+    }
+  }
+});
+</script>
+<script type="module" crossorigin src="assets/index-CguyBJZF.js?v=39"></script>
     <link rel="stylesheet" crossorigin href="assets/index-CTYFC3_u.css?v=40">
     <!-- Галерея-лайтбокс для фото домов -->
     <style>
