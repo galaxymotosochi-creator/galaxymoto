@@ -34,7 +34,7 @@
     
 </style>
 <!-- Модалка тест-драйва -->
-<div class="serv-overlay" id="tdOverlay">
+<div class="serv-overlay" id="tdOverlay" style="display:none">
   <div class="serv-modal" style="max-width:400px;padding:2rem;border-radius:16px">
     <button class="serv-close" onclick="closeTD()">&times;</button>
     
@@ -722,9 +722,7 @@
       })
       .catch(function(){
         // Fallback: отправляем напрямую в Telegram если API не ответил
-        var msg = '📋 НОВАЯ ЗАЯВКА\n';
-        msg += 'Ожидания: ' + (type === 'match' ? 'Совпали ✓' : 'Дешевле ✗') + '\n';
-        msg += 'Модель: ' + calcModel.name + ' (' + calcModel.basePrice.toLocaleString('ru-RU') + ' ₽)\n';
+        var msg = '\U0001f4cb \u0417\u0410\u042f\u0412\u041a\u0410 \u041d\u0410 \u041a\u041e\u041d\u0421\u0423\u041b\u042c\u0422\u0410\u0426\u0418\u042e\n\u0421\u0435\u0440\u0432\u0438\u0441\u043d\u044b\u0435 \u043a\u0430\u0440\u0442\u044b GALAXY MOTO\n\n\U0001f464 ' + name + '\n\U0001f4de ' + phone + '\n';
         if (selectedOptions.length) msg += 'Опции: ' + selectedOptions.join(', ') + '\n';
         msg += 'Доставка до ' + (calcSelectedCity || 'Уточняется') + '\n';
         msg += 'ИТОГО: ' + getGrandTotal().toLocaleString('ru-RU') + ' ₽\n\n';
@@ -1618,12 +1616,7 @@ window.submitConsult = function() {
   var now = new Date().toISOString();
   var leadData = { name: name, phone: phone, source: 'service_cards', status: 'new', message: 'Консультация по сервисным картам', visitorId: localStorage.getItem('galaxy_visitor_id') || '', createdAt: now, updatedAt: now };
   fetch('/api/leads/' + leadId, { method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(leadData) }).catch(function(){});
-  var msg = '📋 ЗАЯВКА НА КОНСУЛЬТАЦИЮ
-Сервисные карты GALAXY MOTO
-
-👤 ' + name + '
-📞 ' + phone + '
-';
+var msg = '\ud83d\udccb \u0417\u0410\u042f\u0412\u041a\u0410 \u041d\u0410 \u041a\u041e\u041d\u0421\u0423\u041b\u042c\u0422\u0410\u0426\u0418\u042e\n\u0421\u0435\u0440\u0432\u0438\u0441\u043d\u044b\u0435 \u043a\u0430\u0440\u0442\u044b GALAXY MOTO\n\n\ud83d\udc64 ' + name + '\n\ud83d\udcde ' + phone + '\n';
   fetch('https://api.telegram.org/bot7471473926:AAE_kyz1Qtb1J8Dddqk1aaxzBGfMQ73lSMM/sendMessage', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ chat_id: 5368408796, text: msg }) })
   .then(function(){
     document.getElementById('consultForm').style.display = 'none';
