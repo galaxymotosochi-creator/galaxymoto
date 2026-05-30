@@ -12,6 +12,64 @@
     <link rel="stylesheet" crossorigin href="assets/index-CTYFC3_u.css?v=40">
     <!-- Галерея-лайтбокс для фото домов -->
     <style>
+
+<!-- Модалка тест-драйва -->
+<div class="serv-overlay" id="tdOverlay">
+  <div class="serv-modal" style="max-width:400px;padding:2rem;border-radius:16px">
+    <button class="serv-close" onclick="closeTD()">&times;</button>
+    
+    <div id="tdForm">
+      <p style="font-size:1.05rem;font-weight:700;color:#111;margin:0 0 2px;text-align:center">Тест-драйв</p>
+      <p style="font-size:.85rem;color:#888;margin:0 0 1.2rem;text-align:center">Бесплатно &middot; 15 минут &middot; Без обязательств</p>
+      
+      <p style="font-size:.9rem;font-weight:500;color:#111;margin:0 0 12px;text-align:center" id="tdModelDisplay"></p>
+      
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+        <div>
+          <p style="font-size:11px;color:#888;margin:0 0 4px">Дата</p>
+          <input type="date" id="tdDate" style="width:100%;padding:10px 12px;font-size:13px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:10px;color:#111;background:#fff;box-sizing:border-box;outline:none" onfocus="this.style.borderColor='#111'" onblur="this.style.borderColor='#ddd'">
+        </div>
+        <div>
+          <p style="font-size:11px;color:#888;margin:0 0 4px">Время</p>
+          <select id="tdTime" style="width:100%;padding:10px 12px;font-size:13px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:10px;color:#111;background:#fff;box-sizing:border-box;outline:none" onfocus="this.style.borderColor='#111'" onblur="this.style.borderColor='#ddd'">
+            <option value="">Выберите время</option>
+            <option value="10:00">10:00</option>
+            <option value="11:00">11:00</option>
+            <option value="12:00">12:00</option>
+            <option value="13:00">13:00</option>
+            <option value="14:00">14:00</option>
+            <option value="15:00">15:00</option>
+            <option value="16:00">16:00</option>
+            <option value="17:00">17:00</option>
+            <option value="18:00">18:00</option>
+          </select>
+        </div>
+      </div>
+      
+      <div style="margin-bottom:10px">
+        <p style="font-size:11px;color:#888;margin:0 0 4px">Имя</p>
+        <input type="text" id="tdName" placeholder="" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:10px;color:#333;background:#fff;box-sizing:border-box;outline:none" onfocus="this.style.borderColor='#111'" onblur="this.style.borderColor='#ddd'">
+      </div>
+      <div style="margin-bottom:16px">
+        <p style="font-size:11px;color:#888;margin:0 0 4px">Номер телефона</p>
+        <input type="tel" id="tdPhone" placeholder="" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:10px;color:#333;background:#fff;box-sizing:border-box;outline:none" onfocus="this.style.borderColor='#111'" onblur="this.style.borderColor='#ddd'">
+      </div>
+      
+      <button id="tdSubmitBtn" onclick="submitTD()" style="width:100%;padding:12px;font-size:15px;font-weight:600;font-family:Inter,sans-serif;color:#fff;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);border:none;border-radius:10px;cursor:pointer">Записаться на тест-драйв</button>
+      
+      <p style="font-size:.72rem;color:#999;margin:10px 0 0;text-align:center">Нажимая кнопку, вы соглашаетесь с обработкой персональных данных</p>
+    </div>
+    
+    <div id="tdSuccess" style="display:none;text-align:center;padding:1.5rem 0">
+      <p style="font-size:1rem;font-weight:600;color:#111;margin:0 0 4px">Вы записаны!</p>
+      <p style="font-size:.85rem;color:#666;margin:0 0 6px;line-height:1.5">Приезжайте в шоурум</p>
+      <p style="font-size:.82rem;color:#333;margin:0 0 4px">Пластунская 52з/2, Сочи</p>
+      <p style="font-size:.82rem;color:#333;margin:0 0 20px">За 5 минут до начала</p>
+      <button onclick="closeTD()" style="padding:10px 32px;font-size:14px;font-weight:600;font-family:Inter,sans-serif;color:#fff;background:#111;border:none;border-radius:10px;cursor:pointer">Хорошо</button>
+    </div>
+  </div>
+</div>
+
 .footer{display:none!important}
 .footer-new{background:#fff;border-top:1px solid #eee;padding:32px 16px 20px;text-align:center}
       .gallery-overlay{display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.92);justify-content:center;align-items:center;flex-direction:column;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
@@ -803,6 +861,7 @@
       .serv-day.sunday{color:#e74c3c}
       .serv-time-grid{display:none;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem}
       .serv-time-grid.active{display:grid}
+.serv-modal select{appearance:auto}
       .serv-text{font-size:.82rem;color:#666;margin-bottom:.7rem}
       .serv-time-slot{text-align:center;padding:10px 4px;font-size:.82rem;font-weight:500!important;color:#333;border:1.5px solid #ddd;border-radius:8px;cursor:pointer;transition:all .15s}
       .serv-time-slot:hover{background:#f0f0f0;border-color:#999}
@@ -1491,6 +1550,52 @@ window.scScroll2 = function(dir) {
   if (!el) return;
   var w = el.offsetWidth + 10;
   cards.scrollBy({ left: w * dir, behavior: 'smooth' });
+};
+
+window.tdModelName = '';
+window.openTestDrive = function(name) {
+  tdModelName = name || '';
+  var o = document.getElementById('tdOverlay');
+  o.classList.add('active');
+  document.getElementById('tdForm').style.display = '';
+  document.getElementById('tdSuccess').style.display = 'none';
+  document.getElementById('tdModelDisplay').textContent = name ? name : '';
+  document.getElementById('tdDate').value = '';
+  document.getElementById('tdTime').value = '';
+  document.getElementById('tdName').value = '';
+  document.getElementById('tdPhone').value = '';
+};
+window.closeTD = function() {
+  document.getElementById('tdOverlay').classList.remove('active');
+};
+window.submitTD = function() {
+  var model = tdModelName;
+  var date = document.getElementById('tdDate').value;
+  var time = document.getElementById('tdTime').value;
+  var name = document.getElementById('tdName').value.trim();
+  var phone = document.getElementById('tdPhone').value.trim();
+  if (!date || !time || !name || !phone) { alert('Заполните все поля'); return; }
+  var btn = document.getElementById('tdSubmitBtn');
+  if (btn) { btn.textContent = 'Отправка...'; btn.disabled = true; }
+  var leadId = 'td_' + Date.now().toString(36) + Math.random().toString(36).substr(2,5);
+  var now = new Date().toISOString();
+  var leadData = { name: name, phone: phone, model: model, date: date, time: time, source: 'test_drive', status: 'new', message: 'Тест-драйв: ' + model, createdAt: now, updatedAt: now };
+  fetch('/api/leads/' + leadId, { method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(leadData) }).catch(function(){});
+  var today = new Date();
+  var parts = date.split('-');
+  var d = new Date(parts[0], parts[1]-1, parts[2]);
+  var months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+  var days = ['воскресенье','понедельник','вторник','среду','четверг','пятницу','субботу'];
+  var dateStr = parts[2] + ' ' + months[d.getMonth()] + ' (' + days[d.getDay()] + ')';
+  var msg = '\u0422\u0415\u0421\u0422-\u0414\u0420\u0410\u0419\u0412\n\n' + '\u041c\u043e\u0434\u0435\u043b\u044c: ' + model + '\n\u0414\u0430\u0442\u0430: ' + dateStr + '\n\u0412\u0440\u0435\u043c\u044f: ' + time + '\n\u0418\u043c\u044f: ' + name + '\n\u0422\u0435\u043b\u0435\u0444\u043e\u043d: ' + phone;
+  fetch('https://api.telegram.org/bot7471473926:AAE_kyz1Qtb1J8Dddqk1aaxzBGfMQ73lSMM/sendMessage', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ chat_id: 5368408796, text: msg }) })
+  .then(function(){
+    document.getElementById('tdForm').style.display = 'none';
+    document.getElementById('tdSuccess').style.display = '';
+  }).catch(function(){
+    alert('\u041e\u0448\u0438\u0431\u043a\u0430 \u043e\u0442\u043f\u0440\u0430\u0432\u043a\u0438. \u041f\u043e\u043f\u0440\u043e\u0431\u0443\u0439\u0442\u0435 \u043f\u043e\u0437\u0436\u0435.');
+    if (btn) { btn.textContent = '\u0417\u0430\u043f\u0438\u0441\u0430\u0442\u044c\u0441\u044f \u043d\u0430 \u0442\u0435\u0441\u0442-\u0434\u0440\u0430\u0439\u0432'; btn.disabled = false; }
+  });
 };
 
 window.openConsult = function() {
