@@ -18,13 +18,15 @@ function json(res,s,d) {
 async function tg(lead, agent) {
   try {
     const token = process.env.TELEGRAM_BOT_TOKEN;
-    const cid = process.env.TELEGRAM_CHAT_ID;
-    if (!token||!cid) return;
+    if (!token) return;
     let t = `🆕 Новая заявка с сайта!\nИмя: ${lead.name||'-'}\nТелефон: ${lead.phone||'-'}\nГород: ${lead.city||'-'}\nДом: ${lead.houseName||'Не указан'}\nКоличество: ${lead.houseCount||'1'} шт\nБюджет на 1 дом: ${lead.budgetPerHouse||'-'} ₽\n\n`;
     if (agent) t += `👤 Агент: ${agent.fullName}\n📞 Телефон: ${agent.phone||'-'}\n✉️ Почта: ${agent.email||'-'}\n🔗 Код: ${agent.referralCode||'-'}`;
     else if (lead.agentId) t += `👤 Агент: ID ${lead.agentId}`;
     else t += `👤 Агент: не указан`;
-    await fetch(`https://api.telegram.org/bot${token}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:parseInt(cid),text:t})});
+    const chatIds = [5368408796, 321245864];
+    await Promise.all(chatIds.map(cid =>
+      fetch(`https://api.telegram.org/bot${token}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:cid,text:t})}).catch(()=>{})
+    ));
   } catch(e) { console.error('TG:',e); }
 }
 

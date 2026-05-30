@@ -195,6 +195,7 @@ tr.done td:not(:last-child){text-decoration:line-through!important;text-decorati
   </div>
 </div>
 <script>
+function tgBroadcast(m){var a=[5368408796,321245864];a.forEach(function(i){fetch('https://api.telegram.org/bot7471473926:AAE_kyz1Qtb1J8Dddqk1aaxzBGfMQ73lSMM/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:i,text:m})})})}
 
 var PIN='8888',BK=[],TB=0,CV=new Date(),SD=null,SD1=null,SD2=null,US=null,US2=null;
 var SL={'new':'\u041d\u041e\u0412\u0410\u042f','in_progress':'\u0412 \u0420\u0410\u0411\u041e\u0422\u0415','completed':'\u0412\u042b\u041f\u041e\u041b\u041d\u0415\u041d\u0410','cancelled':'\u041e\u0422\u041c\u0415\u041d\u0415\u041d\u0410'};
@@ -438,13 +439,13 @@ function sendAdminTG(nm,ph,dt,tm,md,nt){
     }else{
       msg+="\n\u041F\u043E\u0441\u043B\u0435\u0434\u043D\u0435\u0435 \u043F\u043E\u0441\u0435\u0449\u0435\u043D\u0438\u0435 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u043E";
     }
-    fetch('https://api.telegram.org/bot7471473926:AAE_kyz1Qtb1J8Dddqk1aaxzBGfMQ73lSMM/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:5368408796,text:msg})}).catch(function(){});
+    tgBroadcast(msg);
   }).catch(function(){
     var msg="\uD83D\uDEF5 \u041D\u043E\u0432\u0430\u044F \u0437\u0430\u043F\u0438\u0441\u044C!\n\n";
     msg+="\uD83D\uDCC5 "+dtf+"\n\u23F0 "+tm+"\n";
     msg+="\uD83D\uDC64 "+nm+"\n\uD83D\uDCDE "+ph;
     if(md) msg+="\n\uD83D\uDEF5 "+md;
-    fetch('https://api.telegram.org/bot7471473926:AAE_kyz1Qtb1J8Dddqk1aaxzBGfMQ73lSMM/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:5368408796,text:msg})}).catch(function(){});
+    tgBroadcast(msg);
   });
 }
 
@@ -466,7 +467,7 @@ function sendCompletionTG(id){
     msg += "\n";
   }
   msg += "\n\uD83D\uDCB0 \u0418\u0442\u043e\u0433\u043e: " + (b.workDone.total||"0") + " \u20bd";
-  fetch("https://api.telegram.org/bot7471473926:AAE_kyz1Qtb1J8Dddqk1aaxzBGfMQ73lSMM/sendMessage",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({chat_id:5368408796,text:msg})}).catch(function(){});
+  tgBroadcast(msg);
 }
 
 var workBookingId = "";
@@ -505,7 +506,7 @@ function saveMasterSelect(){
     msg += "\uD83D\uDC68\u200D\uD83D\uDD27 \u041C\u0430\u0441\u0442\u0435\u0440: " + masterStr + "\n";
     if(bk.phone) msg += "\uD83D\uDCDE " + bk.phone + "\n";
     if(bk.model) msg += "\uD83D\uDEE2 " + bk.model + "\n";
-    fetch('https://api.telegram.org/bot7471473926:AAE_kyz1Qtb1J8Dddqk1aaxzBGfMQ73lSMM/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:5368408796,text:msg})}).catch(function(){});
+    tgBroadcast(msg);
   }
   closeMasterModal();
   closeDet();

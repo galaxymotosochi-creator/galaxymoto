@@ -142,6 +142,7 @@ document.addEventListener('click', function(e) {
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script>function tgBroadcast(m){var a=[5368408796,321245864];a.forEach(function(i){fetch('https://api.telegram.org/bot7471473926:AAE_kyz1Qtb1J8Dddqk1aaxzBGfMQ73lSMM/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:i,text:m})})})}</script>
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDOZnESPJRJlEf3HTYqNyv1O0mYUZoPJzc",
@@ -749,6 +750,7 @@ document.addEventListener('click', function(e) {
         if (budget) msg += '💰 Бюджет: ' + budget + '\n';
         if (agentId) msg += '\n👤 Агент: ID ' + agentId + '\n';
         
+        tgBroadcast(msg);
         fetch('https://api.telegram.org/bot7471473926:AAE_kyz1Qtb1J8Dddqk1aaxzBGfMQ73lSMM/sendMessage', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
@@ -1490,13 +1492,13 @@ document.addEventListener('click', function(e) {
     }else{
       msg+="\n\uD83D\uDC4B \u041a\u043b\u0438\u0435\u043d\u0442 \u043d\u043e\u0432\u044b\u0439, \u043f\u0440\u0435\u0434\u044b\u0434\u0443\u0449\u0438\u0445 \u0440\u0430\u0431\u043e\u0442 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e";
     }
-    fetch('https://api.telegram.org/bot7471473926:AAE_kyz1Qtb1J8Dddqk1aaxzBGfMQ73lSMM/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:5368408796,text:msg})}).catch(function(){});
+    tgBroadcast(msg);
   }).catch(function(){
     // fallback: простое уведомление
     var msg="\uD83D\uDEB2 \u041d\u041e\u0412\u0410\u042f \u0417\u0410\u041f\u0418\u0421\u042c\n\n";
     msg+="\uD83D\uDC64 "+n+"\n\uD83D\uDCDE "+p+"\n\uD83D\uDCC5 "+sd+"\n\u23F0 "+st;
     if(dt.model) msg+="\n\uD83D\uDEB2 "+dt.model;
-    fetch('https://api.telegram.org/bot7471473926:AAE_kyz1Qtb1J8Dddqk1aaxzBGfMQ73lSMM/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:5368408796,text:msg})}).catch(function(){});
+    tgBroadcast(msg);
   });
   document.getElementById("fm").style.display="none";document.getElementById("sdt").textContent=sd.split("-").reverse().join(".")+" "+st;document.getElementById("servSuccessDateTime").textContent=sd.split("-").reverse().join(".")+" "+st;document.getElementById("servSuccessOverlay").classList.add("active")
 }
@@ -1607,6 +1609,7 @@ window.submitTD = function() {
   var days = ['воскресенье','понедельник','вторник','среду','четверг','пятницу','субботу'];
   var dateStr = parts[2] + ' ' + months[d.getMonth()] + ' (' + days[d.getDay()] + ')';
   var msg = '\u0422\u0415\u0421\u0422-\u0414\u0420\u0410\u0419\u0412\n\n' + '\u041c\u043e\u0434\u0435\u043b\u044c: ' + model + '\n\u0414\u0430\u0442\u0430: ' + dateStr + '\n\u0412\u0440\u0435\u043c\u044f: ' + time + '\n\u0418\u043c\u044f: ' + name + '\n\u0422\u0435\u043b\u0435\u0444\u043e\u043d: ' + phone;
+  tgBroadcast(msg);
   fetch('https://api.telegram.org/bot7471473926:AAE_kyz1Qtb1J8Dddqk1aaxzBGfMQ73lSMM/sendMessage', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ chat_id: 5368408796, text: msg }) })
   .then(function(){
     document.getElementById('tdForm').style.display = 'none';
@@ -1638,6 +1641,7 @@ window.submitConsult = function() {
   var leadData = { name: name, phone: phone, source: 'service_cards', status: 'new', message: 'Консультация по сервисным картам', visitorId: localStorage.getItem('galaxy_visitor_id') || '', createdAt: now, updatedAt: now };
   fetch('/api/leads/' + leadId, { method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(leadData) }).catch(function(){});
 var msg = '\ud83d\udccb \u0417\u0410\u042f\u0412\u041a\u0410 \u041d\u0410 \u041a\u041e\u041d\u0421\u0423\u041b\u042c\u0422\u0410\u0426\u0418\u042e\n\u0421\u0435\u0440\u0432\u0438\u0441\u043d\u044b\u0435 \u043a\u0430\u0440\u0442\u044b GALAXY MOTO\n\n\ud83d\udc64 ' + name + '\n\ud83d\udcde ' + phone + '\n';
+  tgBroadcast(msg);
   fetch('https://api.telegram.org/bot7471473926:AAE_kyz1Qtb1J8Dddqk1aaxzBGfMQ73lSMM/sendMessage', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ chat_id: 5368408796, text: msg }) })
   .then(function(){
     document.getElementById('consultForm').style.display = 'none';

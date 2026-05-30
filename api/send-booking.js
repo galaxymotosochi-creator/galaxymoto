@@ -24,14 +24,16 @@ export default async function handler(req, res) {
     if (notes) msg += `📝 Описание: ${notes}\n`;
     
     const token = process.env.TELEGRAM_BOT_TOKEN || '7471473926:AAE_kyz1Qtb1J8Dddqk1aaxzBGfMQ73lSMM';
-    const chatId = process.env.TELEGRAM_CHAT_ID || '5368408796';
+    const chatIds = [5368408796, 321245864];
     
-    // Отправляем текст
-    await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: parseInt(chatId), text: msg })
-    });
+    // Отправляем текст на оба телефона
+    await Promise.all(chatIds.map(cid =>
+      fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: cid, text: msg })
+      }).catch(() => {})
+    ));
     
     return res.status(200).json({ ok: true });
   } catch (e) {
