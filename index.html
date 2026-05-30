@@ -17,7 +17,7 @@ document.addEventListener('click', function(e) {
     e.preventDefault();
     var card = btn.closest('.house-card');
     var title = card ? card.querySelector('.house-card__title') : null;
-    var name = title ? title.textContent.trim().toUpperCase() : '';
+    var name = title ? title.textContent.trim() : '';
     if (typeof window.openTestDrive === 'function') {
       window.openTestDrive(name);
     } else {
