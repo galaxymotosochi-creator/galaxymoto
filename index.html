@@ -1573,6 +1573,7 @@ window.openTestDrive = function(name) {
   tdModelName = name || '';
   var o = document.getElementById('tdOverlay');
   o.classList.add('active');
+  o.style.display = '';
   document.getElementById('tdForm').style.display = '';
   document.getElementById('tdSuccess').style.display = 'none';
   document.getElementById('tdModelDisplay').textContent = name ? name : '';
@@ -1582,7 +1583,9 @@ window.openTestDrive = function(name) {
   document.getElementById('tdPhone').value = '';
 };
 window.closeTD = function() {
-  document.getElementById('tdOverlay').classList.remove('active');
+  var o = document.getElementById('tdOverlay');
+  o.classList.remove('active');
+  o.style.display = '';
 };
 window.submitTD = function() {
   var model = tdModelName;
