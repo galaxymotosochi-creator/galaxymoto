@@ -1,1 +1,1 @@
-{ "version": 2, "rewrites": [{ "source": "/admin", "destination": "/admin.html" }] }
+{ "version": 2, "rewrites": [{ "source": "/adminservice", "destination": "/admin.html" }] }
