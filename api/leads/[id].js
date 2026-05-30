@@ -48,6 +48,20 @@ export default async function handler(req, res) {
       
       if (!body.name||!body.phone) return json(res,400,{ok:false,error:'Name+phone required'});
       
+      // Проверка: если это тест-драйв, убедиться что слот не занят
+      if (body.source === 'test_drive' && body.model && body.date && body.time) {
+        const conflict = await db.collection('galaxy_leads')
+          .where('source', '==', 'test_drive')
+          .where('model', '==', body.model)
+          .where('date', '==', body.date)
+          .where('time', '==', body.time)
+          .get();
+        if (!conflict.empty) {
+          console.log('[LEAD] Conflict: test_drive already booked for ' + body.model + ' on ' + body.date + ' at ' + body.time);
+          return json(res,409,{ok:false,error:'Этот скутер уже забронирован на это время'});
+        }
+      }
+      
       // Save lead + more fields to help debug
       await db.collection('galaxy_leads').doc(id).set(body,{merge:true});
       
