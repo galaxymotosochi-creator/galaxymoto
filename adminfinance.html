@@ -74,7 +74,7 @@ body{font-family:Inter,sans-serif;background:#f5f5f5;color:#111;min-height:100vh
 .debt-item__info{flex:1}
 .debt-item__title{font-size:13px;font-weight:500}
 .debt-item__meta{font-size:11px;color:#999}
-.debt-item__amount{font-size:14px;font-weight:700;color:#c62828}
+/* .debt-item__amount removed */
 .debt-input{width:100px;padding:6px 8px;font-size:13px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:6px;text-align:right;outline:none}
 .debt-input:focus{border-color:#111}
 .payout-summary{background:#fff8e1;border:1.5px solid #ffe082;border-radius:10px;padding:12px;margin-bottom:12px;text-align:center}
@@ -473,8 +473,8 @@ function buildPayForm(type){
       unpaid.forEach(function(o,i){
         var debt=o.amount-(o.paidOut||0);
         html+='<div class="debt-item"><div class="debt-item__info"><div class="debt-item__title">'+(o.model||'Скутер')+'</div><div class="debt-item__meta">'+o.date+' · '+(o.client||'')+' · сумма: '+o.amount.toLocaleString()+' руб</div></div>';
-        html+='<div style="text-align:right"><div class="debt-item__amount" id="pd_'+i+'">'+debt.toLocaleString()+' руб</div>';
-        html+='<input type="number" class="debt-input" id="pp_'+i+'" step="any" value="0" placeholder="'+debt+'"></div></div>';
+        html+='<div style="text-align:right">';
+        html+='<input type="number" class="debt-input" id="pp_'+i+'" step="any" value="0"></div></div>';
       });
     }
   } else if(type==='rent'){
@@ -486,8 +486,8 @@ function buildPayForm(type){
       unpaid.forEach(function(o,i){
         var comm=o.amount*0.15,debt=comm-(o.paidOut||0);
         html+='<div class="debt-item"><div class="debt-item__info"><div class="debt-item__title">'+(o.model||'Аренда')+'</div><div class="debt-item__meta">'+o.date+' · '+o.amount.toLocaleString()+' руб · 15% = '+comm.toLocaleString()+' руб</div></div>';
-        html+='<div style="text-align:right"><div class="debt-item__amount" id="pd_'+i+'">'+debt.toLocaleString()+' руб</div>';
-        html+='<input type="number" class="debt-input" id="pp_'+i+'" step="any" value="0" placeholder="'+debt.toFixed(0)+'"></div></div>';
+        html+='<div style="text-align:right">';
+        html+='<input type="number" class="debt-input" id="pp_'+i+'" step="any" value="0"></div></div>';
       });
     }
   } else if(type==='trans'){
@@ -499,8 +499,8 @@ function buildPayForm(type){
       unpaid.forEach(function(o,i){
         var debt=o.amount-(o.paidOut||0);
         html+='<div class="debt-item"><div class="debt-item__info"><div class="debt-item__title">'+(o.cargo||'Перевозка')+'</div><div class="debt-item__meta">'+o.date+' · '+(o.route||'')+' · '+o.amount.toLocaleString()+' руб</div></div>';
-        html+='<div style="text-align:right"><div class="debt-item__amount" id="pd_'+i+'">'+debt.toLocaleString()+' руб</div>';
-        html+='<input type="number" class="debt-input" id="pp_'+i+'" step="any" value="0" placeholder="'+debt+'"></div></div>';
+        html+='<div style="text-align:right">';
+        html+='<input type="number" class="debt-input" id="pp_'+i+'" step="any" value="0"></div></div>';
       });
     }
   } else if(type==='other'){
