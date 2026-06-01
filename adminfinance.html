@@ -225,7 +225,7 @@ function init(){
   unsubPays=DB.collection('galaxymoto_finance_payouts').orderBy('createdAt','desc').onSnapshot(function(snap){
     paysArr=[];
     snap.forEach(function(doc){var x=doc.data(); x.id=doc.id; if(x.total) paysArr.push(x);});
-    renderPays();
+    renderAll(); renderPays();
   });
 }
 
@@ -362,28 +362,33 @@ function renderOps(){
   paysArr.forEach(function(p){bal-=p.total;});
   document.getElementById('balVal').textContent=bal.toLocaleString()+' руб';
 
-  // Sort by date desc
-  filtered.sort(function(a,b){return (b.date||'').localeCompare(a.date||'')||b.createdAt-a.createdAt;});
-  var html='<div class="ops-header"><span>Операции</span><span>Сумма</span></div>';
-  if(filtered.length===0&&paysArr.length===0){
+  // Sort by date desc - combine ops and pays into one list
+  var allItems=[];
+  filtered.forEach(function(o){
+    var sign='',clr='#111';
+    if(o.category==='Продажа'||o.category==='Аренда'||o.category==='Прочие доходы'){sign='+';clr='#2e7d32';}
+    else if(o.category==='Прочие расходы'){sign='-';clr='#c62828';}
+    else {sign='';clr='#e65100';}
+    var desc=o.model||o.cargo||o.desc||o.subcat||'';
+    allItems.push({date:o.date,cat:o.category,desc:desc,pay:o.payMethod||'',amt:o.amount,sign:sign,clr:clr,type:'op',createdAt:o.createdAt});
+  });
+  paysArr.forEach(function(p){
+    allItems.push({date:p.date,cat:'Выплата: '+p.label,desc:'',pay:p.payMethod||'—',amt:-p.total,sign:'-',clr:'#c62828',type:'pay',bg:'#fff8e1',createdAt:p.createdAt});
+  });
+  allItems.sort(function(a,b){return (b.date||'').localeCompare(a.date||'')||b.createdAt-a.createdAt;});
+
+  var html='<div class="ops-header"><span>Дата</span><span>Категория</span><span>Способ</span><span>Сумма</span></div>';
+  if(allItems.length===0){
     html+='<div style="text-align:center;padding:30px 20px;color:#888;font-size:13px">Нет операций</div>';
   } else {
-    filtered.forEach(function(o){
-      var sign='',clr='#111';
-      if(o.category==='Продажа'||o.category==='Аренда'||o.category==='Прочие доходы'){sign='+';clr='#2e7d32';}
-      else if(o.category==='Прочие расходы'){sign='-';clr='#c62828';}
-      else {sign='';clr='#e65100';}
-      var desc=o.model||o.cargo||o.desc||o.subcat||'';
-      html+='<div class="ops-item"><span style="font-size:12px;font-weight:600;color:'+clr+'">'+o.category+'</span>';
-      html+='<span style="font-size:13px;color:#555;flex:1;margin:0 10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(desc)+'</span>';
-      html+='<span style="font-size:11px;color:#aaa;margin-right:6px">'+(o.date?o.date.slice(5):'')+'</span>';
-      html+='<span style="font-size:13px;font-weight:700;color:'+clr+'">'+sign+o.amount.toLocaleString()+' руб</span></div>';
-    });
-    paysArr.forEach(function(p){
-      html+='<div class="ops-item" style="background:#fff8e1"><span style="font-size:12px;font-weight:600;color:#c62828">Выплата</span>';
-      html+='<span style="font-size:13px;color:#555;flex:1;margin:0 10px;overflow:hidden;text-overflow:ellipsis">'+esc(p.label||'')+'</span>';
-      html+='<span style="font-size:11px;color:#aaa;margin-right:6px">'+(p.date?p.date.slice(5):'')+'</span>';
-      html+='<span style="font-size:13px;font-weight:700;color:#c62828">-'+p.total.toLocaleString()+' руб</span></div>';
+    allItems.forEach(function(it){
+      var bg=it.bg||'';
+      var descExtra=(it.type==='pay'&&(it.cat.indexOf('Выплата:')===0))?it.cat.replace('Выплата: ','')+' ':' ';
+      html+='<div class="ops-item"'+(bg?' style="background:'+bg+'"':'')+'>';
+      html+='<span style="font-size:11px;color:#888;width:55px;flex-shrink:0">'+(it.date?it.date.slice(5):'')+'</span>';
+      html+='<span style="font-size:12px;font-weight:'+(it.type==='pay'?600:500)+';color:'+it.clr+';flex:1;margin:0 6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(it.cat)+(it.desc?' ('+esc(it.desc)+')':'')+'</span>';
+      html+='<span style="font-size:11px;color:#888;width:60px;flex-shrink:0;text-align:center">'+it.pay+'</span>';
+      html+='<span style="font-size:13px;font-weight:700;color:'+it.clr+';width:90px;flex-shrink:0;text-align:right">'+it.sign+Math.abs(it.amt).toLocaleString()+' руб</span></div>';
     });
   }
   document.getElementById('opsList').innerHTML=html;
