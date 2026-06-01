@@ -16,7 +16,16 @@
   --med: 250ms;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Inter,sans-serif;background:#f5f5f5;color:#111;min-height:100vh}
+body{font-family:Inter,sans-serif;color:#111;min-height:100vh;position:relative}
+body::before{content:'';position:fixed;inset:0;z-index:-1;background:#f5f5f5}
+body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none}
+.bg-ambient{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.bg-ambient .glow{position:absolute;border-radius:50%;filter:blur(80px);animation:amb 12s ease-in-out infinite}
+.bg-ambient .g1{width:500px;height:500px;background:var(--c1,#0bc5ea);top:-150px;right:-100px;opacity:.05}
+.bg-ambient .g2{width:450px;height:450px;background:var(--c2,#8b5cf6);bottom:-120px;left:-80px;opacity:.04;animation-delay:-5s;animation-duration:15s}
+.bg-ambient .g3{width:300px;height:300px;background:var(--c1,#0bc5ea);top:40%;left:50%;opacity:.03;animation-delay:-8s;animation-duration:18s}
+@keyframes amb{0%,100%{opacity:.03;transform:scale(1)}50%{opacity:.07;transform:scale(1.1)}}
+.fin-container{position:relative;z-index:1}
 .fin-header{background:#111;color:#fff;padding:8px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.06);border-radius:12px;margin:8px 12px;width:auto}
 .fin-header h1{font-size:16px;font-weight:700;letter-spacing:.3px;display:flex;align-items:center;gap:8px}
 .fin-header h1 .emoji{display:inline}
@@ -127,6 +136,11 @@ body{font-family:Inter,sans-serif;background:#f5f5f5;color:#111;min-height:100vh
 </style>
 </head>
 <body>
+<div class="bg-ambient">
+    <div class="glow g1"></div>
+    <div class="glow g2"></div>
+    <div class="glow g3"></div>
+  </div>
 <div id="loginScreen" class="login-screen">
   <div class="login-box">
     <h2>💰 FINANCE</h2>
