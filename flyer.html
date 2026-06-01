@@ -11,13 +11,17 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 
 :root{
+  --c1: #0bc5ea;
+  --c2: #8b5cf6;
+  --c3: #06b6d4;
+  --c4: #a78bfa;
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-  --duration-fast: 160ms;
-  --duration-med: 250ms;
-  --duration-slow: 400ms;
-  --scale-press: 0.97;
+  --fast: 160ms;
+  --med: 250ms;
+  --slow: 400ms;
+  --press: 0.97;
 }
 
 body{
@@ -30,20 +34,75 @@ body{
   padding:20px;
 }
 
+/* FLYER */
 .flyer{
   width:420px;
   min-height:595px;
   background:#fff;
   border-radius:20px;
   overflow:hidden;
-  box-shadow:0 12px 48px rgba(0,0,0,.1),0 2px 8px rgba(0,0,0,.04);
+  box-shadow:0 12px 48px rgba(0,0,0,.1);
   position:relative;
-  animation:intro var(--duration-slow) var(--ease-out) both;
+  animation:intro var(--slow) var(--ease-out) both;
 }
 
 @keyframes intro{
   from{opacity:0;transform:translateY(12px) scale(0.98)}
   to{opacity:1;transform:translateY(0) scale(1)}
+}
+
+/* MESH GRADIENT BACKGROUND */
+.flyer-mesh{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  pointer-events:none;
+}
+
+.flyer-mesh .blob{
+  position:absolute;
+  border-radius:50%;
+  filter:blur(60px);
+  opacity:.25;
+  animation:float 12s var(--ease-in-out) infinite;
+}
+
+.flyer-mesh .blob:nth-child(1){
+  width:280px;height:280px;
+  background:var(--c1);
+  top:-60px;left:-40px;
+  animation-delay:0s;
+}
+
+.flyer-mesh .blob:nth-child(2){
+  width:220px;height:220px;
+  background:var(--c2);
+  bottom:80px;right:-30px;
+  animation-delay:-3s;
+  animation-duration:14s;
+}
+
+.flyer-mesh .blob:nth-child(3){
+  width:180px;height:180px;
+  background:var(--c4);
+  top:40%;left:50%;
+  animation-delay:-6s;
+  animation-duration:16s;
+}
+
+.flyer-mesh .blob:nth-child(4){
+  width:160px;height:160px;
+  background:var(--c3);
+  top:60%;left:-20px;
+  animation-delay:-9s;
+  animation-duration:11s;
+}
+
+@keyframes float{
+  0%,100%{transform:translate(0,0) scale(1)}
+  25%{transform:translate(30px,-20px) scale(1.05)}
+  50%{transform:translate(-20px,30px) scale(0.95)}
+  75%{transform:translate(20px,20px) scale(1.02)}
 }
 
 /* Top stripe */
@@ -52,25 +111,14 @@ body{
   padding:24px 28px 18px;
   text-align:center;
   position:relative;
-  overflow:hidden;
-}
-.flyer-top::before{
-  content:'';
-  position:absolute;
-  top:-50%;
-  left:-50%;
-  width:200%;
-  height:200%;
-  background:radial-gradient(circle at 50% 0%, rgba(255,255,255,.04) 0%, transparent 60%);
-  pointer-events:none;
+  z-index:1;
 }
 .flyer-top h1{
   font-size:22px;
   font-weight:800;
   color:#fff;
   letter-spacing:1px;
-  position:relative;
-  animation:slideDown var(--duration-med) var(--ease-out) 100ms both;
+  animation:slideDown var(--med) var(--ease-out) 100ms both;
 }
 .flyer-top h1 span{
   font-weight:400;
@@ -90,8 +138,9 @@ body{
 .flyer-hero{
   padding:22px 28px 16px;
   text-align:center;
-  background:linear-gradient(135deg,#0bc5ea06,#8b5cf606);
-  animation:fadeIn var(--duration-slow) var(--ease-out) 200ms both;
+  position:relative;
+  z-index:1;
+  animation:fadeIn var(--slow) var(--ease-out) 200ms both;
 }
 .flyer-hero h2{
   font-size:26px;
@@ -102,19 +151,14 @@ body{
 }
 .flyer-hero h2 em{
   font-style:normal;
-  background:linear-gradient(135deg,#0bc5ea,#8b5cf6);
+  background:linear-gradient(135deg,var(--c1),var(--c2));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
   background-clip:text;
-  filter:drop-shadow(0 0 0 transparent);
-  transition:filter var(--duration-med) var(--ease-out);
-}
-.flyer-hero h2:hover em{
-  filter:drop-shadow(0 0 8px rgba(139,92,246,.3));
 }
 .flyer-hero p{
   font-size:13px;
-  color:#666;
+  color:#555;
   line-height:1.5;
   max-width:320px;
   margin:0 auto;
@@ -125,24 +169,43 @@ body{
   to{opacity:1}
 }
 
-/* Features grid with stagger */
+/* Tagline */
+.tagline{
+  display:inline-block;
+  background:rgba(255,255,255,.8);
+  backdrop-filter:blur(8px);
+  border:1px solid rgba(139,92,246,.15);
+  border-radius:999px;
+  padding:4px 14px;
+  font-size:10px;
+  font-weight:600;
+  color:#7b1fa2;
+  letter-spacing:.5px;
+  margin-bottom:10px;
+  animation:fadeIn var(--slow) var(--ease-out) 150ms both;
+}
+
+/* Features grid */
 .features{
   padding:16px 28px 8px;
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:10px;
+  position:relative;
+  z-index:1;
 }
+
 .feature{
-  border:1.5px solid #eee;
+  background:rgba(255,255,255,.85);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,.4);
   border-radius:14px;
   padding:16px 12px;
   text-align:center;
   cursor:default;
-  transition:
-    transform var(--duration-fast) var(--ease-out),
-    box-shadow var(--duration-fast) var(--ease-out),
-    border-color var(--duration-fast) var(--ease-out);
-  animation:cardIn var(--duration-med) var(--ease-out) both;
+  animation:cardIn var(--med) var(--ease-out) both;
+  transition:transform var(--fast) var(--ease-out),box-shadow var(--fast) var(--ease-out);
 }
 .feature:nth-child(1){animation-delay:250ms}
 .feature:nth-child(2){animation-delay:300ms}
@@ -150,18 +213,16 @@ body{
 .feature:nth-child(4){animation-delay:400ms}
 
 @keyframes cardIn{
-  from{opacity:0;transform:translateY(8px)}
+  from{opacity:0;transform:translateY(10px)}
   to{opacity:1;transform:translateY(0)}
 }
 
 .feature:hover{
   transform:translateY(-3px);
   box-shadow:0 8px 24px rgba(0,0,0,.06);
-  border-color:#111;
 }
 .feature:active{
-  transform:scale(var(--scale-press));
-  transition-duration:var(--duration-fast);
+  transform:scale(var(--press));
 }
 
 .feature__icon{
@@ -173,10 +234,10 @@ body{
   justify-content:center;
   margin:0 auto 10px;
   font-size:22px;
-  transition:transform var(--duration-med) var(--ease-spring);
+  transition:transform var(--med) cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .feature:hover .feature__icon{
-  transform:scale(1.12);
+  transform:scale(1.15) rotate(-3deg);
 }
 .feature:nth-child(1) .feature__icon{background:#e8f5e9;color:#2e7d32}
 .feature:nth-child(2) .feature__icon{background:#e3f2fd;color:#1565c0}
@@ -191,37 +252,28 @@ body{
 }
 .feature__desc{
   font-size:10.5px;
-  color:#999;
+  color:#666;
   line-height:1.45;
 }
 
-/* Contact strip */
+/* Contact */
 .contact{
   background:#111;
   margin:10px 28px 0;
   border-radius:14px;
-  padding:16px 16px;
+  padding:16px;
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:8px;
   position:relative;
-  overflow:hidden;
-  transition:transform var(--duration-med) var(--ease-out);
+  z-index:1;
+  transition:transform var(--fast) var(--ease-out);
 }
 .contact:hover{
   transform:scale(1.01);
 }
-.contact::before{
-  content:'';
-  position:absolute;
-  top:-50%;left:-50%;
-  width:200%;height:200%;
-  background:radial-gradient(circle at 30% 50%, rgba(255,255,255,.03) 0%, transparent 50%);
-  pointer-events:none;
-}
 .contact-item{
   text-align:center;
-  position:relative;
 }
 .contact-item__label{
   font-size:9px;
@@ -239,19 +291,17 @@ body{
 .contact-item__value a{
   color:#fff;
   text-decoration:none;
-  transition:opacity var(--duration-fast) var(--ease-out);
+  transition:opacity var(--fast) var(--ease-out);
 }
-.contact-item__value a:hover{
-  opacity:.7;
-}
-.contact-item__value a:active{
-  opacity:.5;
-}
+.contact-item__value a:hover{opacity:.7}
+.contact-item__value a:active{opacity:.5}
 
-/* Address bar */
+/* Address */
 .address-bar{
-  background:#fafafa;
-  border-top:1px solid #eee;
+  background:rgba(255,255,255,.85);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  border-top:1px solid rgba(0,0,0,.06);
   padding:12px 28px;
   display:flex;
   justify-content:center;
@@ -259,10 +309,8 @@ body{
   gap:20px;
   font-size:11px;
   color:#555;
-  transition:background var(--duration-med) var(--ease-out);
-}
-.address-bar:hover{
-  background:#f5f5f5;
+  position:relative;
+  z-index:1;
 }
 .address-bar strong{
   color:#111;
@@ -273,11 +321,13 @@ body{
 .flyer-bottom{
   padding:14px 28px 22px;
   text-align:center;
-  animation:fadeIn var(--duration-slow) var(--ease-out) 500ms both;
+  position:relative;
+  z-index:1;
+  animation:fadeIn var(--slow) var(--ease-out) 500ms both;
 }
 .flyer-bottom p{
   font-size:10px;
-  color:#aaa;
+  color:#999;
   line-height:1.5;
 }
 
@@ -291,59 +341,39 @@ body{
   font-weight:700;
   color:#fff;
   text-decoration:none;
-  background:linear-gradient(135deg,#0bc5ea,#8b5cf6);
-  transition:
-    transform var(--duration-fast) var(--ease-out),
-    box-shadow var(--duration-fast) var(--ease-out);
+  background:linear-gradient(135deg,var(--c1),var(--c2));
+  transition:transform var(--fast) var(--ease-out),box-shadow var(--fast) var(--ease-out);
   position:relative;
   overflow:hidden;
 }
 .btn::before{
   content:'';
-  position:absolute;
-  inset:0;
+  position:absolute;inset:0;
   background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);
   opacity:0;
-  transition:opacity var(--duration-fast) var(--ease-out);
+  transition:opacity var(--fast) var(--ease-out);
 }
 .btn:hover{
   transform:translateY(-2px);
   box-shadow:0 6px 20px rgba(139,92,246,.25);
 }
-.btn:hover::before{
-  opacity:1;
-}
-.btn:active{
-  transform:scale(var(--scale-press));
-  box-shadow:none;
-}
-.btn-arrow{
-  display:inline-block;
-  transition:transform var(--duration-med) var(--ease-out);
-}
-.btn:hover .btn-arrow{
-  transform:translateX(3px);
-}
-
-/* Tagline */
-.tagline{
-  display:inline-block;
-  background:linear-gradient(135deg,#0bc5ea10,#8b5cf610);
-  border:1px solid rgba(139,92,246,.12);
-  border-radius:999px;
-  padding:4px 14px;
-  font-size:10px;
-  font-weight:600;
-  color:#7b1fa2;
-  letter-spacing:.5px;
-  margin-bottom:10px;
-  animation:fadeIn var(--duration-slow) var(--ease-out) 150ms both;
-}
+.btn:hover::before{opacity:1}
+.btn:active{transform:scale(var(--press))}
+.btn-arrow{display:inline-block;transition:transform var(--med) var(--ease-out)}
+.btn:hover .btn-arrow{transform:translateX(3px)}
 </style>
 </head>
 <body>
 
 <div class="flyer">
+
+  <!-- Mesh gradient blobs -->
+  <div class="flyer-mesh">
+    <div class="blob"></div>
+    <div class="blob"></div>
+    <div class="blob"></div>
+    <div class="blob"></div>
+  </div>
 
   <!-- TOP -->
   <div class="flyer-top">
