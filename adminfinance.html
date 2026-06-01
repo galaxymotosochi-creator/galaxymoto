@@ -183,6 +183,19 @@ var PIN='7777';
 var DB=null, opsArr=[], paysArr=[], curPeriod='month', payType='';
 var unsubOps=null, unsubPays=null;
 
+function loadCached(){
+  try{
+    var o=localStorage.getItem('fin_ops');if(o) opsArr=JSON.parse(o);
+    var p=localStorage.getItem('fin_pays');if(p) paysArr=JSON.parse(p);
+  }catch(e){}
+  if(!Array.isArray(opsArr))opsArr=[];
+  if(!Array.isArray(paysArr))paysArr=[];
+}
+function saveCache(){
+  localStorage.setItem('fin_ops',JSON.stringify(opsArr));
+  localStorage.setItem('fin_pays',JSON.stringify(paysArr));
+}
+
 function doLogin(){
   var p=document.getElementById('pinInput').value;
   if(p===PIN){
@@ -202,6 +215,7 @@ function doLogout(){
 }
 
 function init(){
+  loadCached(); renderAll();
   var FC={apiKey:'AIzaSyDOZnESPJRJlEf3HTYqNyv1O0mYUZoPJzc',authDomain:'capsulehouse-1c0c9.firebaseapp.com',projectId:'capsulehouse-1c0c9',storageBucket:'capsulehouse-1c0c9.firebasestorage.app',messagingSenderId:'640070206939',appId:'1:640070206939:web:e7ba997ec68457be2893fe'};
   try{firebase.initializeApp(FC);}catch(e){}
   DB=firebase.firestore();
@@ -216,8 +230,8 @@ function init(){
       var x=doc.data(); x.id=doc.id;
       if(x.category) opsArr.push(x);
     });
-    // Move transport to end in display
     opsArr.sort(function(a,b){return (a.category==='Транспорт'?1:0)-(b.category==='Транспорт'?1:0)||b.createdAt-a.createdAt;});
+    saveCache();
     renderAll();
   });
 
@@ -225,7 +239,7 @@ function init(){
   unsubPays=DB.collection('galaxymoto_finance_payouts').orderBy('createdAt','desc').onSnapshot(function(snap){
     paysArr=[];
     snap.forEach(function(doc){var x=doc.data(); x.id=doc.id; if(x.total) paysArr.push(x);});
-    renderAll(); renderPays();
+    saveCache(); renderAll(); renderPays();
   });
 }
 
