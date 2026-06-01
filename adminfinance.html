@@ -416,7 +416,7 @@ function renderOps(){
   } else {
     allItems.forEach(function(it){
       var bg=it.bg||'';
-      var clickable=(it.type==='op'&&it.cat!=='Транспорт');
+      var clickable=(it.type==='op');
       var onclick=clickable?' onclick="editRecord(\''+it.docId+'\')" style="cursor:pointer"':'';
       var descExtra=(it.type==='pay'&&(it.cat.indexOf('Выплата:')===0))?it.cat.replace('Выплата: ','')+' ':' ';
       html+='<div class="ops-item"'+(bg?' style="background:'+bg+'"':'')+onclick+'>';
@@ -456,7 +456,7 @@ function renderCounts(){
   if(ss) ss.style.display='none';
 }
 
-function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;').replace(/"/g,'&quot;');}
 function fmtDate(d){if(!d)return '';var p=d.split('-');return p[2]+'.'+p[1]+'.'+p[0].slice(2);}
 
 function setPer(p,btn){
