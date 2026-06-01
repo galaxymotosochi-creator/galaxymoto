@@ -548,6 +548,9 @@ function openWorkForm(id){
     });
 }
 calcWorkTotal();
+  // Hide "Завершить" button if booking is already completed
+  var completeBtn = document.getElementById("completeBtn");
+  if(completeBtn) completeBtn.style.display = (b && b.status==='completed') ? 'none' : '';
 }
 function editWork(id){
   openWorkForm(id);
@@ -850,7 +853,7 @@ function renderStats(){
       <div style="font-size:14px;font-weight:700;color:#111">Итого: <span id="workTotal">0</span> ₽</div>
     </div>
     <div style="display:flex;gap:8px">
-      <button class="btn-grad" style="flex:1;padding:10px;font-size:13px;background:linear-gradient(135deg,#0bc5ea,#8b5cf6)" onclick="if(confirm('Точно завершить?'))saveWork('complete')">Завершить</button>
+      <button class="btn-grad" id="completeBtn" style="flex:1;padding:10px;font-size:13px;background:linear-gradient(135deg,#0bc5ea,#8b5cf6)" onclick="if(confirm('Точно завершить?'))saveWork('complete')">Завершить</button>
       <button class="btn-grad" style="flex:1;padding:10px;font-size:13px;background:#333" onclick="saveWork();closeWorkForm()">Сохранить</button>
     </div>
   </div>
