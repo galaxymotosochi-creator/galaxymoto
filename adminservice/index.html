@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>GALAXY MOTO — Админ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;background:#f5f5f5;color:#111;min-height:100vh}
+.admin-header{background:#111;color:#fff;padding:6px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:8px;z-index:100;box-shadow:0 4px 20px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.06);border-radius:12px;margin:0 12px;width:auto}
+.admin-header h1{font-size:18px;font-weight:700;letter-spacing:.5px;display:flex;align-items:center;gap:8px}
+.admin-header h1 img{width:32px;height:32px;border-radius:6px;object-fit:contain}
+.admin-header a{color:#999;text-decoration:none;font-size:13px;font-weight:500;cursor:pointer}
+.admin-header a:hover{color:#fff}
+.admin-container{max-width:900px;margin:0 auto;padding:20px 16px 40px}
+.login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#111}
+.login-box{background:#fff;border-radius:16px;padding:2rem;max-width:360px;width:100%;text-align:center}
+.login-box h2{font-size:20px;font-weight:700;margin-bottom:4px;letter-spacing:1px}
+.login-box p{font-size:13px;color:#888;margin-bottom:20px}
+.login-box input{width:100%;padding:12px 14px;font-size:16px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:10px;text-align:center;letter-spacing:8px;outline:none}
+.login-box input:focus{border-color:#111}
+.login-box .error{color:#e53935;font-size:13px;margin-top:8px;display:none}
+.login-btn{width:100%;padding:12px;margin-top:14px;font-size:15px;font-weight:600;font-family:Inter,sans-serif;color:#fff;background:#111;border:none;border-radius:10px;cursor:pointer}
+.login-btn:hover{background:#333}
+.stats{display:flex;gap:10px;margin-bottom:20px}
+.stat-card{flex:1;background:#fff;border-radius:12px;padding:14px;text-align:center;border:1.5px solid #eee}
+.stat-card__value{font-size:24px;font-weight:800}
+.stat-card__label{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.calendar-wrap{background:#fff;border-radius:14px;border:1.5px solid #eee;padding:10px 12px;margin-bottom:16px}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.cal-nav button{width:28px;height:28px;border-radius:50%;border:1.5px solid #ddd;background:#fff;color:#333;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.cal-nav button:hover{background:#f0f0f0;border-color:#999}
+.cal-month{font-size:13px;font-weight:700}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-weekday{font-size:10px;color:#999;text-align:center;font-weight:600;text-transform:uppercase;padding:4px 0;letter-spacing:.3px}
+.cal-day{text-align:center;padding:6px 0;font-size:.85rem;font-weight:500;color:#333;border-radius:8px;cursor:pointer;border:2px solid transparent;position:relative;transition:all .1s}
+.cal-day:hover{background:#f5f5f5}.cal-day--other{color:#ddd;pointer-events:none}
+.cal-day--today{font-weight:700;color:#111;background:#f5f5f5}
+.cal-day--selected{background:#111!important;color:#fff!important;font-weight:600}
+.cal-day__count{position:absolute;top:0;right:2px;font-size:8px;font-weight:700;color:#888;min-width:10px;text-align:center;line-height:12px}
+.cal-day--green{background:#e8f5e9;border-color:#c8e6c9}.cal-day--green .cal-day__count{color:#2e7d32}
+.cal-day--yellow{background:#fff8e1;border-color:#ffe082}.cal-day--yellow .cal-day__count{color:#e65100}
+.cal-day--red{background:#ffebee;border-color:#ef9a9a}.cal-day--red .cal-day__count{color:#c62828}
+.cal-legend{display:flex;gap:14px;justify-content:center;margin-top:10px;font-size:10px;color:#888}
+.cal-legend span{display:flex;align-items:center;gap:4px}.cal-legend i{width:10px;height:10px;border-radius:3px}
+.bookings-section h3{font-size:14px;font-weight:700;margin-bottom:10px;letter-spacing:.5px}
+.booking-status{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;padding:3px 8px;border-radius:6px;white-space:nowrap}
+.status-new{background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff}
+.status-confirmed{background:#e8f5e9;color:#2e7d32}
+.status-completed{background:#f5f5f5;color:#888}
+.status-cancelled{background:#ffebee;color:#e53935}
+.status-progress{background:#e3f2fd;color:#1565c0}
+.empty-state{text-align:center;padding:30px 20px;color:#888;font-size:13px}
+.tab-bar{display:flex;background:#fff;border-radius:12px;border:1.5px solid #eee;margin-bottom:16px;overflow:hidden}
+.tab-bar button{flex:1;padding:10px;font-size:12px;font-weight:600;font-family:Inter,sans-serif;border:none;cursor:pointer;background:transparent;color:#888}
+.tab-bar button.active{background:#111;color:#fff}
+.tab-bar button:hover:not(.active){background:#f5f5f5}
+.hidden{display:none!important}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;justify-content:center;align-items:center;padding:1rem;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.modal-overlay.active{display:flex}
+.modal-box{background:#fff;max-width:480px;width:100%;border-radius:14px;padding:1.5rem;position:relative;max-height:80vh;overflow-y:auto;box-shadow:0 10px 40px rgba(0,0,0,.2)}
+.modal-close{position:absolute;top:12px;right:14px;background:none;border:none;font-size:20px;cursor:pointer;color:#999;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%}
+.modal-close:hover{background:#f0f0f0}
+*:focus{outline:none!important;box-shadow:none!important}
+.detail-row{display:flex;padding:6px 0;border-bottom:1px solid #f0f0f0;font-size:13px}
+.detail-row .label{color:#888;width:80px;flex-shrink:0}
+.detail-row .value{font-weight:500}
+.bookings-table{background:#fff;border-radius:12px;border:1.5px solid #eee;overflow:hidden}
+.bookings-table table{width:100%;border-collapse:collapse;font-size:13px}
+.bookings-table td{padding:8px 10px;border-bottom:1px solid #f0f0f0}
+.bookings-table td:first-child{white-space:nowrap;font-weight:600;color:#111}
+.bookings-table td:nth-child(5){text-align:right}
+.bookings-table thead td{font-weight:600;color:#888;text-transform:uppercase;font-size:10px;letter-spacing:.5px;border-top:none;background:#fafafa;cursor:default}
+.bookings-table tbody tr{cursor:pointer;transition:background .1s}
+.bookings-table tbody tr:hover{background:#f0f0f0!important}
+@media(max-width:640px){
+.admin-container{padding:12px 10px 30px}.stats{gap:6px}.stat-card{padding:10px}.stat-card__value{font-size:20px}
+.calendar-wrap{padding:8px}.cal-day{font-size:.75rem;padding:5px 0}.cal-day__count{font-size:7px}
+.bookings-table td{padding:6px;font-size:12px}
+}
+
+.btn-grad,.btn-grad-del{background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff;padding:5px 12px;font-size:11px;font-weight:600;font-family:Inter,sans-serif;border:none;border-radius:6px;cursor:pointer;transition:opacity .15s}.btn-grad:hover,.btn-grad-del:hover{opacity:.85}
+.ts-slot{text-align:center;padding:8px 4px;font-size:13px;font-weight:500;color:#333;border:1px solid #ddd;border-radius:8px;cursor:pointer}
+.ts-taken{color:#aaa;background:#f5f5f5;cursor:default}
+tr.done td:not(:last-child){text-decoration:line-through!important;text-decoration-thickness:1px!important;opacity:.55}
+
+/* Carousel Minimal */
+/* Carousel Minimal White */
+/* Timeline */
+.tl-wrap{padding:0 0 0 28px;position:relative}
+.tl-wrap::before{content:"";position:absolute;left:9px;top:4px;bottom:4px;width:2px;background:#e0e0e0}
+.tl-item{position:relative;padding:14px 0 14px 16px}
+.tl-item::before{content:"";position:absolute;left:-19px;top:16px;width:12px;height:12px;border-radius:50%;background:#e0e0e0;border:2px solid #fff;box-shadow:0 0 0 2px #e0e0e0;transition:all .2s}
+.tl-item.active::before{background:linear-gradient(135deg,#0bc5ea,#8b5cf6);border-color:#fff;box-shadow:0 0 0 4px rgba(11,197,234,.2)}
+.tl-item .tl-date{font-size:13px;color:#999;font-weight:600;margin-bottom:4px;letter-spacing:.3px}
+.tl-item .tl-date s{color:#ddd;font-weight:400}
+.tl-item .tl-title{font-size:16px;font-weight:700;color:#111;margin-bottom:4px}
+.tl-item .tl-meta{font-size:14px;color:#888;margin-bottom:2px}
+.tl-item .tl-works{font-size:14px;color:#aaa;margin-top:4px}
+.tl-item .tl-total{font-size:16px;font-weight:700;color:#0bc5ea;margin-top:4px}
+.tl-item .tl-total grad{background:linear-gradient(135deg,#0bc5ea,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+</head>
+<body>
+<div id="loginScreen" class="login-screen">
+  <div class="login-box">
+    <h2 style="display:flex;align-items:center;justify-content:center;gap:8px"><img src="admin-logo.jpg" style="width:48px;height:48px;border-radius:8px;object-fit:contain" alt="">GALAXY MOTO</h2>
+    <p>Панель управления записями</p>
+    <input type="password" id="pinInput" placeholder="****" maxlength="4" inputmode="numeric" autocomplete="off" onkeydown="if(event.key==='Enter')doLogin()">
+    <div class="error" id="loginError">Неверный пин-код</div>
+    <button class="login-btn" onclick="doLogin()">Войти</button>
+  </div>
+</div>
+<div id="adminApp" class="hidden">
+  <div class="admin-header">
+    <h1><img src="admin-logo.jpg" alt="">GALAXY MOTO</h1>
+    <a onclick="doLogout()">Выйти</a>
+  </div>
+  <div class="admin-container">
+    <div class="stats" id="statsRow"></div>
+    <div class="calendar-wrap" id="calWrap">
+      <div class="cal-nav">
+        <button onclick="calMove(-1)">‹</button>
+        <span class="cal-month" id="calMonth"></span>
+        <button onclick="calMove(1)">›</button>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+      <div class="cal-legend">
+        <span><i style="background:#e8f5e9;border:1px solid #c8e6c9"></i> 1</span>
+        <span><i style="background:#fff8e1;border:1px solid #ffe082"></i> 2</span>
+        <span><i style="background:#ffebee;border:1px solid #ef9a9a"></i> 3+</span>
+      </div>
+    </div>
+    <div class="tab-bar">
+      <button class="active" onclick="switchTab(0)" id="tab0">Сегодня</button>
+      <button onclick="switchTab(1)" id="tab1">Завтра</button>
+      <button onclick="switchTab(2)" id="tab2">Все</button>
+    </div>
+    <div class="bookings-section" id="bookingsList"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="addModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeAddForm()">&times;</button>
+    <h3 style="margin-bottom:12px">Новая запись</h3>
+    <div style="margin-bottom:10px;padding:0 4px">
+      <label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Дата</label>
+      <input type="date" id="addDate" onchange="renderTimeSlots()" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box">
+    </div>
+    <div style="margin-bottom:10px;padding:0 4px">
+      <label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Время</label><div id="addTimeSlots" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px"></div>
+      <input type="hidden" id="addTime" value="">
+    </div>
+    <div style="margin-bottom:10px;padding:0 4px">
+      <label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Имя *</label>
+      <input type="text" id="addName" placeholder="Имя" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box">
+    </div>
+    <div style="margin-bottom:10px;padding:0 4px">
+      <label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Телефон</label>
+      <input type="tel" id="addPhone" placeholder="Телефон" oninput="autoFillClient()" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box">
+    </div>
+    <div style="margin-bottom:10px;padding:0 4px">
+      <label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Модель</label>
+      <input type="text" id="addModel" placeholder="Модель" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box">
+    </div>
+    <div style="margin-bottom:10px;padding:0 4px">
+      <label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Комментарий</label>
+      <textarea id="addNotes" rows="2" placeholder="Комментарий" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box;resize:vertical"></textarea>
+    </div>
+    <button class="btn-grad" style="width:100%;padding:10px;font-size:13px" onclick="saveNewRecord()">Сохранить</button>
+  </div>
+</div>
+
+
+<div class="modal-overlay" id="masterModal" style="z-index:300">
+  <div class="modal-box" style="max-width:360px">
+    <button class="modal-close" onclick="closeMasterModal()">&times;</button>
+    <h3 style="margin-bottom:6px">Выберите мастера</h3>
+    <div style="display:flex;flex-direction:column;gap:8px" id="masterList"></div>
+  </div>
+</div>
+<div class="modal-overlay" id="detailModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeDet()">&times;</button>
+    <h3 id="detTitle" style="margin-bottom:12px">Детали записи</h3>
+    <div id="detBody"></div>
+    <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap" id="detActions"></div>
+  </div>
+</div>
+<script>
+function tgBroadcast(m){var a=[5368408796,321245864];a.forEach(function(i){fetch('https://api.telegram.org/bot7471473926:AAE_kyz1Qtb1J8Dddqk1aaxzBGfMQ73lSMM/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:i,text:m})})})}
+
+var PIN='8888',BK=[],TB=0,CV=new Date(),SD=null,SD1=null,SD2=null,US=null,US2=null;
+var SL={'new':'\u041d\u041e\u0412\u0410\u042f','in_progress':'\u0412 \u0420\u0410\u0411\u041e\u0422\u0415','completed':'\u0412\u042b\u041f\u041e\u041b\u041d\u0415\u041d\u0410','cancelled':'\u041e\u0422\u041c\u0415\u041d\u0415\u041d\u0410'};
+var MN=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];var SC={'new':'status-new','in_progress':'status-progress','completed':'status-completed','cancelled':'status-cancelled'};
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function fmt(d){var y=d.getFullYear(),m=(d.getMonth()+1+'').padStart(2,'0'),dd=(d.getDate()+'').padStart(2,'0');return y+'-'+m+'-'+dd}
+function same(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate()}
+function doLogin(){var p=document.getElementById('pinInput').value;if(p===PIN){localStorage.setItem('ga','1');document.getElementById('loginScreen').classList.add('hidden');document.getElementById('adminApp').classList.remove('hidden');try{initFB()}catch(e){}}else{document.getElementById('loginError').style.display='block'}}
+function doLogout(){localStorage.removeItem('ga');if(US)US();if(US2)US2();document.getElementById('adminApp').classList.add('hidden');document.getElementById('loginScreen').classList.remove('hidden');document.getElementById('loginError').style.display='none'}
+function initFB(){try{var FC={apiKey:'AIzaSyDOZnESPJRJlEf3HTYqNyv1O0mYUZoPJzc',authDomain:'capsulehouse-1c0c9.firebaseapp.com',projectId:'capsulehouse-1c0c9',storageBucket:'capsulehouse-1c0c9.firebasestorage.app',messagingSenderId:'640070206939',appId:'1:640070206939:web:e7ba997ec68457be2893fe'};try{firebase.initializeApp(FC);}catch(e){}var db=firebase.firestore();window.db=db;db.settings({merge:true});if(US||US2)return;BK=[];US2=db.collection('galaxymoto_bookings').onSnapshot(function(s){s.docChanges().forEach(function(c){var x=c.doc.data(),id=c.doc.id;if(c.type==='removed'){BK=BK.filter(function(b){return b.id!==id});R();return}if(x.date&&x.name){var i=BK.findIndex(function(b){return b.id===id});var b={id:id,orderNumber:x.orderNumber||0,date:x.date,time:x.time||'',name:x.name,phone:x.phone||'',model:x.model||'',notes:x.notes||'',status:x.status||'new',workDone:x.workDone||null,master:x.master||'',workDone:x.workDone||null,master:x.master||''};if(i>=0)BK[i]=b;else BK.push(b);R()}})});US=db.collection('leads').onSnapshot(function(s){s.docChanges().forEach(function(c){var x=c.doc.data(),id=c.doc.id;if(c.type==='removed'){BK=BK.filter(function(b){return b.id!==id});R();return}if(x.date&&x.name){var i=BK.findIndex(function(b){return b.id===id});var b={id:id,date:x.date,time:x.time||'',name:x.name,phone:x.phone||'',model:x.model||'',notes:x.notes||'',status:x.status||'new',workDone:x.workDone||null};if(i>=0)BK[i]=b;else BK.push(b);R()}})});}catch(e){} setTimeout(R,100);}
+function R(){RSTAT();RCAL();RBOK()}
+function RSTAT(){var n=BK.length,p=BK.filter(function(b){return b.status==='new'}).length,w=BK.filter(function(b){return b.status==='in_progress'}).length;document.getElementById('statsRow').innerHTML='<div class="stat-card"><div class="stat-card__value">'+n+'</div><div class="stat-card__label">\u0412\u0441\u0435\u0433\u043e</div></div><div class="stat-card"><div class="stat-card__value">'+p+'</div><div class="stat-card__label">\u041d\u043e\u0432\u044b\u0435</div></div><div class="stat-card"><div class="stat-card__value">'+w+'</div><div class="stat-card__label">\u0412\u0020\u0440\u0430\u0431\u043e\u0442\u0435</div></div><div class=\"stat-card\" style=\"cursor:pointer;background:#111;color:#fff\" onclick=\"openAddForm()\"><div class=\"stat-card__value\" style=\"color:#fff;font-size:28px\">+</div><div class=\"stat-card__label\" style=\"color:rgba(255,255,255,.7)\">\u041d\u043e\u0432\u0430\u044f \u0437\u0430\u043f\u0438\u0441\u044c</div></div><div class=\"stat-card\" style=\"cursor:pointer;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff\" onclick=\"openStats()\"><div class=\"stat-card__value\" style=\"color:#fff;font-size:24px\"><svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" style="vertical-align:middle"><rect x="2" y="10" width="4" height="8" rx="1"/><rect x="8" y="5" width="4" height="13" rx="1"/><rect x="14" y="2" width="4" height="16" rx="1"/></svg></div><div class=\"stat-card__label\" style=\"color:rgba(255,255,255,.7)\">\u0421\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043a\u0430</div></div>'}
+function RCAL(){var y=CV.getFullYear(),m=CV.getMonth();document.getElementById('calMonth').textContent=new Date(y,m).toLocaleDateString('ru',{month:'long',year:'numeric'});var fd=new Date(y,m,1).getDay();fd=(fd===0?6:fd-1);var ld=new Date(y,m+1,0).getDate(),pd=new Date(y,m,1-fd).getDate(),h='',td=new Date(),dw='\u041f\u043d,\u0412\u0442,\u0421\u0440,\u0427\u0442,\u041f\u0442,\u0421\u0431,\u0412\u0441'.split(',');dw.forEach(function(w){h+='<div class="cal-weekday">'+w+'</div>'});for(var i=0;i<fd;i++){h+='<div class="cal-day cal-day--other">'+pd+'</div>';pd++}for(var d=1;d<=ld;d++){var dt=new Date(y,m,d),ds=fmt(dt),cnt=BK.filter(function(b){return b.date===ds}).length,cl='cal-day';if(same(dt,td))cl+=' cal-day--today';if(SD1&&same(dt,SD1))cl+=' cal-day--selected';if(SD2&&same(dt,SD2))cl+=' cal-day--selected';if(cnt===1)cl+=' cal-day--green';else if(cnt===2)cl+=' cal-day--yellow';else if(cnt>=3)cl+=' cal-day--red';h+='<div class="'+cl+'" onclick="pickDate('+d+')"><span>'+d+'</span>'+(cnt>0?'<span class="cal-day__count">'+cnt+'</span>':'')+'</div>'}var rm=(7-(fd+ld)%7)%7;for(var i=0;i<rm;i++){h+='<div class="cal-day cal-day--other">'+(i+1)+'</div>'}document.getElementById('calGrid').innerHTML=h}
+function calMove(d){CV.setMonth(CV.getMonth()+d);RCAL()}
+function pickDate(d){var y=CV.getFullYear(),m=CV.getMonth();if(!SD1){SD1=new Date(y,m,d);SD2=null}else{if(SD2){SD1=new Date(y,m,d);SD2=null}else{var nt=new Date(y,m,d);if(nt>SD1)SD2=nt;else{SD2=SD1;SD1=nt}}}SD=SD1||SD2;TB=2;document.querySelectorAll('.tab-bar button').forEach(function(b){b.classList.remove('active')});document.getElementById('tab2').classList.add('active');RCAL();RBOK()}
+function switchTab(t){TB=t;if(t===2){SD1=null;SD2=null;SD=null}document.querySelectorAll('.tab-bar button').forEach(function(b){b.classList.remove('active')});document.getElementById('tab'+t).classList.add('active');if(t===2)RCAL();RBOK()}
+function RBOK(){var d=new Date(),tm=new Date(d);tm.setDate(tm.getDate()+1);var f=[];if(TB===0)f=BK.filter(function(b){var bd=new Date(b.date);return same(bd,d)});else if(TB===1)f=BK.filter(function(b){var bd=new Date(b.date);return same(bd,tm)});else if(TB===2&&SD2)f=BK.filter(function(b){var bd=new Date(b.date);return bd>=SD1&&bd<=SD2});else if(TB===2&&SD1)f=BK.filter(function(b){var bd=new Date(b.date);return same(bd,SD1)});else f=[].concat(BK);f.sort(function(a,b){return a.date.localeCompare(b.date)||a.time.localeCompare(b.time)});var h='',tt='\u0412\u0441\u0435 \u0437\u0430\u043f\u0438\u0441\u0438';if(TB===0)tt='\u0421\u0435\u0433\u043e\u0434\u043d\u044f';else if(TB===1)tt='\u0417\u0430\u0432\u0442\u0440\u0430';else if(SD2){var wr=f.length==1?'запись':(f.length>=2&&f.length<=4?'записи':'записей');tt=SD1.getDate()+' '+MN[SD1.getMonth()]+' — '+SD2.getDate()+' '+MN[SD2.getMonth()]+' — '+f.length+' '+wr}else if(SD1){var wr=f.length==1?'запись':(f.length>=2&&f.length<=4?'записи':'записей');tt=SD1.getDate()+' '+MN[SD1.getMonth()]+' — '+f.length+' '+wr}h+='<h3>'+tt+'</h3>';if(f.length===0){h+='<div class="empty-state">\u041d\u0435\u0442 \u0437\u0430\u043f\u0438\u0441\u0435\u0439</div>'}else{h+='<div class="bookings-table"><table style="table-layout:fixed"><colgroup><col style="width:16%"><col style="width:18%"><col style="width:14%"><col style="width:13%"><col style="width:13%"><col style="width:13%"><col style="width:13%"></colgroup><thead><tr><td>\u0414\u0430\u0442\u0430</td><td>\u0418\u043c\u044f</td><td>\u0422\u0435\u043b\u0435\u0444\u043e\u043d</td><td>\u041c\u043e\u0434\u0435\u043b\u044c</td><td style="text-align:left">\u041c\u0430\u0441\u0442\u0435\u0440</td><td style="text-align:left">\u0421\u0443\u043c\u043c\u0430</td><td style="text-align:center">\u0421\u0442\u0430\u0442\u0443\u0441</td></tr></thead><tbody>';for(var i=0;i<f.length;i++){var b=f[i];var st=b.status||'new';var bg=i%2===0?'#fff':'#fafafa';var dc='';if(st==='completed'||st==='cancelled')dc=' class="done"';h+='<tr'+dc+' style="background:'+bg+'" onclick="'+(st==='in_progress'?'openWorkForm(\u0027'+b.id+'\u0027)':'openDet(\u0027'+b.id+'\u0027)')+'"><td>'+b.date.slice(8)+'.'+b.date.slice(5,7)+(b.time?' '+b.time:'')+(b.orderNumber?' #'+b.orderNumber:'')+'</td><td>'+esc(b.name)+'</td><td>'+(b.phone||'-')+'</td><td>'+(b.model?esc(b.model):'-')+'</td><td style="text-align:left">'+(b.master||'-')+'</td><td style="text-align:left">'+(b.workDone&&b.workDone.total?b.workDone.total+' ₽':'-')+'</td><td style="text-align:center"><span class="booking-status '+SC[st]+'">'+SL[st]+'</span></td></tr>'}h+='</tbody></table></div>'}document.getElementById('bookingsList').innerHTML=h}
+function openDet(id){
+  var b=BK.find(function(x){return x.id===id});if(!b)return;
+  var st=b.status||"new";
+  if(st==='completed' && b.workDone && b.workDone.items && b.workDone.items.length > 0 && b.phone){
+    renderCarousel(id);
+    return;
+  }
+
+  document.getElementById("detTitle").textContent="\u0414\u0435\u0442\u0430\u043b\u0438 \u0437\u0430\u043f\u0438\u0441\u0438";
+  var h="";
+  h+="<div style=\"display:flex;gap:10px;margin-bottom:10px\">";
+    h+="<div style=\"flex:1\"><label style=\"font-size:12px;color:#888;display:block;margin-bottom:3px\">\u0414\u0430\u0442\u0430</label><div style=\"width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;background:#f9f9f9;color:#333\">"+b.date.slice(8)+'.'+b.date.slice(5,7)+"</div></div>";
+    if(b.time){h+="<div style=\"flex:1\"><label style=\"font-size:12px;color:#888;display:block;margin-bottom:3px\">\u0412\u0440\u0435\u043c\u044f</label><div style=\"width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;background:#f9f9f9;color:#333\">"+b.time+"</div></div>";}else{h+="<div style=\"flex:1\"></div>";}
+    h+="</div>";
+  h+="<div style=\"display:flex;gap:10px;margin-bottom:10px\">";
+    h+="<div style=\"flex:1\"><label style=\"font-size:12px;color:#888;display:block;margin-bottom:3px\">\u0418\u043c\u044f</label><div style=\"width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;background:#f9f9f9;color:#333\">"+esc(b.name)+"</div></div>";
+    h+="<div style=\"flex:1\"><label style=\"font-size:12px;color:#888;display:block;margin-bottom:3px\">\u0422\u0435\u043b\u0435\u0444\u043e\u043d</label><div style=\"width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;background:#f9f9f9;color:#333\">"+(b.phone||"-")+"</div></div>";
+    h+="</div>";
+  if(b.model){
+    h+="<div style=\"display:flex;gap:10px;margin-bottom:10px\">";
+    h+="<div style=\"flex:1\"><label style=\"font-size:12px;color:#888;display:block;margin-bottom:3px\">\u041c\u043e\u0434\u0435\u043b\u044c</label><div style=\"width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;background:#f9f9f9;color:#333\">"+esc(b.model)+"</div></div>";
+    h+="<div style=\"flex:1\"><label style=\"font-size:12px;color:#888;display:block;margin-bottom:3px\">\u0421\u0442\u0430\u0442\u0443\u0441</label><div style=\"width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;background:#f9f9f9\"><span class=\"booking-status status-"+st+"\">"+SL[st]+"</span></div></div>";
+    h+="</div>";
+  }else{
+    h+="<div style=\"margin-bottom:10px\">";
+    h+="<label style=\"font-size:12px;color:#888;display:block;margin-bottom:3px\">\u0421\u0442\u0430\u0442\u0443\u0441</label>";
+    h+="<div style=\"width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;background:#f9f9f9\"><span class=\"booking-status status-"+st+"\">"+SL[st]+"</span></div>";
+    h+="</div>";
+  }
+
+  if(b.notes){
+    h+="<div style=\"margin-bottom:10px\">";
+    h+="<label style=\"font-size:12px;color:#888;display:block;margin-bottom:3px\">\u041e\u043f\u0438\u0441\u0430\u043d\u0438\u0435</label>";
+    h+="<div style=\"width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;background:#f9f9f9;color:#333\">"+esc(b.notes)+"</div>";
+    h+="</div>";
+  }
+  if(b.workDone && b.workDone.items && b.workDone.items.length > 0){
+    h+="<div style=\"margin-top:14px;padding-top:12px;border-top:2px solid #ddd\">";
+    h+="<div style=\"font-size:12px;color:#888;font-weight:600;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px\">\u0412\u044b\u043f\u043e\u043b\u043d\u0435\u043d\u043d\u044b\u0435 \u0440\u0430\u0431\u043e\u0442\u044b</div>";
+    if(b.workDone.mileage){
+      h+="<div style=\"margin-bottom:8px\">";
+      h+="<label style=\"font-size:12px;color:#888;display:block;margin-bottom:3px\">\u041f\u0440\u043e\u0431\u0435\u0433</label>";
+      h+="<div style=\"width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;background:#f9f9f9;color:#333\">"+b.workDone.mileage+" \u043a\u043c</div>";
+      h+="</div>";
+    }
+    h+="<div style=\"background:#fafafa;border-radius:8px;padding:10px 12px\">";
+    for(var wi=0;wi<b.workDone.items.length;wi++){
+      var w=b.workDone.items[wi];
+      if(w.name||w.price) h+="<div style=\"display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:1px solid #eee\"><span style=\"color:#333\">"+esc(w.name)+"</span><span style=\"font-weight:600;color:#111\">"+w.price+" \u20BD</span></div>";
+    }
+    h+="<div style=\"display:flex;justify-content:space-between;font-size:14px;font-weight:700;color:#111;padding-top:6px;margin-top:2px;border-top:2px solid #333\"><span>\u0418\u0442\u043e\u0433\u043e:</span><span>"+b.workDone.total+" \u20BD</span></div>";
+    h+="</div>";
+    h+="<div style=\"text-align:right;margin-top:6px\"><a href=\"javascript:void(0)\" onclick=\"editWork(\u0027"+b.id+"\u0027)\" style=\"color:#1983dd;font-weight:600;font-size:12px;text-decoration:none\">\u270f \u0420\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u0442\u044c</a></div>";
+    h+="</div>";
+  }
+if(b.phone){
+    var prev=BK.filter(function(x){return x.phone===b.phone&&x.id!==b.id&&x.workDone&&x.workDone.items&&x.workDone.items.length>0});
+    if(prev.length>0){
+      prev.sort(function(a,b){return a.date.localeCompare(b.date)});
+      var last = prev[prev.length-1];
+      h+='<div class="tl-wrap" style="margin-top:12px;padding-top:10px;border-top:none">';
+      h+='<div class="tl-item active" style="padding:8px 0 8px 14px">';
+      h+='<div class="tl-date">' + last.date.slice(8)+'.'+last.date.slice(5,7) + ' <s>\u043f\u043e\u0441\u043b\u0435\u0434\u043d\u0435\u0435</s></div>';
+      h+='<div class="tl-title">#' + prev.length + ' \u2014 ' + esc(last.name||'') + '</div>';
+      h+='<div class="tl-meta">' + (last.model ? esc(last.model) : '') + (last.master ? ' \u00b7 ' + last.master : '') + (last.workDone && last.workDone.mileage ? ' \u00b7 ' + last.workDone.mileage + ' \u043a\u043c' : '') + '</div>';
+      if(last.workDone && last.workDone.items && last.workDone.items.length > 0){
+        var works = '';
+        for(var wi = 0; wi < last.workDone.items.length; wi++){
+          works += (wi > 0 ? ' \u00b7 ' : '') + esc(last.workDone.items[wi].name||'');
+        }
+        h+='<div class="tl-works">' + works + '</div>';
+        h+='<div class="tl-total">' + (last.workDone.total||'0') + ' \u20bd</div>';
+      }
+      h+='</div></div>';
+    }
+  }
+document.getElementById("detBody").innerHTML=h;
+    var a="";
+  if(st==='new'){
+    a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px\" onclick=\"openMasterSelect('"+b.id+"')\"> ВЗЯТЬ В РАБОТУ</button>";
+    a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px;background:#111;color:#fff\" onclick=\"openMoveBooking('"+b.id+"')\"> ПЕРЕНЕСТИ</button>";
+    a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px;background:#111;color:#fff\" onclick=\"setStat('"+b.id+"','cancelled');closeDet()\"> ОТМЕНИТЬ</button>";
+  }else if(st==='in_progress'){
+    a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px\" onclick=\"openWorkEdit('"+b.id+"')\"> РЕДАКТИРОВАТЬ РАБОТЫ</button>";
+    a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px;background:linear-gradient(135deg,#0bc5ea,#8b5cf6)\" onclick=\"openWorkForm('"+b.id+"','complete')\"> ЗАВЕРШИТЬ</button>";
+  }else if(st==='completed'&&b.workDone){
+    a+="<button class=\"btn-grad\" style=\"flex:1;padding:10px;font-size:13px\" onclick=\"editWork('"+b.id+"')\"> ✏ РЕДАКТИРОВАТЬ</button>";
+  }
+document.getElementById("detActions").innerHTML=a;
+  document.getElementById("detailModal").classList.add("active");
+}function closeDet(){document.getElementById('detailModal').classList.remove('active')}
+function openWorkEdit(id){
+  openWorkForm(id);
+}
+function openMoveBooking(id){
+  document.getElementById('moveBookingId').value = id;
+  var b = BK.find(function(x){return x.id===id});
+  if(b){
+    document.getElementById('moveDate').value = b.date;
+    document.getElementById('moveTime').value = b.time || '';
+  }
+  document.getElementById('moveModal').classList.add('active');
+}
+function saveMoveBooking(){
+  var id = document.getElementById('moveBookingId').value;
+  var newDate = document.getElementById('moveDate').value;
+  var newTime = document.getElementById('moveTime').value;
+  if(!newDate){alert('Выберите дату');return}
+  try{
+    var d = firebase.firestore();
+    var upd = {date: newDate, time: newTime, updatedAt: new Date().toISOString()};
+    d.collection('leads').doc(id).update(upd).catch(function(){});
+    d.collection('galaxymoto_bookings').doc(id).update(upd).catch(function(){});
+  }catch(e){}
+  document.getElementById('moveModal').classList.remove('active');
+  closeDet();
+}
+function setStat(id,st,master){try{var d=firebase.firestore();var upd={status:st,updatedAt:new Date().toISOString()};if(master)upd.master=master;d.collection('leads').doc(id).update(upd).catch(function(){});d.collection('galaxymoto_bookings').doc(id).update(upd).catch(function(){})}catch(e){}}
+function delRec(id){try{var d=firebase.firestore();d.collection('leads').doc(id).delete().catch(function(){});d.collection('galaxymoto_bookings').doc(id).delete().catch(function(){})}catch(e){}}
+
+
+
+function normPh(s){return s.replace(/\D/g,'').slice(-10)}
+function autoFillClient(){
+  var ph=normPh(document.getElementById("addPhone").value);
+  if(!ph) return;
+  for(var i=BK.length-1;i>=0;i--){
+    var b=BK[i];
+    if(normPh(b.phone)===ph && b.status!=='new' && b.workDone && b.workDone.items && b.workDone.items.length>0){
+      document.getElementById("addName").value = b.name;
+      if(b.model) document.getElementById("addModel").value = b.model;
+      return;
+    }
+  }
+  for(var i=BK.length-1;i>=0;i--){
+    var b=BK[i];
+    if(normPh(b.phone)===ph && b.name){
+      document.getElementById("addName").value = b.name;
+      if(b.model) document.getElementById("addModel").value = b.model;
+      return;
+    }
+  }
+}
+
+function openAddForm(){
+  document.getElementById('addModal').classList.add('active');
+  document.getElementById('addDate').valueAsDate=new Date();
+  renderTimeSlots();
+}
+function closeAddForm(){
+  document.getElementById('addModal').classList.remove('active');
+  document.getElementById('addTime').value='';
+}
+function renderTimeSlots(){
+  var dt=document.getElementById("addDate").value;
+  var cont=document.getElementById("addTimeSlots");
+  if(!dt||!cont)return;
+  var h="";
+  for(var hh=11;hh<19;hh++){
+    for(var mm=0;mm<60;mm+=30){
+      var ti=String(hh).padStart(2,"0")+":"+String(mm).padStart(2,"0");
+      var taken=BK.some(function(b){return b.date===dt&&b.time===ti});
+      if(taken){
+        h+="<div class='ts-slot ts-taken'>"+ti+"</div>";
+      }else{
+        h+="<div class='ts-slot ts-free' onclick=\"selectSlot(this,'"+ti+"')\">"+ti+"</div>";
+      }
+    }
+  }
+  cont.innerHTML=h;
+}
+function selectSlot(el,ti){
+  document.getElementById("addTime").value=ti;
+  var x=document.getElementById("addTimeSlots").children;
+  for(var i=0;i<x.length;i++){x[i].style.borderColor="#ddd";x[i].style.background="#fff"};
+  el.style.borderColor="#111";el.style.background="#eee";
+}
+function saveNewRecord(){
+  var dt=document.getElementById('addDate').value;
+  var tm=document.getElementById('addTime').value;
+  var nm=document.getElementById('addName').value.trim();
+  var ph=document.getElementById('addPhone').value.trim();
+  var md=document.getElementById('addModel').value.trim();
+  var nt=document.getElementById('addNotes').value.trim();
+  if(!dt||!nm){alert('Заполните дату и имя');return}
+  var id=dt+'_'+(tm?tm.replace(':','-'):'00-00');
+  var orderNumber = BK.length + 1;
+  var data={orderNumber:orderNumber,date:dt,time:tm||'',name:nm,phone:ph||'',model:md||'',notes:nt||'',status:'new',createdAt:new Date().toISOString()};
+  var d=firebase.firestore();
+  d.collection('galaxymoto_bookings').doc(id).set(data).then(function(){closeAddForm();sendAdminTG(nm,ph,dt,tm,md,nt)}).catch(function(e){alert('Ошибка')})
+}
+function sendAdminTG(nm,ph,dt,tm,md,nt){
+  // Format date: YYYY-MM-DD -> DD Month (DayOfWeek)
+  var dd=new Date(dt);
+  var months=["\u044F\u043D\u0432\u0430\u0440\u044F","\u0444\u0435\u0432\u0440\u0430\u043B\u044F","\u043C\u0430\u0440\u0442\u0430","\u0430\u043F\u0440\u0435\u043B\u044F","\u043C\u0430\u044F","\u0438\u044E\u043D\u044F","\u0438\u044E\u043B\u044F","\u0430\u0432\u0433\u0443\u0441\u0442\u0430","\u0441\u0435\u043D\u0442\u044F\u0431\u0440\u044F","\u043E\u043A\u0442\u044F\u0431\u0440\u044F","\u043D\u043E\u044F\u0431\u0440\u044F","\u0434\u0435\u043A\u0430\u0431\u0440\u044F"];
+  var days=["\u0432\u043E\u0441\u043A\u0440\u0435\u0441\u0435\u043D\u044C\u0435","\u043F\u043E\u043D\u0435\u0434\u0435\u043B\u044C\u043D\u0438\u043A","\u0432\u0442\u043E\u0440\u043D\u0438\u043A","\u0441\u0440\u0435\u0434\u0430","\u0447\u0435\u0442\u0432\u0435\u0440\u0433","\u043F\u044F\u0442\u043D\u0438\u0446\u0430","\u0441\u0443\u0431\u0431\u043E\u0442\u0430"];
+  var dtf=dd.getDate()+" "+months[dd.getMonth()]+" ("+days[dd.getDay()]+")";
+  
+  // Check client history
+  firebase.firestore().collection("galaxymoto_bookings").get().then(function(snap){
+    var prev=[];
+    snap.forEach(function(doc){
+      var d=doc.data(); if(d.phone!==ph)return;
+      if(d.workDone&&d.workDone.items&&d.workDone.items.length>0) prev.push(d);
+    });
+    prev.sort(function(a,b){return a.date.localeCompare(b.date)});
+    var msg="\uD83D\uDEF5 \u041D\u043E\u0432\u0430\u044F \u0437\u0430\u043F\u0438\u0441\u044C \u043D\u0430 \u0441\u0435\u0440\u0432\u0438\u0441 \u0447\u0435\u0440\u0435\u0437 \u0430\u0434\u043C\u0438\u043D \u043F\u0430\u043D\u0435\u043B\u044C!\n\n";
+    msg+="\uD83D\uDCC5 \u0414\u0430\u0442\u0430: "+dtf+"\n";
+    msg+="\u23F0 \u0412\u0440\u0435\u043C\u044F: "+tm+"\n";
+    msg+="\uD83D\uDC64 \u0418\u043C\u044F: "+nm+"\n";
+    msg+="\uD83D\uDCDE \u0422\u0435\u043B\u0435\u0444\u043E\u043D: "+ph+"\n";
+    msg+="\uD83D\uDEF2 \u041C\u043E\u0434\u0435\u043B\u044C: "+(md||"-")+"\n";
+    if(nt) msg+="\uD83D\uDCDD \u041E\u043F\u0438\u0441\u0430\u043D\u0438\u0435: "+nt+"\n";
+    if(prev.length>0){
+      var last=prev[prev.length-1];
+      
+      var ld=new Date(last.date+"T12:00:00"); msg+="\uD83D\uDCC5 \u041F\u043E\u0441\u043B\u0435\u0434\u043D\u0435\u0435 \u043F\u043E\u0441\u0435\u0449\u0435\u043D\u0438\u0435: "+ld.getDate()+" "+["\u044F\u043D\u0432\u0430\u0440\u044F","\u0444\u0435\u0432\u0440\u0430\u043B\u044F","\u043C\u0430\u0440\u0442\u0430","\u0430\u043F\u0440\u0435\u043B\u044F","\u043C\u0430\u044F","\u0438\u044E\u043D\u044F","\u0438\u044E\u043B\u044F","\u0430\u0432\u0433\u0443\u0441\u0442\u0430","\u0441\u0435\u043D\u0442\u044F\u0431\u0440\u044F","\u043E\u043A\u0442\u044F\u0431\u0440\u044F","\u043D\u043E\u044F\u0431\u0440\u044F","\u0434\u0435\u043A\u0430\u0431\u0440\u044F"][ld.getMonth()]+" ("+["\u0432\u043E\u0441\u043A\u0440\u0435\u0441\u0435\u043D\u044C\u0435","\u043F\u043E\u043D\u0435\u0434\u0435\u043B\u044C\u043D\u0438\u043A","\u0432\u0442\u043E\u0440\u043D\u0438\u043A","\u0441\u0440\u0435\u0434\u0430","\u0447\u0435\u0442\u0432\u0435\u0440\u0433","\u043F\u044F\u0442\u043D\u0438\u0446\u0430","\u0441\u0443\u0431\u0431\u043E\u0442\u0430"][ld.getDay()]+")\n";
+      if(last.workDone.mileage) msg+="\uD83D\uDCCF \u041F\u0440\u043E\u0431\u0435\u0433: "+last.workDone.mileage+" \u043A\u043C\n";
+      msg+="\uD83D\uDCCB \u041F\u043E\u0441\u043B\u0435\u0434\u043D\u0438\u0435 \u0440\u0430\u0431\u043E\u0442\u044B:";
+      for(var i=0;i<last.workDone.items.length;i++){
+        msg+="\n  - "+last.workDone.items[i].name+": "+last.workDone.items[i].price+" \u20BD";
+      }
+      msg+="\n\u0421\u0443\u043C\u043C\u0430: "+last.workDone.total+" \u20BD";
+    }else{
+      msg+="\n\u041F\u043E\u0441\u043B\u0435\u0434\u043D\u0435\u0435 \u043F\u043E\u0441\u0435\u0449\u0435\u043D\u0438\u0435 \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u043E";
+    }
+    tgBroadcast(msg);
+  }).catch(function(){
+    var msg="\uD83D\uDEF5 \u041D\u043E\u0432\u0430\u044F \u0437\u0430\u043F\u0438\u0441\u044C!\n\n";
+    msg+="\uD83D\uDCC5 "+dtf+"\n\u23F0 "+tm+"\n";
+    msg+="\uD83D\uDC64 "+nm+"\n\uD83D\uDCDE "+ph;
+    if(md) msg+="\n\uD83D\uDEF5 "+md;
+    tgBroadcast(msg);
+  });
+}
+
+function sendCompletionTG(id){
+  var b = BK.find(function(x){return x.id===id});
+  if(!b || !b.workDone || !b.workDone.items || b.workDone.items.length === 0) return;
+  var num = b.orderNumber ? " №" + b.orderNumber : "";
+  var msg = "\u2705 " + b.name + num + " \u0443\u0441\u043f\u0435\u0448\u043d\u043e \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u0430!\n\n";
+  var sd=new Date(b.date+"T12:00:00"); msg += "\uD83D\uDCC5 "+sd.getDate()+" "+["\u044F\u043D\u0432\u0430\u0440\u044F","\u0444\u0435\u0432\u0440\u0430\u043B\u044F","\u043C\u0430\u0440\u0442\u0430","\u0430\u043F\u0440\u0435\u043B\u044F","\u043C\u0430\u044F","\u0438\u044E\u043D\u044F","\u0438\u044E\u043B\u044F","\u0430\u0432\u0433\u0443\u0441\u0442\u0430","\u0441\u0435\u043D\u0442\u044F\u0431\u0440\u044F","\u043E\u043A\u0442\u044F\u0431\u0440\u044F","\u043D\u043E\u044F\u0431\u0440\u044F","\u0434\u0435\u043A\u0430\u0431\u0440\u044F"][sd.getMonth()]+" ("+["\u0432\u043E\u0441\u043A\u0440\u0435\u0441\u0435\u043D\u044C\u0435","\u043F\u043E\u043D\u0435\u0434\u0435\u043B\u044C\u043D\u0438\u043A","\u0432\u0442\u043E\u0440\u043D\u0438\u043A","\u0441\u0440\u0435\u0434\u0430","\u0447\u0435\u0442\u0432\u0435\u0440\u0433","\u043F\u044F\u0442\u043D\u0438\u0446\u0430","\u0441\u0443\u0431\u0431\u043E\u0442\u0430"][sd.getDay()]+")"+(b.time?" "+b.time:"")+"\n";
+  if(b.master) msg += "\uD83D\uDC68\u200D\uD83D\uDD27 \u041c\u0430\u0441\u0442\u0435\u0440: " + b.master + "\n";
+  if(b.phone) msg += "\uD83D\uDCDE " + b.phone + "\n";
+  if(b.model) msg += "\uD83D\uDEE2 " + b.model + "\n";
+  if(b.workDone.mileage) msg += "\uD83D\uDCCF \u041f\u0440\u043e\u0431\u0435\u0433: " + b.workDone.mileage + " \u043a\u043c\n";
+  msg += "\n\uD83D\uDCCB \u0420\u0430\u0431\u043e\u0442\u044b:\n";
+  for(var wi=0; wi<b.workDone.items.length; wi++){
+    var w = b.workDone.items[wi];
+    msg += "  - " + (w.name||"") + ": " + (w.price||"0") + " \u20bd";
+    if(w.master) msg += " (" + w.master + ")";
+    msg += "\n";
+  }
+  msg += "\n\uD83D\uDCB0 \u0418\u0442\u043e\u0433\u043e: " + (b.workDone.total||"0") + " \u20bd";
+  tgBroadcast(msg);
+}
+
+var workBookingId = "";
+
+var MASTERS = ["Денис","Дмитрий","Алексей"];
+var pendingConfirmId = "";
+function openMasterSelect(id){
+  pendingConfirmId=id;
+  var list=document.getElementById("masterList");
+  var h="";
+  h+="<div style=\"margin-bottom:8px;font-size:13px;color:#888\">Выберите мастера (можно несколько):</div>";
+  for(var i=0;i<MASTERS.length;i++){
+    h+="<label style=\"display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid #ddd;border-radius:8px;margin-bottom:6px;cursor:pointer;font-size:14px;font-weight:500;color:#333\">";
+    h+="<input type=\"checkbox\" class=\"master-cb\" value=\""+i+"\" style=\"width:16px;height:16px;cursor:pointer\">";
+    h+=MASTERS[i]+"</label>";
+  }
+  h+="<button onclick=\"saveMasterSelect()\" style=\"width:100%;padding:10px;font-size:14px;font-weight:600;font-family:Inter,sans-serif;color:#fff;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);border:none;border-radius:8px;cursor:pointer;margin-top:4px\">Сохранить</button>";
+  list.innerHTML = h;
+  document.getElementById("masterModal").classList.add("active");
+}
+function closeMasterModal(){
+  document.getElementById("masterModal").classList.remove("active");
+}
+function saveMasterSelect(){
+  var cbs = document.querySelectorAll(".master-cb:checked");
+  if(cbs.length===0){alert("Выберите хотя бы одного мастера");return}
+  var selected = [];
+  for(var i=0;i<cbs.length;i++) selected.push(MASTERS[parseInt(cbs[i].value)]);
+  var masterStr = selected.join(", ");
+  setStat(pendingConfirmId, "in_progress", masterStr);
+  var bk = BK.find(function(x){return x.id===pendingConfirmId});
+  if(bk){
+    var msg = "\uD83D\uDEF5 \u0417\u0430\u043F\u0438\u0441\u044C \u0432\u0437\u044F\u0442\u0430 \u0432 \u0440\u0430\u0431\u043E\u0442\u0443!\n\n";
+    msg += "\uD83D\uDCC5 " + (new Date(bk.date+'T12:00:00')).getDate()+' '+["\u044F\u043D\u0432\u0430\u0440\u044F","\u0444\u0435\u0432\u0440\u0430\u043B\u044F","\u043C\u0430\u0440\u0442\u0430","\u0430\u043F\u0440\u0435\u043B\u044F","\u043C\u0430\u044F","\u0438\u044E\u043D\u044F","\u0438\u044E\u043B\u044F","\u0430\u0432\u0433\u0443\u0441\u0442\u0430","\u0441\u0435\u043D\u0442\u044F\u0431\u0440\u044F","\u043E\u043A\u0442\u044F\u0431\u0440\u044F","\u043D\u043E\u044F\u0431\u0440\u044F","\u0434\u0435\u043A\u0430\u0431\u0440\u044F"][(new Date(bk.date+'T12:00:00')).getMonth()]+' ('+["\u0432\u043E\u0441\u043A\u0440\u0435\u0441\u0435\u043D\u044C\u0435","\u043F\u043E\u043D\u0435\u0434\u0435\u043B\u044C\u043D\u0438\u043A","\u0432\u0442\u043E\u0440\u043D\u0438\u043A","\u0441\u0440\u0435\u0434\u0430","\u0447\u0435\u0442\u0432\u0435\u0440\u0433","\u043F\u044F\u0442\u043D\u0438\u0446\u0430","\u0441\u0443\u0431\u0431\u043E\u0442\u0430"][(new Date(bk.date+'T12:00:00')).getDay()]+')' + (bk.time?' '+bk.time:'') + "\n";
+    msg += "\uD83D\uDC64 " + bk.name + "\n";
+    msg += "\uD83D\uDC68\u200D\uD83D\uDD27 \u041C\u0430\u0441\u0442\u0435\u0440: " + masterStr + "\n";
+    if(bk.phone) msg += "\uD83D\uDCDE " + bk.phone + "\n";
+    if(bk.model) msg += "\uD83D\uDEE2 " + bk.model + "\n";
+    tgBroadcast(msg);
+  }
+  closeMasterModal();
+  closeDet();
+}
+function openWorkForm(id){
+  workBookingId = id;
+  var b = BK.find(function(x){return x.id===id});
+  document.getElementById("workModal").classList.add("active");
+  document.getElementById("workMileage").value = "";
+  document.getElementById("workItems").innerHTML = "";
+  if(b && b.workDone && b.workDone.items && b.workDone.items.length > 0){
+    // Load existing work data
+    if(b.workDone.mileage) document.getElementById("workMileage").value = b.workDone.mileage;
+    var existing = b.workDone.items;
+    for(var wi=0; wi<existing.length; wi++) addWorkRow(wi);
+    calcWorkTotal();
+  } else {
+    for(var i=0;i<3;i++) addWorkRow();
+  }
+  if(b && b.master){
+    var masters = b.master.split(", ");
+    var sels = document.querySelectorAll(".wi-master");
+    sels.forEach(function(s,i){
+      s.innerHTML = "";
+      for(var j=0;j<MASTERS.length;j++){
+        s.innerHTML += "<option value=\""+MASTERS[j]+"\">"+MASTERS[j]+"</option>";
+      }
+      // Auto-select based on assigned masters
+      var assigned = (b.master||"").split(", ");
+      if(assigned.length===1) s.value = assigned[0];
+      else if(assigned.length===2) s.value = i===0?assigned[0]:assigned[1];
+    });
+}
+calcWorkTotal();
+}
+function editWork(id){
+  openWorkForm(id);
+}
+function closeWorkForm(){
+  document.getElementById("workModal").classList.remove("active");
+}
+function addWorkRow(idx){
+  var tb = document.getElementById("workItems");
+  var tr = document.createElement("tr");
+  tr.innerHTML = '<td style="padding:4px"><textarea class="wi-name" placeholder="Наименование" rows="1" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box;resize:none;overflow:hidden;line-height:1.3;height:42px"></textarea></td><td style="padding:4px"><input class="wi-price" type="number" placeholder="0" oninput="calcWorkTotal()" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box;text-align:right"></td><td style="padding:4px"><select class="wi-master" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box;cursor:pointer"></select></td>';
+  tb.appendChild(tr);
+  // If index is provided, look up data from the current booking
+  if(typeof idx !== 'undefined'){
+    var b2 = BK.find(function(x){return x.id===workBookingId});
+    if(b2 && b2.workDone && b2.workDone.items && b2.workDone.items[idx]){
+      var item = b2.workDone.items[idx];
+      tr.querySelector(".wi-name").value = item.name || '';
+      tr.querySelector(".wi-price").value = item.price || 0;
+      if(item.master) tr.querySelector(".wi-master").value = item.master;
+    }
+  }
+  // Populate master dropdown for new row
+  var b2 = BK.find(function(x){return x.id===workBookingId});
+  if(b2 && b2.master){
+    var ss = tr.querySelector(".wi-master");
+    ss.innerHTML = "";
+    for(var k=0;k<MASTERS.length;k++){
+      ss.innerHTML += "<option value=\""+MASTERS[k]+"\">"+MASTERS[k]+"</option>";
+    }
+  }
+}
+function calcWorkTotal(){
+  var total = 0;
+  document.querySelectorAll(".wi-price").forEach(function(el){
+    total += parseFloat(el.value) || 0;
+  });
+  document.getElementById("workTotal").textContent = total;
+}
+function saveWork(mode){
+  var mileage = document.getElementById("workMileage").value.trim();
+  var items = [];
+  var names = document.querySelectorAll(".wi-name");
+  var prices = document.querySelectorAll(".wi-price");
+  var masters = document.querySelectorAll(".wi-master");
+  for(var i=0;i<names.length;i++){
+    var n = names[i].value.trim();
+    var p = parseFloat(prices[i].value) || 0;
+    var m = masters[i] ? masters[i].value : "";
+    if(n || p){
+      var item = {name:n||"-",price:p};
+      if(m) item.master = m;
+      items.push(item);
+    }
+  }
+  try{
+    var d = firebase.firestore();
+    d.collection("leads").doc(workBookingId).update({
+      status: (mode==="complete" ? "completed" : "in_progress"),
+      completedAt: new Date().toISOString(),
+      workDone: {mileage:mileage,items:items,total:document.getElementById("workTotal").textContent}
+    }).catch(function(){});
+    d.collection("galaxymoto_bookings").doc(workBookingId).update({
+      status: (mode==="complete" ? "completed" : "in_progress"),
+      completedAt: new Date().toISOString(),
+      workDone: {mileage:mileage,items:items,total:document.getElementById("workTotal").textContent}
+    }).catch(function(){});
+  }catch(e){}
+  if(mode==='complete' && workBookingId){
+    sendCompletionTG(workBookingId);
+  }
+  closeWorkForm();
+  closeDet();
+}
+
+function renderCarousel(id){
+  var b = BK.find(function(x){return x.id===id});
+  if(!b || !b.phone) return;
+  var visits = BK.filter(function(x){
+    return x.phone === b.phone && x.workDone && x.workDone.items && x.workDone.items.length > 0;
+  });
+  visits.sort(function(a, b){return a.date.localeCompare(b.date) || a.time.localeCompare(b.time)});
+  if(visits.length === 0){ openDet(id); return; }
+  var h = '<div class="tl-wrap">';
+  for(var vi = visits.length - 1; vi >= 0; vi--){
+    var v = visits[vi];
+    var visitNum = visits.length - vi;
+    var isActive = v.id === id;
+    h += '<div class="tl-item' + (isActive ? ' active' : '') + '">';
+    h += '<div class="tl-date">' + v.date.slice(8)+'.'+v.date.slice(5,7) + (v.time ? ' ' + v.time : '') + (isActive ? ' <s>· сейчас</s>' : '') + '</div>';
+    h += '<div class="tl-title">#' + visitNum + ' — ' + esc(v.name||'') + '</div>';
+    h += '<div class="tl-meta">' + (v.model ? esc(v.model) : '') + (v.master ? ' · ' + v.master : '') + (v.workDone && v.workDone.mileage ? ' · ' + v.workDone.mileage + ' км' : '') + '</div>';
+    if(v.workDone && v.workDone.items && v.workDone.items.length > 0){
+      var works = '';
+      for(var wi = 0; wi < v.workDone.items.length; wi++){
+        works += (wi > 0 ? ' · ' : '') + esc(v.workDone.items[wi].name||'');
+      }
+      h += '<div class="tl-works">' + works + '</div>';
+      h += '<div class="tl-total">' + (v.workDone.total||'0') + ' ₽</div>';
+    }
+    h += '</div>';
+  }
+  h += '</div>';
+  document.getElementById("detBody").innerHTML = h;
+  document.getElementById("detTitle").textContent = "История визитов";
+  document.getElementById("detActions").innerHTML = '';
+  document.getElementById("detailModal").classList.add("active");
+}
+
+// Carousel touch events
+
+
+
+var _carouselTouchStart = null;
+var _carouselTouchX = 0;
+
+
+
+
+/* \u0421\u0422\u0410\u0422\u0418\u0421\u0422\u0418\u041a\u0410 */
+var statsPeriod='today',statsMaster='all',statsDate1='',statsDate2='';
+function openStats(){
+  document.getElementById('statsModal').classList.add('active');
+  statsPeriod='today';
+  statsMaster='all';
+  statsDate1='';
+  statsDate2='';
+  renderStats();
+}
+function closeStats(){
+  document.getElementById('statsModal').classList.remove('active');
+}
+function setStatsPeriod(p,el){
+  statsPeriod=p;
+  document.querySelectorAll('.sp-btn').forEach(function(b){b.classList.remove('active')});
+  if(el)el.classList.add('active');
+  var dr=document.getElementById('statsDateRange');
+  if(p==='custom'){dr.classList.remove('hidden')}else{dr.classList.add('hidden')}
+  renderStats();
+}
+function setStatsMaster(el){
+  statsMaster=el.value;
+  renderStats();
+}
+function applyStatsCustom(){
+  statsDate1=document.getElementById('statsDate1').value;
+  statsDate2=document.getElementById('statsDate2').value;
+  renderStats();
+}
+function renderStats(){
+  var now=new Date();now.setHours(0,0,0,0);
+  var flt=[];
+  for(var i=0;i<BK.length;i++){
+    var b=BK[i],bd=new Date(b.date+'T00:00:00');
+    var ok=false;
+    if(statsPeriod==='today'){
+      ok=bd.getTime()===now.getTime();
+    }else if(statsPeriod==='week'){
+      var weekStart=new Date(now);weekStart.setDate(now.getDate()-now.getDay());
+      var weekEnd=new Date(weekStart);weekEnd.setDate(weekStart.getDate()+6);
+      ok=bd>=weekStart&&bd<=weekEnd;
+    }else if(statsPeriod==='month'){
+      ok=bd.getMonth()===now.getMonth()&&bd.getFullYear()===now.getFullYear();
+    }else if(statsPeriod==='custom'){
+      if(statsDate1&&statsDate2){
+        var d1=new Date(statsDate1+'T00:00:00'),d2=new Date(statsDate2+'T00:00:00');
+        ok=bd>=d1&&bd<=d2;
+      }else if(statsDate1){
+        var d1=new Date(statsDate1+'T00:00:00');
+        ok=bd.getTime()===d1.getTime();
+      }else{
+        ok=true;
+      }
+    }else{ok=true}
+    if(ok&&statsMaster!=='all'&&b.master&&b.master.indexOf(statsMaster)<0)ok=false;
+    if(ok&&statsMaster!=='all'&&!b.master)ok=false;
+    if(ok)flt.push(b);
+  }
+  // \u0421\u0447\u0451\u0442\u0447\u0438\u043a\u0438
+  var tc=flt.length;
+  var nc=flt.filter(function(x){return x.status==='new'}).length;
+  var ip=flt.filter(function(x){return x.status==='in_progress'}).length;
+  var dn=flt.filter(function(x){return x.status==='completed'}).length;
+  var cn=flt.filter(function(x){return x.status==='cancelled'}).length;
+  var rev=0,cnt=0;
+  flt.forEach(function(x){if(x.workDone&&x.workDone.total){rev+=parseInt(x.workDone.total)||0;cnt++}});
+  var avg=cnt>0?Math.round(rev/cnt):0;
+  var h='';
+  h+='<div class="stats" style="margin-bottom:16px">';
+  h+='<div class="stat-card"><div class="stat-card__value">'+tc+'</div><div class="stat-card__label">\u0412\u0441\u0435\u0433\u043e</div></div>';
+  h+='<div class="stat-card"><div class="stat-card__value">'+nc+'</div><div class="stat-card__label">\u041d\u043e\u0432\u044b\u0435</div></div>';
+  h+='<div class="stat-card"><div class="stat-card__value">'+ip+'</div><div class="stat-card__label">\u0412 \u0440\u0430\u0431\u043e\u0442\u0435</div></div>';
+  h+='<div class="stat-card"><div class="stat-card__value">'+dn+'</div><div class="stat-card__label">\u0412\u044b\u043f\u043e\u043b\u043d\u0435\u043d\u043e</div></div>';
+  h+='<div class="stat-card"><div class="stat-card__value">'+cn+'</div><div class="stat-card__label">\u041e\u0442\u043c\u0435\u043d\u0435\u043d\u043e</div></div>';
+  h+='</div>';
+  h+='<div class="stats" style="margin-bottom:16px">';
+  h+='<div class="stat-card" style="background:#fff8e1;border-color:#ffe082"><div class="stat-card__value" style="color:#e65100">'+rev.toLocaleString()+' \u20BD</div><div class="stat-card__label">\u0412\u044b\u0440\u0443\u0447\u043a\u0430</div></div>';
+  h+='<div class="stat-card" style="background:#e8f5e9;border-color:#c8e6c9"><div class="stat-card__value" style="color:#2e7d32">'+avg.toLocaleString()+' \u20BD</div><div class="stat-card__label">\u0421\u0440\u0435\u0434\u043d\u0438\u0439 \u0447\u0435\u043a</div></div>';
+  h+='</div>';
+  // \u0420\u0430\u0437\u0431\u0438\u0432\u043a\u0430 \u043f\u043e \u043c\u0430\u0441\u0442\u0435\u0440\u0430\u043c
+  var mStats={};
+  flt.forEach(function(x){
+    if(x.master){
+      var ms=x.master.split(', ');
+      ms.forEach(function(m){
+        if(!mStats[m])mStats[m]={total:0,count:0,revenue:0};
+        mStats[m].count++;
+        if(x.workDone&&x.workDone.total)mStats[m].revenue+=parseInt(x.workDone.total)||0;
+      });
+    }
+  });
+  var mk=Object.keys(mStats);
+  if(mk.length>0){
+    h+='<div style="background:#fff;border-radius:12px;border:1.5px solid #eee;padding:12px;margin-bottom:16px">';
+    
+    h+='<div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#888;margin-bottom:8px">\u0420\u0430\u0437\u0431\u0438\u0432\u043a\u0430 \u043f\u043e \u0441\u043e\u0442\u0440\u0443\u0434\u043d\u0438\u043a\u0430\u043c</div>';
+    h+='<div style="display:flex;flex-direction:column;gap:6px">';
+    mk.sort().forEach(function(m){
+      var ms=mStats[m];
+      h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:#fafafa;border-radius:8px;font-size:13px">';
+      h+='<span style="font-weight:600">'+m+'</span>';
+      h+='<span style="color:#888">'+ms.count+' записей, выручка: <strong style="color:#111">'+ms.revenue.toLocaleString()+' ₽</strong></span>';
+      h+='</div>';
+    });
+    h+='</div></div>';
+  }
+  // Детальная таблица
+  h+='<div class="bookings-table"><table style="table-layout:fixed"><colgroup><col style="width:16%"><col style="width:18%"><col style="width:14%"><col style="width:13%"><col style="width:13%"><col style="width:13%"><col style="width:13%"></colgroup><thead><tr><td>Дата</td><td>Имя</td><td>Телефон</td><td>Модель</td><td style="text-align:left">Мастер</td><td style="text-align:left">Сумма</td><td style="text-align:center">Статус</td></tr></thead><tbody>';
+  flt.sort(function(a,b){return a.date.localeCompare(b.date)||a.time.localeCompare(b.time)}).forEach(function(b){
+    var st=b.status||'new';
+    h+='<tr style="cursor:default" onclick="closeStats();openDet(\''+b.id+'\')"><td>'+b.date.slice(8)+'.'+b.date.slice(5,7)+(b.time?' '+b.time:'')+'</td><td>'+esc(b.name)+'</td><td>'+(b.phone||'-')+'</td><td>'+(b.model?esc(b.model):'-')+'</td><td style="text-align:left">'+(b.master||'-')+'</td><td style="text-align:left">'+(b.workDone&&b.workDone.total?b.workDone.total+' ₽':'-')+'</td><td style="text-align:center"><span class="booking-status '+SC[st]+'">'+SL[st]+'</span></td></tr>';
+  });
+  h+='</tbody></table></div>';
+  document.getElementById('statsBody').innerHTML = h;
+}
+</script>
+
+<div class="modal-overlay" id="statsModal" style="z-index:200">
+  <div class="modal-box" style="max-width:860px">
+    <button class="modal-close" onclick="closeStats()">&times;</button>
+    <h3 style="margin-bottom:12px">Статистика</h3>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
+      <button class="sp-btn active" style="padding:6px 14px;font-size:11px;font-weight:600;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;cursor:pointer;background:#111;color:#fff" onclick="setStatsPeriod('today',this)">Сегодня</button>
+      <button class="sp-btn" style="padding:6px 14px;font-size:11px;font-weight:600;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;cursor:pointer;background:#fff;color:#333" onclick="setStatsPeriod('week',this)">Неделя</button>
+      <button class="sp-btn" style="padding:6px 14px;font-size:11px;font-weight:600;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;cursor:pointer;background:#fff;color:#333" onclick="setStatsPeriod('month',this)">Месяц</button>
+      <button class="sp-btn" style="padding:6px 14px;font-size:11px;font-weight:600;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;cursor:pointer;background:#fff;color:#333" onclick="setStatsPeriod('custom',this)">Свои даты</button>
+      <select onchange="setStatsMaster(this)" style="padding:6px 10px;font-size:11px;font-weight:600;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;cursor:pointer;background:#fff;color:#333;outline:none;margin-left:auto">
+        <option value="all">Все сотрудники</option>
+        <option value="Денис">Денис</option>
+        <option value="Дмитрий">Дмитрий</option>
+        <option value="Алексей">Алексей</option>
+      </select>
+    </div>
+    <div id="statsDateRange" class="hidden" style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
+      <input type="date" id="statsDate1" style="padding:8px 10px;font-size:13px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;flex:1">
+      <span style="color:#888;font-size:12px">—</span>
+      <input type="date" id="statsDate2" style="padding:8px 10px;font-size:13px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;flex:1">
+      <button onclick="applyStatsCustom()" style="padding:8px 16px;font-size:12px;font-weight:600;font-family:Inter,sans-serif;background:#111;color:#fff;border:none;border-radius:8px;cursor:pointer">Применить</button>
+    </div>
+    <div id="statsBody"></div>
+  </div>
+</div>
+
+
+<div class="modal-overlay" id="moveModal" style="z-index:210">
+  <div class="modal-box" style="max-width:400px">
+    <input type="hidden" id="moveBookingId">
+    <button class="modal-close" onclick="document.getElementById('moveModal').classList.remove('active')">&times;</button>
+    <h3 style="margin-bottom:12px">Перенести запись</h3>
+    <div style="margin-bottom:10px;padding:0 4px">
+      <label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Новая дата</label>
+      <input type="date" id="moveDate" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box">
+    </div>
+    <div style="margin-bottom:10px;padding:0 4px">
+      <label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Новое время</label>
+      <input type="time" id="moveTime" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box">
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn-grad-del" style="flex:1;padding:10px;font-size:13px;background:#333" onclick="document.getElementById('moveModal').classList.remove('active')">Отмена</button>
+      <button class="btn-grad" style="flex:1;padding:10px;font-size:13px" onclick="saveMoveBooking()">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="workModal">
+  <div class="modal-box" style="max-width:520px">
+    <button class="modal-close" onclick="closeWorkForm()">&times;</button>
+    <h3 style="margin-bottom:12px">Какие виды работ были выполнены?</h3>
+    <p style="font-size:14px;color:#888;margin:0 0 12px">Заполните информацию о выполненном обслуживании</p>
+    <div style="margin-bottom:10px;padding:0 4px">
+      <label style="font-size:12px;color:#888;display:block;margin-bottom:3px">Пробег</label>
+      <input type="text" id="workMileage" placeholder="км" style="width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box">
+    </div>
+    <table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:10px">
+      <thead><tr><th style="text-align:left;padding:6px;color:#888;font-weight:600;font-size:11px;border-bottom:2px solid #eee;width:60%">Вид</th><th style="text-align:left;padding:6px;color:#888;font-weight:600;font-size:11px;border-bottom:2px solid #eee;width:17%">Сумма</th><th style="text-align:left;padding:6px;color:#888;font-weight:600;font-size:11px;border-bottom:2px solid #eee;width:23%">Мастер</th></tr></thead>
+    <tbody id="workItems"></tbody>
+    </table>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <a href="javascript:void(0)" onclick="addWorkRow()" style="color:#1983dd;font-weight:600;font-size:12px;text-decoration:none">+ Добавить строку</a>
+      <div style="font-size:14px;font-weight:700;color:#111">Итого: <span id="workTotal">0</span> ₽</div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn-grad" style="flex:1;padding:10px;font-size:13px;background:linear-gradient(135deg,#0bc5ea,#8b5cf6)" onclick="if(confirm('Точно завершить?'))saveWork('complete')">Завершить</button>
+      <button class="btn-grad" style="flex:1;padding:10px;font-size:13px;background:#333" onclick="saveWork();closeWorkForm()">Сохранить</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

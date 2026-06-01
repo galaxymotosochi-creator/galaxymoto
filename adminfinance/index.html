@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1">
+<title>GALAXY MOTO — Финансы</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;background:#f5f5f5;color:#111;min-height:100vh}
+.fin-header{background:#111;color:#fff;padding:8px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.06);border-radius:12px;margin:8px 12px;width:auto}
+.fin-header h1{font-size:16px;font-weight:700;letter-spacing:.3px;display:flex;align-items:center;gap:8px}
+.fin-header h1 .emoji{display:inline}
+.fin-header h1 span{font-size:12px;font-weight:500;color:#999;margin-left:4px}
+.fin-header a{color:#999;text-decoration:none;font-size:13px;font-weight:500;cursor:pointer;font-weight:600}
+.fin-header a:hover{color:#fff}
+.fin-container{max-width:960px;margin:0 auto;padding:20px 16px 40px}
+.login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#111}
+.login-box{background:#fff;border-radius:16px;padding:2rem;max-width:360px;width:100%;text-align:center}
+.login-box h2{font-size:20px;font-weight:700;margin-bottom:4px;letter-spacing:1px}
+.login-box p{font-size:13px;color:#888;margin-bottom:20px}
+.login-box input{width:100%;padding:12px 14px;font-size:16px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:10px;text-align:center;letter-spacing:8px;outline:none}
+.login-box input:focus{border-color:#111}
+.login-box .error{color:#e53935;font-size:13px;margin-top:8px;display:none}
+.login-btn{width:100%;padding:12px;margin-top:14px;font-size:15px;font-weight:600;font-family:Inter,sans-serif;color:#fff;background:#111;border:none;border-radius:10px;cursor:pointer}
+.login-btn:hover{background:#333}
+.hidden{display:none!important}
+.balance-bar{text-align:center;margin:0 auto 20px;padding:12px 20px;max-width:360px;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);border-radius:14px;color:#fff}
+.balance-bar__label{font-size:11px;text-transform:uppercase;letter-spacing:1px;opacity:.8}
+.balance-bar__value{font-size:22px;font-weight:800;margin-top:2px}
+.balance-bar__period{font-size:11px;opacity:.7;margin-top:2px}
+.date-filter{display:flex;gap:8px;justify-content:center;margin-bottom:20px}
+.date-filter button{padding:6px 14px;font-size:12px;font-weight:600;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;background:#fff;color:#888;cursor:pointer}
+.date-filter button.active{border-color:#111;color:#111;background:#f5f5f5}
+.buttons-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:20px}
+.btn-card{background:#fff;border:1.5px solid #eee;border-radius:14px;padding:18px 8px;text-align:center;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:6px}
+.btn-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.08);border-color:#111}
+.btn-card__icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px}
+.btn-card__label{font-size:12px;font-weight:600;color:#111}
+.btn-card__count{font-size:10px;color:#999;font-weight:500}
+.btn-card.sale .btn-card__icon{background:#e8f5e9;color:#2e7d32}
+.btn-card.rent .btn-card__icon{background:#e3f2fd;color:#1565c0}
+.btn-card.transport .btn-card__icon{background:#fff8e1;color:#e65100}
+.btn-card.income .btn-card__icon{background:#f3e5f5;color:#7b1fa2}
+.btn-card.expense .btn-card__icon{background:#ffebee;color:#c62828}
+.btn-card.payout .btn-card__icon{background:#fce4ec;color:#c62828}
+.ops-list{background:#fff;border-radius:14px;border:1.5px solid #eee;overflow:hidden}
+.ops-header{display:flex;justify-content:space-between;padding:12px 14px;font-size:12px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.5px;background:#fafafa;border-bottom:1px solid #eee}
+.ops-item{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid #f0f0f0;transition:background .1s}
+.ops-item:last-child{border-bottom:none}
+.ops-item:hover{background:#f5f5f5}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;justify-content:center;align-items:center;padding:1rem;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.modal-overlay.active{display:flex}
+.modal-box{background:#fff;max-width:520px;width:100%;border-radius:14px;padding:1.5rem;position:relative;max-height:90vh;overflow-y:auto;box-shadow:0 10px 40px rgba(0,0,0,.2)}
+.modal-close{position:absolute;top:12px;right:14px;background:none;border:none;font-size:20px;cursor:pointer;color:#999;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%}
+.modal-close:hover{background:#f0f0f0}
+.modal-box input,.modal-box textarea,.modal-box select{width:100%;padding:10px 12px;font-size:14px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box;transition:border .15s}
+.modal-box input:focus,.modal-box textarea:focus,.modal-box select:focus{border-color:#111}
+.modal-box label{font-size:12px;color:#888;display:block;margin-bottom:3px}
+.btn-grad{background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff;padding:10px;font-size:13px;font-weight:600;font-family:Inter,sans-serif;border:none;border-radius:8px;cursor:pointer;transition:opacity .15s;width:100%}
+.btn-grad:hover{opacity:.85}
+.btn-ghost{background:transparent;color:#111;padding:8px 14px;font-size:12px;font-weight:600;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;cursor:pointer}
+.btn-ghost:hover{background:#f5f5f5;border-color:#111}
+.form-group{margin-bottom:12px}
+.form-row{display:flex;gap:10px}.form-row .form-group{flex:1}
+.payout-option{display:flex;align-items:center;justify-content:space-between;padding:14px;border:1.5px solid #eee;border-radius:12px;cursor:pointer;transition:all .15s;margin-bottom:8px}
+.payout-option:hover{border-color:#111;background:#f9f9f9}
+.payout-option__icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px}
+.payout-option__info{flex:1;margin:0 12px}
+.payout-option__title{font-size:14px;font-weight:600;color:#111}
+.payout-option__sub{font-size:11px;color:#999;margin-top:2px}
+.debt-item{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border:1px solid #eee;border-radius:10px;margin-bottom:6px;background:#fafafa;gap:8px}
+.debt-item__info{flex:1}
+.debt-item__title{font-size:13px;font-weight:500}
+.debt-item__meta{font-size:11px;color:#999}
+/* .debt-item__amount removed */
+.debt-input{width:100px;padding:6px 8px;font-size:13px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:6px;text-align:right;outline:none}
+.debt-input:focus{border-color:#111}
+.detail-row{display:flex;padding:6px 0;border-bottom:1px solid #f0f0f0;font-size:13px}
+.dl{color:#888;width:80px;flex-shrink:0}
+.dv{font-weight:500}
+.payout-summary{background:#fff8e1;border:1.5px solid #ffe082;border-radius:10px;padding:12px;margin-bottom:12px;text-align:center}
+.payout-summary__label{font-size:11px;color:#888}
+.payout-summary__value{font-size:22px;font-weight:800;color:#111}
+.loading{text-align:center;padding:40px 20px;color:#999;font-size:14px;font-weight:500}
+@media(max-width:768px){
+.buttons-grid{grid-template-columns:repeat(3,1fr);gap:8px}
+.btn-card{padding:14px 6px}
+.form-row{flex-direction:column;gap:0}
+.fin-container{padding:12px 10px 30px}
+.balance-bar__value{font-size:24px}
+.fin-header h1 .emoji{display:none}
+.fin-header h1 span{display:none}
+}
+</style>
+</head>
+<body>
+<div id="loginScreen" class="login-screen">
+  <div class="login-box">
+    <h2>💰 FINANCE</h2>
+    <p>Панель управления финансами</p>
+    <input type="password" id="pinInput" placeholder="****" maxlength="4" inputmode="numeric" autocomplete="off">
+    <div class="error" id="loginError">Неверный пин-код</div>
+    <button class="login-btn" onclick="doLogin()">Войти</button>
+  </div>
+</div>
+<div id="mainApp" class="hidden">
+  <div class="fin-header">
+    <h1><span class="emoji">💰</span> GALAXY MOTO <span>FINANCE</span></h1>
+    <div style="display:flex;gap:14px;align-items:center">
+      <a onclick="switchTab('ops')" id="opsTabBtn" style="font-size:13px;font-weight:600">Операции</a>
+      <a onclick="switchTab('pays')" id="paysTabBtn" style="font-size:13px;font-weight:600">Выплаты</a>
+      <a onclick="doLogout()" style="font-size:13px;font-weight:600">Выйти</a>
+    </div>
+  </div>
+  <div class="fin-container">
+    <div id="opsView">
+      <div class="balance-bar">
+        <div class="balance-bar__label">Баланс</div>
+        <div class="balance-bar__value" id="balVal">0 &#8381;</div>
+        <div class="balance-bar__period" id="balPer"></div>
+      </div>
+      <div class="date-filter">
+        <button class="active" onclick="setPer('day',this)">День</button>
+        <button onclick="setPer('week',this)">Неделя</button>
+        <button onclick="setPer('month',this)">Месяц</button>
+        <button onclick="setPer('all',this)">Всё</button>
+      </div>
+      <div class="buttons-grid">
+        <div class="btn-card sale" onclick="openForm('Продажа')"><div class="btn-card__icon">&#x1F3CD;</div><div class="btn-card__label">Продажа</div><div class="btn-card__count" id="c0">0</div></div>
+        <div class="btn-card rent" onclick="openForm('Аренда')"><div class="btn-card__icon">&#x1F4CB;</div><div class="btn-card__label">Аренда</div><div class="btn-card__count" id="c1">0</div></div>
+        <div class="btn-card transport" onclick="openForm('Транспорт')"><div class="btn-card__icon">&#x1F69A;</div><div class="btn-card__label">Транспорт</div><div class="btn-card__count" id="c2">0</div></div>
+        <div class="btn-card income" onclick="openForm('Прочие доходы')"><div class="btn-card__icon">&#x1F4C8;</div><div class="btn-card__label">Прочие доходы</div><div class="btn-card__count" id="c3">0</div></div>
+        <div class="btn-card expense" onclick="openForm('Прочие расходы')"><div class="btn-card__icon">&#x1F4C9;</div><div class="btn-card__label">Прочие расходы</div><div class="btn-card__count" id="c4">0</div></div>
+        <div class="btn-card payout" onclick="openPayoutModal()"><div class="btn-card__icon">&#x1F4B8;</div><div class="btn-card__label">Выплата</div><div class="btn-card__count" id="c5">0</div></div>
+      </div>
+      <div class="ops-list" id="opsList"><div class="ops-header"><span style="width:55px;flex-shrink:0">Дата</span><span style="flex:1;margin:0 6px">Категория</span><span style="width:60px;flex-shrink:0;text-align:left">Способ</span><span style="width:90px;flex-shrink:0;text-align:right">Сумма</span></div><div id="opsBody" class="loading">Загрузка данных...</div></div>
+    </div>
+    <div id="paysView" class="hidden">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+        <div><h3 style="font-size:16px;font-weight:700">История выплат</h3><div id="debtInfo" style="font-size:12px;font-weight:600;margin-top:4px"></div></div>
+        <button class="btn-ghost" onclick="openPayoutModal()">+ Новая выплата</button>
+      </div>
+      <div class="ops-list" id="paysList"><div class="ops-header"><span style="width:55px;flex-shrink:0">Дата</span><span style="flex:1;margin:0 6px">Категория</span><span style="width:60px;flex-shrink:0;text-align:left">Способ</span><span style="width:90px;flex-shrink:0;text-align:right">Сумма</span></div><div id="paysBody" class="loading">Загрузка...</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="addModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeForm()">&times;</button>
+    <h3 id="formTitle" style="margin-bottom:14px;font-size:16px">+ Добавить</h3>
+    <input type="hidden" id="formCat"><div id="formFields"></div>
+    <button class="btn-grad" onclick="saveRecord()">Сохранить</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="payModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closePayModal()">&times;</button>
+    <h3 style="margin-bottom:14px;font-size:16px">&#x1F4B8; Выплата</h3>
+    <div id="payStep1">
+      <p style="font-size:13px;color:#888;margin-bottom:14px">За что хотите выплатить?</p>
+      <div class="payout-option" onclick="paySel('sale')"><div class="payout-option__icon" style="background:#e8f5e9;color:#2e7d32">&#x1F3CD;</div><div class="payout-option__info"><div class="payout-option__title">Продажа</div><div class="payout-option__sub" id="paySaleSub" style="font-size:0">&nbsp;</div></div><span style="font-size:18px;color:#999">&rarr;</span></div>
+      <div class="payout-option" onclick="paySel('rent')"><div class="payout-option__icon" style="background:#e3f2fd;color:#1565c0">&#x1F4CB;</div><div class="payout-option__info"><div class="payout-option__title">Аренда</div><div class="payout-option__sub">15% от суммы аренды</div></div><span style="font-size:18px;color:#999">&rarr;</span></div>
+      <div class="payout-option" onclick="paySel('trans')"><div class="payout-option__icon" style="background:#fff8e1;color:#e65100">&#x1F69A;</div><div class="payout-option__info"><div class="payout-option__title">Транспорт</div><div class="payout-option__sub">Расчёт за перевозку</div></div><span style="font-size:18px;color:#999">&rarr;</span></div>
+      <div class="payout-option" onclick="paySel('other')"><div class="payout-option__icon" style="background:#f3e5f5;color:#7b1fa2">&#x1F4CC;</div><div class="payout-option__info"><div class="payout-option__title">Прочие выплаты</div><div class="payout-option__sub">Премия, бонус и т.д.</div></div><span style="font-size:18px;color:#999">&rarr;</span></div>
+    </div>
+    <div id="payStep2" class="hidden">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <button class="btn-ghost" style="padding:4px 10px;font-size:11px" onclick="payBack()">&larr; Назад</button>
+        <span id="payStepTitle" style="font-size:14px;font-weight:600"></span>
+      </div>
+      <div id="payFormFields"></div>
+      <div class="form-group" id="payMethodGroup" style="margin-top:4px">
+        <label>Способ выплаты</label>
+        <select id="payMethod"><option>Наличные</option><option>Перевод</option><option>Терминал</option><option>Расчетный счет</option></select>
+      </div>
+      <button class="btn-grad" onclick="confirmPay()" id="payBtn">Подтвердить выплату</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Edit record -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeEditModal()">&times;</button>
+    <h3 id="editTitle" style="margin-bottom:14px;font-size:16px">&#x270F;&#xFE0F; Редактировать</h3>
+    <input type="hidden" id="editDocId">
+    <div id="editFields"></div>
+    <button class="btn-grad" onclick="saveEditRecord()">Сохранить</button>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script>
+var PIN='7777';
+var DB=null, opsArr=[], paysArr=[], curPeriod='month', payType='';
+var unsubOps=null, unsubPays=null;
+
+function loadCached(){
+  try{
+    var o=localStorage.getItem('fin_ops');if(o) opsArr=JSON.parse(o);
+    var p=localStorage.getItem('fin_pays');if(p) paysArr=JSON.parse(p);
+  }catch(e){}
+  if(!Array.isArray(opsArr))opsArr=[];
+  if(!Array.isArray(paysArr))paysArr=[];
+}
+function saveCache(){
+  localStorage.setItem('fin_ops',JSON.stringify(opsArr));
+  localStorage.setItem('fin_pays',JSON.stringify(paysArr));
+}
+
+function doLogin(){
+  var p=document.getElementById('pinInput').value;
+  if(p===PIN){
+    localStorage.setItem('ga_fin','1');
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('mainApp').classList.remove('hidden');
+    init();
+  } else {
+    document.getElementById('loginError').style.display='block';
+  }
+}
+function doLogout(){
+  localStorage.removeItem('ga_fin');
+  document.getElementById('mainApp').classList.add('hidden');
+  document.getElementById('loginScreen').classList.remove('hidden');
+  document.getElementById('loginError').style.display='none';
+}
+
+function init(){
+  loadCached(); renderAll();
+  var FC={apiKey:'AIzaSyDOZnESPJRJlEf3HTYqNyv1O0mYUZoPJzc',authDomain:'capsulehouse-1c0c9.firebaseapp.com',projectId:'capsulehouse-1c0c9',storageBucket:'capsulehouse-1c0c9.firebasestorage.app',messagingSenderId:'640070206939',appId:'1:640070206939:web:e7ba997ec68457be2893fe'};
+  try{firebase.initializeApp(FC);}catch(e){}
+  DB=firebase.firestore();
+  DB.settings({merge:true});
+  var d=new Date();
+  document.getElementById('balPer').textContent=d.toLocaleDateString('ru',{month:'long',year:'numeric'});
+
+  // Subscribe to ops
+  unsubOps=DB.collection('galaxymoto_finance_ops').orderBy('createdAt','desc').onSnapshot(function(snap){
+    opsArr=[];
+    snap.forEach(function(doc){
+      var x=doc.data(); x.id=doc.id;
+      if(x.category) opsArr.push(x);
+    });
+    opsArr.sort(function(a,b){return (a.category==='Транспорт'?1:0)-(b.category==='Транспорт'?1:0)||b.createdAt-a.createdAt;});
+    saveCache();
+    renderAll();
+  });
+
+  // Subscribe to pays
+  unsubPays=DB.collection('galaxymoto_finance_payouts').orderBy('createdAt','desc').onSnapshot(function(snap){
+    paysArr=[];
+    snap.forEach(function(doc){var x=doc.data(); x.id=doc.id; if(x.total) paysArr.push(x);});
+    saveCache(); renderAll(); renderPays();
+  });
+}
+
+function switchTab(t){
+  document.getElementById('opsView').className=(t==='ops'?'':'hidden');
+  document.getElementById('paysView').className=(t==='pays'?'':'hidden');
+  document.getElementById('opsTabBtn').style.fontWeight=(t==='ops'?'600':'400');
+  document.getElementById('paysTabBtn').style.fontWeight=(t==='pays'?'600':'400');
+}
+
+// ===== FORM BUILDER =====
+var catLabels={
+  'Продажа':['Дата','Модель','Цвет','Клиент','Номер клиента','Сумма продажи','Способ оплаты','Дополнительные продажи'],
+  'Аренда':['Дата','Модель','Цвет','Клиент','С','По','Стоимость за 1 сутки','Общая стоимость','Способ оплаты'],
+  'Транспорт':['Дата','Что перевозил?','Откуда и куда?','Сумма'],
+  'Прочие доходы':['Дата','Категория','Подробности','Способ оплаты','Сумма'],
+  'Прочие расходы':['Дата','Категория','Подробности','Способ оплаты','Сумма']
+};
+var payMethods=['Наличные','Перевод','Терминал','Расчетный счет'];
+
+function openForm(cat){
+  document.getElementById('formTitle').textContent='+ '+cat;
+  document.getElementById('formCat').value=cat;
+  var d=new Date().toISOString().split('T')[0];
+  var h='';
+  if(cat==='Продажа'){
+    h+='<div class="form-group"><label>Дата</label><input type="date" id="f_date" value="'+d+'"></div>';
+    h+='<div class="form-group"><label>Модель</label><input type="text" id="f_model" placeholder="Модель скутера"></div>';
+    h+='<div class="form-group"><label>Цвет</label><input type="text" id="f_color" placeholder="Цвет"></div>';
+    h+='<div class="form-group"><label>Клиент</label><input type="text" id="f_client" placeholder="Имя клиента"></div>';
+    h+='<div class="form-group"><label>Номер клиента</label><input type="tel" id="f_phone" placeholder="+7 ..." value="+7"></div>';
+    h+='<div class="form-group"><label>Сумма продажи *</label><input type="number" id="f_amount" step="0.01" inputmode="decimal" min="0"></div>';
+    h+='<div class="form-group"><label>Способ оплаты</label><select id="f_pay">'+payMethods.map(function(m){return '<option>'+m+'</option>';}).join('')+'</select></div>';
+    h+='<div class="form-group"><label>Дополнительные продажи</label><input type="text" id="f_extra" placeholder="Экипировка, страховка..."></div>';
+    h+='<div class="form-group"><label>Комиссия с продажи</label><input type="number" id="f_commission" step="0.01" min="0" placeholder="Заполняется при выплате"></div>';
+  } else if(cat==='Аренда'){
+    h+='<div class="form-group"><label>Дата</label><input type="date" id="f_date" value="'+d+'"></div>';
+    h+='<div class="form-group"><label>Модель</label><input type="text" id="f_model" placeholder="Модель скутера"></div>';
+    h+='<div class="form-group"><label>Цвет</label><input type="text" id="f_color" placeholder="Цвет"></div>';
+    h+='<div class="form-group"><label>Клиент</label><input type="text" id="f_client" placeholder="Имя клиента"></div>';
+    h+='<div class="form-row"><div class="form-group"><label>С</label><input type="date" id="f_from" oninput="calcRent()"></div>';
+    h+='<div class="form-group"><label>По</label><input type="date" id="f_to" oninput="calcRent()"></div></div>';
+    h+='<div class="form-group"><label>Стоимость за 1 сутки *</label><input type="number" id="f_rate" step="0.01" min="0" oninput="calcRent()"></div>';
+    h+='<div class="form-group"><label>Общая стоимость</label><input type="number" id="f_amount" step="0.01" readonly style="background:#f9f9f9;font-weight:700"><div style="font-size:11px;color:#999;margin-top:2px" id="rentInfo"></div></div>';
+    h+='<div class="form-group"><label>Способ оплаты</label><select id="f_pay">'+payMethods.map(function(m){return '<option>'+m+'</option>';}).join('')+'</select></div>';
+  } else if(cat==='Транспорт'){
+    h+='<div class="form-group"><label>Дата</label><input type="date" id="f_date" value="'+d+'"></div>';
+    h+='<div class="form-group"><label>Что перевозил?</label><input type="text" id="f_cargo" placeholder="Скутер, запчасти..."></div>';
+    h+='<div class="form-group"><label>Откуда и куда?</label><input type="text" id="f_route" placeholder=""></div>';
+    h+='<div class="form-group"><label>Сумма</label><input type="number" id="f_amount" step="0.01" min="0"></div>';
+  } else { // Прочие доходы/расходы
+    h+='<div class="form-group"><label>Дата</label><input type="date" id="f_date" value="'+d+'"></div>';
+    h+='<div class="form-group"><label>Категория</label><input type="text" id="f_cat" placeholder=""></div>';
+    h+='<div class="form-group"><label>Подробности</label><input type="text" id="f_desc" placeholder="Описание"></div>';
+    h+='<div class="form-group"><label>Способ оплаты</label><select id="f_pay">'+payMethods.map(function(m){return '<option>'+m+'</option>';}).join('')+'</select></div>';
+    h+='<div class="form-group"><label>Сумма *</label><input type="number" id="f_amount" step="0.01" min="0"></div>';
+  }
+  document.getElementById('formFields').innerHTML=h;
+  document.getElementById('addModal').classList.add('active');
+}
+
+function closeForm(){
+  document.getElementById('addModal').classList.remove('active');
+}
+
+function calcRent(){
+  var from=document.getElementById('f_from').value;
+  var to=document.getElementById('f_to').value;
+  var rate=parseFloat(document.getElementById('f_rate').value)||0;
+  if(from&&to&&rate>0){
+    var f=new Date(from),t=new Date(to);
+    var days=Math.max(0,Math.round((t-f)/(86400000)));
+    var total=rate*days;
+    document.getElementById('f_amount').value=total.toFixed(2);
+    document.getElementById('rentInfo').textContent=days+' сут × '+rate.toLocaleString()+' = '+total.toLocaleString()+' ₽';
+  }
+}
+
+function gv(id){var el=document.getElementById(id);return el?el.value:'';}
+
+function saveRecord(){
+  var cat=document.getElementById('formCat').value;
+  var date=gv('f_date');
+  var amount=parseFloat(gv('f_amount'))||0;
+  if(!date){alert('Выберите дату');return;}
+  if(amount<=0&&cat!=='Транспорт'){alert('Введите сумму');return;}
+
+  var rec={category:cat,date:date,amount:amount,createdAt:Date.now()};
+  if(cat==='Продажа'){
+    rec.model=gv('f_model');rec.color=gv('f_color');rec.client=gv('f_client');
+    rec.phone=gv('f_phone');rec.payMethod=gv('f_pay');rec.extra=gv('f_extra');
+    rec.commission=parseFloat(gv('f_commission'))||0;rec.paidOut=0;rec.fullyPaid=false;
+  } else if(cat==='Аренда'){
+    rec.model=gv('f_model');rec.color=gv('f_color');rec.client=gv('f_client');
+    rec.dateFrom=gv('f_from');rec.dateTo=gv('f_to');rec.rate=parseFloat(gv('f_rate'))||0;
+    rec.payMethod=gv('f_pay');rec.paidOut=0;rec.fullyPaid=false;
+  } else if(cat==='Транспорт'){
+    rec.cargo=gv('f_cargo');rec.route=gv('f_route');
+    rec.paidOut=0;rec.fullyPaid=false;
+  } else {
+    rec.subcat=gv('f_cat');rec.desc=gv('f_desc');rec.payMethod=gv('f_pay');
+  }
+  DB.collection('galaxymoto_finance_ops').add(rec);
+  closeForm();
+}
+
+function renderAll(){renderOps();renderCounts();}
+
+
+function renderOps(){
+  var d=new Date(), y=d.getFullYear(), m=d.getMonth();
+  var filtered=opsArr;
+  if(curPeriod==='day'){
+    var t=d.toISOString().split('T')[0];
+    filtered=opsArr.filter(function(o){return o.date===t;});
+  } else if(curPeriod==='week'){
+    var sw=new Date(d);sw.setDate(d.getDate()-d.getDay()+1);
+    var ew=new Date(d);ew.setDate(d.getDate()+(7-d.getDay()));
+    var ss=sw.toISOString().split('T')[0], ee=ew.toISOString().split('T')[0];
+    filtered=opsArr.filter(function(o){return o.date>=ss&&o.date<=ee;});
+  } else if(curPeriod==='month'){
+    var ms=y+'-'+(m+1).toString().padStart(2,'0')+'-01';
+    var me=y+'-'+(m+1).toString().padStart(2,'0')+'-31';
+    filtered=opsArr.filter(function(o){return o.date>=ms&&o.date<=me;});
+  }
+
+  // Balance
+  var bal=0;
+  filtered.forEach(function(o){
+    if(o.category==='Продажа'||o.category==='Аренда') bal+=o.amount;
+    else if(o.category==='Прочие доходы') bal+=o.amount;
+    else if(o.category==='Прочие расходы') bal-=o.amount;
+  });
+  // Subtract all payouts (not filtered)
+  paysArr.forEach(function(p){bal-=p.total;});
+  document.getElementById('balVal').textContent=bal.toLocaleString()+' ₽';
+
+  // Sort by date desc - combine ops and pays into one list
+  var allItems=[];
+  filtered.forEach(function(o){
+    var sign='',clr='#111';
+    if(o.category==='Продажа'||o.category==='Аренда'||o.category==='Прочие доходы'){sign='+';clr='#2e7d32';}
+    else if(o.category==='Прочие расходы'){sign='-';clr='#c62828';}
+    else {sign='';clr='#e65100';}
+    var desc=o.model||o.cargo||o.desc||o.subcat||'';
+    allItems.push({date:o.date,cat:o.category,desc:desc,pay:o.payMethod||'',amt:o.amount,sign:sign,clr:clr,type:'op',createdAt:o.createdAt,docId:o.id,record:o});
+  });
+  paysArr.forEach(function(p){
+    allItems.push({date:p.date,cat:'Выплата: '+p.label,desc:'',pay:p.payMethod||'—',amt:-p.total,sign:'-',clr:'#c62828',type:'pay',bg:'#fff8e1',createdAt:p.createdAt});
+  });
+  allItems.sort(function(a,b){return (b.date||'').localeCompare(a.date||'')||b.createdAt-a.createdAt;});
+
+  var html='<div class="ops-header"><span style="width:55px;flex-shrink:0">Дата</span><span style="flex:1;margin:0 6px">Категория</span><span style="width:60px;flex-shrink:0;text-align:left">Способ</span><span style="width:90px;flex-shrink:0;text-align:right">Сумма</span></div>';
+  if(allItems.length===0){
+    html+='<div style="text-align:center;padding:30px 20px;color:#888;font-size:13px">Нет операций</div>';
+  } else {
+    allItems.forEach(function(it){
+      var bg=it.bg||'';
+      var clickable=(it.type==='op');
+      var onclick=clickable?' onclick="editRecord(\''+it.docId+'\')" style="cursor:pointer"':'';
+      var descExtra=(it.type==='pay'&&(it.cat.indexOf('Выплата:')===0))?it.cat.replace('Выплата: ','')+' ':' ';
+      html+='<div class="ops-item"'+(bg?' style="background:'+bg+'"':'')+onclick+'>';
+      html+='<span style="font-size:11px;color:#888;width:55px;flex-shrink:0">'+(it.date?it.date.slice(5):'')+'</span>';
+      html+='<span style="font-size:12px;font-weight:'+(it.type==='pay'?600:500)+';color:'+it.clr+';flex:1;margin:0 6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(it.cat)+(it.desc?' ('+esc(it.desc)+')':'')+'</span>';
+      html+='<span style="font-size:11px;color:#888;width:60px;flex-shrink:0;text-align:left">'+it.pay+'</span>';
+      html+='<span style="font-size:13px;font-weight:700;color:'+it.clr+';width:90px;flex-shrink:0;text-align:right">'+it.sign+Math.abs(it.amt).toLocaleString()+' ₽</span></div>';
+    });
+  }
+  document.getElementById('opsList').innerHTML=html;
+}
+
+function renderCounts(){
+  var cats={};
+  opsArr.forEach(function(o){cats[o.category]=(cats[o.category]||0)+1;});
+  document.getElementById('c0').textContent=cats['Продажа']||0;
+  document.getElementById('c1').textContent=cats['Аренда']||0;
+  document.getElementById('c2').textContent=cats['Транспорт']||0;
+  document.getElementById('c3').textContent=cats['Прочие доходы']||0;
+  document.getElementById('c4').textContent=cats['Прочие расходы']||0;
+  document.getElementById('c5').textContent=paysArr.length;
+
+  // Debt info
+  var upS=opsArr.filter(function(o){return o.category==='Продажа'&&o.commission&&o.commission>0&&!o.fullyPaid;});
+  var upR=opsArr.filter(function(o){return o.category==='Аренда'&&!o.fullyPaid;});
+  var upT=opsArr.filter(function(o){return o.category==='Транспорт'&&!o.fullyPaid;});
+  var parts=[], total=0;
+  if(upS.length>0){var sd=upS.reduce(function(s,o){return s+o.commission-(o.paidOut||0);},0);total+=sd;parts.push('Продажи: '+sd.toLocaleString()+' ₽');}
+  if(upR.length>0){var rd=upR.reduce(function(s,o){return s+(o.amount*0.15)-(o.paidOut||0);},0);total+=rd;parts.push('Аренда: '+rd.toLocaleString()+' ₽');}
+  if(upT.length>0){var td=upT.reduce(function(s,o){return s+o.amount-(o.paidOut||0);},0);total+=td;parts.push('Транспорт: '+td.toLocaleString()+' ₽');}
+  var di=document.getElementById('debtInfo');
+  if(total>0){di.textContent='Не выплачено: '+parts.join(' | ');di.style.color='#c62828';}
+  else{di.textContent='Все выплачено';di.style.color='#2e7d32';}
+
+  // Update payout hints
+  var ss=document.getElementById('paySaleSub');
+  if(ss) ss.style.display='none';
+}
+
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;').replace(/"/g,'&quot;');}
+function fmtDate(d){if(!d)return '';var p=d.split('-');return p[2]+'.'+p[1]+'.'+p[0].slice(2);}
+
+function setPer(p,btn){
+  curPeriod=p;
+  document.querySelectorAll('.date-filter button').forEach(function(b){b.classList.remove('active');});
+  if(btn)btn.classList.add('active');
+  renderOps();
+}
+
+// ===== SALE EDIT (COMMISSION) =====
+function editRecord(id){
+  var rec=opsArr.find(function(o){return o.id===id;});
+  if(!rec) return;
+  document.getElementById('editDocId').value=id;
+  var cat=rec.category;
+  document.getElementById('editTitle').textContent='\u270F\uFE0F '+cat;
+  var h='';
+  // Common fields
+  h+='<div class="form-group"><label>Дата</label><input type="date" id="ed_date" value="'+(rec.date||'')+'" class="form-input"></div>';
+  
+  if(cat==='Продажа'){
+    h+='<div class="form-group"><label>Модель</label><input type="text" id="ed_model" value="'+esc(rec.model||'')+'" class="form-input"></div>';
+    h+='<div class="form-group"><label>Цвет</label><input type="text" id="ed_color" value="'+esc(rec.color||'')+'" class="form-input"></div>';
+    h+='<div class="form-group"><label>Клиент</label><input type="text" id="ed_client" value="'+esc(rec.client||'')+'" class="form-input"></div>';
+    h+='<div class="form-group"><label>Номер клиента</label><input type="text" id="ed_phone" value="'+esc(rec.phone||'')+'" class="form-input"></div>';
+    h+='<div class="form-group"><label>Сумма</label><input type="number" id="ed_amount" step="0.01" value="'+(rec.amount||0)+'" class="form-input"></div>';
+    h+='<div class="form-group"><label>Способ оплаты</label><select id="ed_pay" class="form-input">'+payMethods.map(function(m){return '<option'+(m===rec.payMethod?' selected':'')+'>'+m+'</option>';}).join('')+'</select></div>';
+    h+='<div class="form-group"><label>Дополнительные продажи</label><input type="text" id="ed_extra" value="'+esc(rec.extra||'')+'" class="form-input"></div>';
+    h+='<div class="form-group"><label>Комиссия с продажи</label><input type="number" id="ed_commission" step="0.01" min="0" value="'+(rec.commission||'')+'" class="form-input" placeholder="Заполняется при выплате"></div>';
+    h+='<div style="font-size:11px;color:#888;margin-bottom:10px">Если комиссия не заполнена — продажа не считается в долге</div>';
+  }
+  else if(cat==='Аренда'){
+    h+='<div class="form-group"><label>Модель</label><input type="text" id="ed_model" value="'+esc(rec.model||'')+'" class="form-input"></div>';
+    h+='<div class="form-group"><label>Цвет</label><input type="text" id="ed_color" value="'+esc(rec.color||'')+'" class="form-input"></div>';
+    h+='<div class="form-group"><label>Клиент</label><input type="text" id="ed_client" value="'+esc(rec.client||'')+'" class="form-input"></div>';
+    h+='<div class="form-row"><div class="form-group"><label>С</label><input type="date" id="ed_from" value="'+(rec.dateFrom||'')+'" class="form-input"></div>';
+    h+='<div class="form-group"><label>По</label><input type="date" id="ed_to" value="'+(rec.dateTo||'')+'" class="form-input"></div></div>';
+    h+='<div class="form-group"><label>Стоимость за 1 сутки</label><input type="number" id="ed_rate" step="0.01" value="'+(rec.rate||0)+'" class="form-input"></div>';
+    h+='<div class="form-group"><label>Общая стоимость</label><input type="number" id="ed_amount" step="0.01" value="'+(rec.amount||0)+'" class="form-input"></div>';
+    h+='<div class="form-group"><label>Способ оплаты</label><select id="ed_pay" class="form-input">'+payMethods.map(function(m){return '<option'+(m===rec.payMethod?' selected':'')+'>'+m+'</option>';}).join('')+'</select></div>';
+  }
+  else if(cat==='Транспорт'){
+    h+='<div class="form-group"><label>Что перевозил?</label><input type="text" id="ed_cargo" value="'+esc(rec.cargo||'')+'" class="form-input"></div>';
+    h+='<div class="form-group"><label>Откуда и куда?</label><input type="text" id="ed_route" value="'+esc(rec.route||'')+'" class="form-input"></div>';
+    h+='<div class="form-group"><label>Сумма</label><input type="number" id="ed_amount" step="0.01" value="'+(rec.amount||0)+'" class="form-input"></div>';
+  }
+  else { // Прочие доходы/расходы
+    h+='<div class="form-group"><label>Категория</label><input type="text" id="ed_subcat" value="'+esc(rec.subcat||'')+'" class="form-input"></div>';
+    h+='<div class="form-group"><label>Подробности</label><input type="text" id="ed_desc" value="'+esc(rec.desc||'')+'" class="form-input"></div>';
+    h+='<div class="form-group"><label>Способ оплаты</label><select id="ed_pay" class="form-input">'+payMethods.map(function(m){return '<option'+(m===rec.payMethod?' selected':'')+'>'+m+'</option>';}).join('')+'</select></div>';
+    h+='<div class="form-group"><label>Сумма</label><input type="number" id="ed_amount" step="0.01" value="'+(rec.amount||0)+'" class="form-input"></div>';
+  }
+  document.getElementById('editFields').innerHTML=h;
+  document.getElementById('editModal').classList.add('active');
+}
+function closeEditModal(){
+  document.getElementById('editModal').classList.remove('active');
+}
+function saveEditRecord(){
+  var id=document.getElementById('editDocId').value;
+  if(!id) return;
+  var rec=opsArr.find(function(o){return o.id===id;});
+  if(!rec) return;
+  var cat=rec.category;
+  var update={};
+  update.date=gv('ed_date')||rec.date;
+  
+  if(cat==='Продажа'){
+    update.model=gv('ed_model');
+    update.color=gv('ed_color');
+    update.client=gv('ed_client');
+    update.phone=gv('ed_phone');
+    update.amount=parseFloat(gv('ed_amount'))||0;
+    update.payMethod=gv('ed_pay');
+    update.extra=gv('ed_extra');
+    update.commission=parseFloat(gv('ed_commission'))||0;
+  }
+  else if(cat==='Аренда'){
+    update.model=gv('ed_model');
+    update.color=gv('ed_color');
+    update.client=gv('ed_client');
+    update.dateFrom=gv('ed_from');
+    update.dateTo=gv('ed_to');
+    update.rate=parseFloat(gv('ed_rate'))||0;
+    update.amount=parseFloat(gv('ed_amount'))||0;
+    update.payMethod=gv('ed_pay');
+  }
+  else if(cat==='Транспорт'){
+    update.cargo=gv('ed_cargo');
+    update.route=gv('ed_route');
+    update.amount=parseFloat(gv('ed_amount'))||0;
+  }
+  else {
+    update.subcat=gv('ed_subcat');
+    update.desc=gv('ed_desc');
+    update.payMethod=gv('ed_pay');
+    update.amount=parseFloat(gv('ed_amount'))||0;
+  }
+  DB.collection('galaxymoto_finance_ops').doc(id).update(update);
+  closeEditModal();
+}
+
+// ===== PAYOUT =====
+function openPayoutModal(){
+  document.getElementById('payStep1').className='';
+  document.getElementById('payStep2').className='hidden';
+  document.getElementById('payModal').classList.add('active');
+  renderCounts(); // refresh hints
+}
+function closePayModal(){document.getElementById('payModal').classList.remove('active');}
+function payBack(){document.getElementById('payStep1').className='';document.getElementById('payStep2').className='hidden';}
+
+function paySel(type){
+  payType=type;
+  var titles={sale:'Выплата за продажу',rent:'Выплата за аренду',trans:'Выплата за транспорт',other:'Прочая выплата'};
+  document.getElementById('payStepTitle').textContent=titles[type]||'Выплата';
+  document.getElementById('payStep1').className='hidden';
+  document.getElementById('payStep2').className='';
+  buildPayForm(type);
+}
+
+function buildPayForm(type){
+  var html='';
+  if(type==='sale'){
+    var unpaid=opsArr.filter(function(o){return o.category==='Продажа'&&o.commission&&o.commission>0&&!o.fullyPaid;});
+    if(unpaid.length===0){html='<p style="color:#888;font-size:13px;text-align:center;padding:20px">Нет невыплаченных продаж</p>';}
+    else{
+      unpaid.forEach(function(o,i){
+        var debt=o.commission-(o.paidOut||0);
+        html+='<div class="debt-item"><div class="debt-item__info"><div class="debt-item__title">'+(o.model||'Скутер')+'</div><div class="debt-item__meta">'+fmtDate(o.date)+' \u2022 '+(o.client||'')+' \u2022 '+o.amount.toLocaleString()+' \u20BD (комиссия: '+o.commission.toLocaleString()+' \u20BD)</div></div>';
+        html+='<div style="text-align:right">';
+        html+='<input type="number" class="debt-input" id="pp_'+i+'" step="any" value="0"></div></div>';
+      });
+    }
+  } else if(type==='rent'){
+    var unpaid=opsArr.filter(function(o){return o.category==='Аренда'&&!o.fullyPaid;});
+    if(unpaid.length===0){html='<p style="color:#888;font-size:13px;text-align:center;padding:20px">Нет аренд для выплаты</p>';}
+    else{
+      var totalDebt=unpaid.reduce(function(s,o){return s+(o.amount*0.15)-(o.paidOut||0);},0);
+      html='<div class="payout-summary"><div class="payout-summary__label">15% от аренд к выплате</div><div class="payout-summary__value" id="pdTotal">'+totalDebt.toLocaleString()+' ₽</div></div>';
+      unpaid.forEach(function(o,i){
+        var comm=o.amount*0.15,debt=comm-(o.paidOut||0);
+        html+='<div class="debt-item"><div class="debt-item__info"><div class="debt-item__title">'+(o.model||'Аренда')+'</div><div class="debt-item__meta">'+fmtDate(o.date)+' \u2022 '+o.amount.toLocaleString()+' \u20BD \u2022 15% = '+comm.toLocaleString()+' \u20BD</div></div>';
+        html+='<div style="text-align:right">';
+        html+='<input type="number" class="debt-input" id="pp_'+i+'" step="any" value="0"></div></div>';
+      });
+    }
+  } else if(type==='trans'){
+    var unpaid=opsArr.filter(function(o){return o.category==='Транспорт'&&!o.fullyPaid;});
+    if(unpaid.length===0){html='<p style="color:#888;font-size:13px;text-align:center;padding:20px">Нет транспорта для выплаты</p>';}
+    else{
+      var totalDebt=unpaid.reduce(function(s,o){return s+o.amount-(o.paidOut||0);},0);
+      html='<div class="payout-summary"><div class="payout-summary__label">К выплате за транспорт</div><div class="payout-summary__value" id="pdTotal">'+totalDebt.toLocaleString()+' ₽</div></div>';
+      unpaid.forEach(function(o,i){
+        var debt=o.amount-(o.paidOut||0);
+        html+='<div class="debt-item"><div class="debt-item__info"><div class="debt-item__title">'+(o.cargo||'Перевозка')+'</div><div class="debt-item__meta">'+fmtDate(o.date)+' \u2022 '+(o.route||'')+' \u2022 '+o.amount.toLocaleString()+' \u20BD</div></div>';
+        html+='<div style="text-align:right">';
+        html+='<input type="number" class="debt-input" id="pp_'+i+'" step="any" value="0"></div></div>';
+      });
+    }
+  } else if(type==='other'){
+    var d=new Date().toISOString().split('T')[0];
+    html='<div class="form-group"><label>Дата</label><input type="date" id="po_date" value="'+d+'"></div>';
+    html+='<div class="form-group"><label>За что?</label><input type="text" id="po_reason" placeholder="Премия, бонус..."></div>';
+    html+='<div class="form-group"><label>Сумма *</label><input type="number" id="po_amount" step="0.01" min="0"></div>';
+    html+='<div class="form-group"><label>Примечание</label><input type="text" id="po_note" placeholder="Комментарий"></div>';
+  }
+  document.getElementById('payFormFields').innerHTML=html;
+}
+
+function confirmPay(){
+  if(payType==='sale') confirmPaySale();
+  else if(payType==='rent') confirmPayRent();
+  else if(payType==='trans') confirmPayTrans();
+  else if(payType==='other') confirmPayOther();
+}
+
+function confirmPaySale(){
+  var unpaid=opsArr.filter(function(o){return o.category==='Продажа'&&o.commission&&o.commission>0&&!o.fullyPaid;});
+  var total=0, items=[];
+  unpaid.forEach(function(o,i){
+    var inp=document.getElementById('pp_'+i);
+    if(inp){
+      var amt=parseFloat(inp.value)||0;
+      if(amt>0){
+        var debt=o.commission-(o.paidOut||0);
+        var actual=Math.min(amt,debt);
+        o.paidOut=(o.paidOut||0)+actual;
+        if(o.paidOut>=o.commission)o.fullyPaid=true;
+        total+=actual;
+        items.push({type:'Продажа',desc:o.model||'Скутер',amount:actual});
+        DB.collection('galaxymoto_finance_ops').doc(o.id).update({paidOut:o.paidOut,fullyPaid:o.fullyPaid});
+      }
+    }
+  });
+  if(total===0){alert('Укажите сумму выплаты');return;}
+  recordPay('Продажа',total,items);
+}
+
+function confirmPayRent(){
+  var unpaid=opsArr.filter(function(o){return o.category==='Аренда'&&!o.fullyPaid;});
+  var total=0, items=[];
+  unpaid.forEach(function(o,i){
+    var inp=document.getElementById('pp_'+i);
+    if(inp){
+      var amt=parseFloat(inp.value)||0;
+      if(amt>0){
+        var comm=o.amount*0.15, debt=comm-(o.paidOut||0);
+        var actual=Math.min(amt,debt);
+        o.paidOut=(o.paidOut||0)+actual;
+        if(o.paidOut>=comm)o.fullyPaid=true;
+        total+=actual;
+        items.push({type:'Аренда',desc:o.model||'Аренда',amount:actual});
+        DB.collection('galaxymoto_finance_ops').doc(o.id).update({paidOut:o.paidOut,fullyPaid:o.fullyPaid});
+      }
+    }
+  });
+  if(total===0){alert('Укажите сумму выплаты');return;}
+  recordPay('Аренда (15%)',total,items);
+}
+
+function confirmPayTrans(){
+  var unpaid=opsArr.filter(function(o){return o.category==='Транспорт'&&!o.fullyPaid;});
+  var total=0, items=[];
+  unpaid.forEach(function(o,i){
+    var inp=document.getElementById('pp_'+i);
+    if(inp){
+      var amt=parseFloat(inp.value)||0;
+      if(amt>0){
+        var debt=o.amount-(o.paidOut||0);
+        var actual=Math.min(amt,debt);
+        o.paidOut=(o.paidOut||0)+actual;
+        if(o.paidOut>=o.amount)o.fullyPaid=true;
+        total+=actual;
+        items.push({type:'Транспорт',desc:o.cargo||'Перевозка',amount:actual});
+        DB.collection('galaxymoto_finance_ops').doc(o.id).update({paidOut:o.paidOut,fullyPaid:o.fullyPaid});
+      }
+    }
+  });
+  if(total===0){alert('Укажите сумму выплаты');return;}
+  recordPay('Транспорт',total,items);
+}
+
+function confirmPayOther(){
+  var date=document.getElementById('po_date').value;
+  var reason=document.getElementById('po_reason').value.trim();
+  var amount=parseFloat(document.getElementById('po_amount').value)||0;
+  var note=document.getElementById('po_note').value.trim();
+  if(!date){alert('Выберите дату');return;}
+  if(amount<=0){alert('Введите сумму');return;}
+  if(!reason)reason='Прочая выплата';
+  recordPay(reason,amount,[{type:'Прочее',desc:reason,amount:amount}],note,date);
+}
+
+function recordPay(label,total,items,note,pDate){
+  var payMethodEl=document.getElementById('payMethod');
+  var payMethod=payMethodEl?payMethodEl.value:'';
+  var rec={
+    label:label,total:total,date:pDate||new Date().toISOString().split('T')[0],
+    items:items,note:note||'',payMethod:payMethod,createdAt:Date.now()
+  };
+  DB.collection('galaxymoto_finance_payouts').add(rec);
+  closePayModal();
+  alert('Выплачено '+total.toLocaleString()+' ₽');
+  switchTab('pays');
+}
+
+function renderPays(){
+  var html='<div class="ops-header"><span style="width:55px;flex-shrink:0">Дата</span><span style="flex:1;margin:0 6px">Категория</span><span style="width:60px;flex-shrink:0;text-align:left">Способ</span><span style="width:90px;flex-shrink:0;text-align:right">Сумма</span></div>';
+  if(paysArr.length===0){
+    html+='<div style="text-align:center;padding:30px 20px;color:#888;font-size:13px">Нет выплат</div>';
+  } else {
+    paysArr.forEach(function(p){
+      var cat=p.label||'';
+      var detail=(p.items||[]).map(function(it){return it.desc;}).join(', ');
+      if(detail) cat+=' ('+detail+')';
+      var payM=p.payMethod||'—';
+      html+='<div class="ops-item">'+
+        '<span style="font-size:12px;color:#888;width:55px;flex-shrink:0">'+(p.date?p.date.slice(5):'')+'</span>'+
+        '<span style="font-size:12px;font-weight:500;flex:1;margin:0 6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(cat)+'</span>'+
+        '<span style="font-size:11px;color:#888;width:60px;flex-shrink:0;text-align:left">'+payM+'</span>'+
+        '<span style="font-size:13px;font-weight:700;color:#c62828;width:90px;flex-shrink:0;text-align:right">-'+p.total.toLocaleString()+' ₽</span></div>';
+    });
+  }
+  document.getElementById('paysList').innerHTML=html;
+}
+
+// Auto-login
+if(localStorage.getItem('ga_fin')==='1'){
+  document.getElementById('pinInput').value=PIN;
+  setTimeout(function(){doLogin();},150);
+}
+</script>
+</body>
+</html>
