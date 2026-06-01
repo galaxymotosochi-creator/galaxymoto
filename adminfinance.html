@@ -157,7 +157,7 @@ body{font-family:Inter,sans-serif;background:#f5f5f5;color:#111;min-height:100vh
     <h3 style="margin-bottom:14px;font-size:16px;font-weight:700">&#x1F4B8; Выплата</h3>
     <div id="payStep1">
       <p style="font-size:13px;color:#888;margin-bottom:14px">За что хотите выплатить?</p>
-      <div class="payout-option" onclick="paySel('sale')"><div class="payout-option__icon" style="background:#e8f5e9;color:#2e7d32">&#x1F3CD;</div><div class="payout-option__info"><div class="payout-option__title">Продажа</div><div class="payout-option__sub" id="paySaleSub">Нет невыплаченных</div></div><span style="font-size:18px;color:#999">&rarr;</span></div>
+      <div class="payout-option" onclick="paySel('sale')"><div class="payout-option__icon" style="background:#e8f5e9;color:#2e7d32">&#x1F3CD;</div><div class="payout-option__info"><div class="payout-option__title">Продажа</div><div class="payout-option__sub" id="paySaleSub" style="font-size:0">&nbsp;</div></div><span style="font-size:18px;color:#999">&rarr;</span></div>
       <div class="payout-option" onclick="paySel('rent')"><div class="payout-option__icon" style="background:#e3f2fd;color:#1565c0">&#x1F4CB;</div><div class="payout-option__info"><div class="payout-option__title">Аренда</div><div class="payout-option__sub">15% от суммы аренды</div></div><span style="font-size:18px;color:#999">&rarr;</span></div>
       <div class="payout-option" onclick="paySel('trans')"><div class="payout-option__icon" style="background:#fff8e1;color:#e65100">&#x1F69A;</div><div class="payout-option__info"><div class="payout-option__title">Транспорт</div><div class="payout-option__sub">Расчёт за перевозку</div></div><span style="font-size:18px;color:#999">&rarr;</span></div>
       <div class="payout-option" onclick="paySel('other')"><div class="payout-option__icon" style="background:#f3e5f5;color:#7b1fa2">&#x1F4CC;</div><div class="payout-option__info"><div class="payout-option__title">Прочие выплаты</div><div class="payout-option__sub">Премия, бонус и т.д.</div></div><span style="font-size:18px;color:#999">&rarr;</span></div>
@@ -432,8 +432,7 @@ function renderCounts(){
 
   // Update payout hints
   var ss=document.getElementById('paySaleSub');
-  if(upS.length>0){var sd2=upS.reduce(function(s,o){return s+o.amount-(o.paidOut||0);},0);ss.textContent=upS.length+' продаж, к выплате: '+sd2.toLocaleString()+' руб';ss.style.color='#c62828';}
-  else{ss.textContent='Нет невыплаченных продаж';ss.style.color='#999';}
+  if(ss) ss.style.display='none';
 }
 
 function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
