@@ -218,7 +218,6 @@ function openDet(id){
   var st=b.status||"new";
   if(st==='completed' && b.workDone && b.workDone.items && b.workDone.items.length > 0){
     openWorkForm(id);
-    document.querySelector('#workModal h3').textContent='\u0412\u0438\u0434\u044B \u0440\u0430\u0431\u043E\u0442';
     return;
   }
 
@@ -548,6 +547,9 @@ function openWorkForm(id){
     });
 }
 calcWorkTotal();
+  // Dynamic title based on status
+  var titleEl = document.querySelector('#workModal h3');
+  if(titleEl) titleEl.textContent = (b && b.status==='completed') ? '\u0412\u0438\u0434\u044B \u0440\u0430\u0431\u043E\u0442' : '\u041A\u0430\u043A\u0438\u0435 \u0432\u0438\u0434\u044B \u0440\u0430\u0431\u043E\u0442 \u0431\u044B\u043B\u0438 \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u044B?';
   // Hide "Завершить" button if booking is already completed
   var cBtn = document.getElementById("completeBtn");
   if(cBtn) cBtn.style.display = (b && b.status==='completed') ? 'none' : '';
