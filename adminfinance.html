@@ -436,6 +436,7 @@ function renderCounts(){
 }
 
 function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function fmtDate(d){if(!d)return '';var p=d.split('-');return p[2]+'.'+p[1]+'.'+p[0].slice(2);}
 
 function setPer(p,btn){
   curPeriod=p;
@@ -472,7 +473,7 @@ function buildPayForm(type){
     else{
       unpaid.forEach(function(o,i){
         var debt=o.amount-(o.paidOut||0);
-        html+='<div class="debt-item"><div class="debt-item__info"><div class="debt-item__title">'+(o.model||'Скутер')+'</div><div class="debt-item__meta">'+o.date+' · '+(o.client||'')+' · сумма: '+o.amount.toLocaleString()+' руб</div></div>';
+        html+='<div class="debt-item"><div class="debt-item__info"><div class="debt-item__title">'+(o.model||'Скутер')+'</div><div class="debt-item__meta">'+fmtDate(o.date)+' \u2022 '+(o.client||'')+' \u2022 '+o.amount.toLocaleString()+' \u20BD</div></div>';
         html+='<div style="text-align:right">';
         html+='<input type="number" class="debt-input" id="pp_'+i+'" step="any" value="0"></div></div>';
       });
@@ -485,7 +486,7 @@ function buildPayForm(type){
       html='<div class="payout-summary"><div class="payout-summary__label">15% от аренд к выплате</div><div class="payout-summary__value" id="pdTotal">'+totalDebt.toLocaleString()+' руб</div></div>';
       unpaid.forEach(function(o,i){
         var comm=o.amount*0.15,debt=comm-(o.paidOut||0);
-        html+='<div class="debt-item"><div class="debt-item__info"><div class="debt-item__title">'+(o.model||'Аренда')+'</div><div class="debt-item__meta">'+o.date+' · '+o.amount.toLocaleString()+' руб · 15% = '+comm.toLocaleString()+' руб</div></div>';
+        html+='<div class="debt-item"><div class="debt-item__info"><div class="debt-item__title">'+(o.model||'Аренда')+'</div><div class="debt-item__meta">'+fmtDate(o.date)+' \u2022 '+o.amount.toLocaleString()+' \u20BD \u2022 15% = '+comm.toLocaleString()+' \u20BD</div></div>';
         html+='<div style="text-align:right">';
         html+='<input type="number" class="debt-input" id="pp_'+i+'" step="any" value="0"></div></div>';
       });
@@ -498,7 +499,7 @@ function buildPayForm(type){
       html='<div class="payout-summary"><div class="payout-summary__label">К выплате за транспорт</div><div class="payout-summary__value" id="pdTotal">'+totalDebt.toLocaleString()+' руб</div></div>';
       unpaid.forEach(function(o,i){
         var debt=o.amount-(o.paidOut||0);
-        html+='<div class="debt-item"><div class="debt-item__info"><div class="debt-item__title">'+(o.cargo||'Перевозка')+'</div><div class="debt-item__meta">'+o.date+' · '+(o.route||'')+' · '+o.amount.toLocaleString()+' руб</div></div>';
+        html+='<div class="debt-item"><div class="debt-item__info"><div class="debt-item__title">'+(o.cargo||'Перевозка')+'</div><div class="debt-item__meta">'+fmtDate(o.date)+' \u2022 '+(o.route||'')+' \u2022 '+o.amount.toLocaleString()+' \u20BD</div></div>';
         html+='<div style="text-align:right">';
         html+='<input type="number" class="debt-input" id="pp_'+i+'" step="any" value="0"></div></div>';
       });
