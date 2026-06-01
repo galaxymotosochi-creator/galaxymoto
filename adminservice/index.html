@@ -195,7 +195,7 @@ tr.done td:not(:last-child){text-decoration:line-through!important;text-decorati
   </div>
 </div>
 <script>
-function tgBroadcast(m){var a=[5368408796,321245864];a.forEach(function(i){fetch('https://api.telegram.org/bot7471473926:AAE_kyz1Qtb1J8Dddqk1aaxzBGfMQ73lSMM/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:i,text:m}).catch(function(e){console.error('TG',e)})})})}
+function tgBroadcast(m){var a=[5368408796,321245864];a.forEach(function(i){fetch('https://api.telegram.org/bot7471473926:AAE_kyz1Qtb1J8Dddqk1aaxzBGfMQ73lSMM/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:i,text:m})}).catch(function(e){console.error('TG',e)}})})}
 
 var PIN='8888',BK=[],TB=0,CV=new Date(),SD=null,SD1=null,SD2=null,US=null,US2=null;
 var SL={'new':'\u041d\u041e\u0412\u0410\u042f','in_progress':'\u0412 \u0420\u0410\u0411\u041e\u0422\u0415','completed':'\u0412\u042b\u041f\u041e\u041b\u041d\u0415\u041d\u0410','cancelled':'\u041e\u0422\u041c\u0415\u041d\u0415\u041d\u0410'};
