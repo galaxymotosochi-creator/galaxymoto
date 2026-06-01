@@ -291,7 +291,7 @@ function openForm(cat){
     h+='<div class="form-group"><label>Сумма</label><input type="number" id="f_amount" step="0.01" min="0"></div>';
   } else { // Прочие доходы/расходы
     h+='<div class="form-group"><label>Дата</label><input type="date" id="f_date" value="'+d+'"></div>';
-    h+='<div class="form-group"><label>Категория</label><input type="text" id="f_cat" placeholder="Например: Реклама, Запчасти..."></div>';
+    h+='<div class="form-group"><label>Категория</label><input type="text" id="f_cat" placeholder=""></div>';
     h+='<div class="form-group"><label>Подробности</label><input type="text" id="f_desc" placeholder="Описание"></div>';
     h+='<div class="form-group"><label>Способ оплаты</label><select id="f_pay">'+payMethods.map(function(m){return '<option>'+m+'</option>';}).join('')+'</select></div>';
     h+='<div class="form-group"><label>Сумма *</label><input type="number" id="f_amount" step="0.01" min="0"></div>';
