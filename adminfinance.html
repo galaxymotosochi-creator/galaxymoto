@@ -183,19 +183,14 @@ body{font-family:Inter,sans-serif;background:#f5f5f5;color:#111;min-height:100vh
   </div>
 </div>
 
-<!-- MODAL: Edit sale commission -->
-<div class="modal-overlay" id="saleModal">
+<!-- MODAL: Edit record -->
+<div class="modal-overlay" id="editModal">
   <div class="modal-box">
-    <button class="modal-close" onclick="closeSaleModal()">&times;</button>
-    <h3 id="saleModalTitle" style="margin-bottom:14px;font-size:16px">&#x1F3CD; Продажа</h3>
-    <input type="hidden" id="saleDocId">
-    <div id="saleDetail"></div>
-    <div class="form-group">
-      <label>Комиссия с продажи</label>
-      <input type="number" id="editCommission" step="0.01" min="0" placeholder="Сумма комиссии">
-    </div>
-    <button class="btn-grad" onclick="saveCommission()">Сохранить комиссию</button>
-    <div style="margin-top:8px;font-size:11px;color:#888;text-align:center">Если комиссия не заполнена — продажа не считается в долге</div>
+    <button class="modal-close" onclick="closeEditModal()">&times;</button>
+    <h3 id="editTitle" style="margin-bottom:14px;font-size:16px">&#x270F;&#xFE0F; Редактировать</h3>
+    <input type="hidden" id="editDocId">
+    <div id="editFields"></div>
+    <button class="btn-grad" onclick="saveEditRecord()">Сохранить</button>
   </div>
 </div>
 
@@ -421,8 +416,8 @@ function renderOps(){
   } else {
     allItems.forEach(function(it){
       var bg=it.bg||'';
-      var clickable=(it.type==='op'&&it.cat==='Продажа');
-      var onclick=clickable?' onclick="editSale(\''+it.docId+'\')" style="cursor:pointer"':'';
+      var clickable=(it.type==='op'&&it.cat!=='Транспорт');
+      var onclick=clickable?' onclick="editRecord(\''+it.docId+'\')" style="cursor:pointer"':'';
       var descExtra=(it.type==='pay'&&(it.cat.indexOf('Выплата:')===0))?it.cat.replace('Выплата: ','')+' ':' ';
       html+='<div class="ops-item"'+(bg?' style="background:'+bg+'"':'')+onclick+'>';
       html+='<span style="font-size:11px;color:#888;width:55px;flex-shrink:0">'+(it.date?it.date.slice(5):'')+'</span>';
@@ -472,32 +467,96 @@ function setPer(p,btn){
 }
 
 // ===== SALE EDIT (COMMISSION) =====
-function editSale(id){
+function editRecord(id){
   var rec=opsArr.find(function(o){return o.id===id;});
-  if(!rec||rec.category!=='Продажа') return;
-  document.getElementById('saleDocId').value=id;
-  document.getElementById('editCommission').value=rec.commission||'';
-  var h='<div style="margin-bottom:12px">';
-  h+='<div class="detail-row"><span class="dl">Дата:</span><span class="dv">'+rec.date+'</span></div>';
-  h+='<div class="detail-row"><span class="dl">Модель:</span><span class="dv">'+(rec.model||'—')+'</span></div>';
-  h+='<div class="detail-row"><span class="dl">Цвет:</span><span class="dv">'+(rec.color||'—')+'</span></div>';
-  h+='<div class="detail-row"><span class="dl">Клиент:</span><span class="dv">'+(rec.client||'—')+'</span></div>';
-  h+='<div class="detail-row"><span class="dl">Сумма:</span><span class="dv">'+rec.amount.toLocaleString()+' ₽</span></div>';
-  h+='<div class="detail-row"><span class="dl">Оплата:</span><span class="dv">'+(rec.payMethod||'—')+'</span></div>';
-  if(rec.extra) h+='<div class="detail-row"><span class="dl">Доп.:</span><span class="dv">'+esc(rec.extra)+'</span></div>';
-  h+='</div>';
-  document.getElementById('saleDetail').innerHTML=h;
-  document.getElementById('saleModal').classList.add('active');
+  if(!rec) return;
+  document.getElementById('editDocId').value=id;
+  var cat=rec.category;
+  document.getElementById('editTitle').textContent='\u270F\uFE0F '+cat;
+  var h='';
+  // Common fields
+  h+='<div class="form-group"><label>Дата</label><input type="date" id="ed_date" value="'+(rec.date||'')+'" class="form-input"></div>';
+  
+  if(cat==='Продажа'){
+    h+='<div class="form-group"><label>Модель</label><input type="text" id="ed_model" value="'+esc(rec.model||'')+'" class="form-input"></div>';
+    h+='<div class="form-group"><label>Цвет</label><input type="text" id="ed_color" value="'+esc(rec.color||'')+'" class="form-input"></div>';
+    h+='<div class="form-group"><label>Клиент</label><input type="text" id="ed_client" value="'+esc(rec.client||'')+'" class="form-input"></div>';
+    h+='<div class="form-group"><label>Номер клиента</label><input type="text" id="ed_phone" value="'+esc(rec.phone||'')+'" class="form-input"></div>';
+    h+='<div class="form-group"><label>Сумма</label><input type="number" id="ed_amount" step="0.01" value="'+(rec.amount||0)+'" class="form-input"></div>';
+    h+='<div class="form-group"><label>Способ оплаты</label><select id="ed_pay" class="form-input">'+payMethods.map(function(m){return '<option'+(m===rec.payMethod?' selected':'')+'>'+m+'</option>';}).join('')+'</select></div>';
+    h+='<div class="form-group"><label>Дополнительные продажи</label><input type="text" id="ed_extra" value="'+esc(rec.extra||'')+'" class="form-input"></div>';
+    h+='<div class="form-group"><label>Комиссия с продажи</label><input type="number" id="ed_commission" step="0.01" min="0" value="'+(rec.commission||'')+'" class="form-input" placeholder="Заполняется при выплате"></div>';
+    h+='<div style="font-size:11px;color:#888;margin-bottom:10px">Если комиссия не заполнена — продажа не считается в долге</div>';
+  }
+  else if(cat==='Аренда'){
+    h+='<div class="form-group"><label>Модель</label><input type="text" id="ed_model" value="'+esc(rec.model||'')+'" class="form-input"></div>';
+    h+='<div class="form-group"><label>Цвет</label><input type="text" id="ed_color" value="'+esc(rec.color||'')+'" class="form-input"></div>';
+    h+='<div class="form-group"><label>Клиент</label><input type="text" id="ed_client" value="'+esc(rec.client||'')+'" class="form-input"></div>';
+    h+='<div class="form-row"><div class="form-group"><label>С</label><input type="date" id="ed_from" value="'+(rec.dateFrom||'')+'" class="form-input"></div>';
+    h+='<div class="form-group"><label>По</label><input type="date" id="ed_to" value="'+(rec.dateTo||'')+'" class="form-input"></div></div>';
+    h+='<div class="form-group"><label>Стоимость за 1 сутки</label><input type="number" id="ed_rate" step="0.01" value="'+(rec.rate||0)+'" class="form-input"></div>';
+    h+='<div class="form-group"><label>Общая стоимость</label><input type="number" id="ed_amount" step="0.01" value="'+(rec.amount||0)+'" class="form-input"></div>';
+    h+='<div class="form-group"><label>Способ оплаты</label><select id="ed_pay" class="form-input">'+payMethods.map(function(m){return '<option'+(m===rec.payMethod?' selected':'')+'>'+m+'</option>';}).join('')+'</select></div>';
+  }
+  else if(cat==='Транспорт'){
+    h+='<div class="form-group"><label>Что перевозил?</label><input type="text" id="ed_cargo" value="'+esc(rec.cargo||'')+'" class="form-input"></div>';
+    h+='<div class="form-group"><label>Откуда и куда?</label><input type="text" id="ed_route" value="'+esc(rec.route||'')+'" class="form-input"></div>';
+    h+='<div class="form-group"><label>Сумма</label><input type="number" id="ed_amount" step="0.01" value="'+(rec.amount||0)+'" class="form-input"></div>';
+  }
+  else { // Прочие доходы/расходы
+    h+='<div class="form-group"><label>Категория</label><input type="text" id="ed_subcat" value="'+esc(rec.subcat||'')+'" class="form-input"></div>';
+    h+='<div class="form-group"><label>Подробности</label><input type="text" id="ed_desc" value="'+esc(rec.desc||'')+'" class="form-input"></div>';
+    h+='<div class="form-group"><label>Способ оплаты</label><select id="ed_pay" class="form-input">'+payMethods.map(function(m){return '<option'+(m===rec.payMethod?' selected':'')+'>'+m+'</option>';}).join('')+'</select></div>';
+    h+='<div class="form-group"><label>Сумма</label><input type="number" id="ed_amount" step="0.01" value="'+(rec.amount||0)+'" class="form-input"></div>';
+  }
+  document.getElementById('editFields').innerHTML=h;
+  document.getElementById('editModal').classList.add('active');
 }
-function closeSaleModal(){
-  document.getElementById('saleModal').classList.remove('active');
+function closeEditModal(){
+  document.getElementById('editModal').classList.remove('active');
 }
-function saveCommission(){
-  var id=document.getElementById('saleDocId').value;
-  var commission=parseFloat(document.getElementById('editCommission').value)||0;
+function saveEditRecord(){
+  var id=document.getElementById('editDocId').value;
   if(!id) return;
-  DB.collection('galaxymoto_finance_ops').doc(id).update({commission:commission});
-  closeSaleModal();
+  var rec=opsArr.find(function(o){return o.id===id;});
+  if(!rec) return;
+  var cat=rec.category;
+  var update={};
+  update.date=gv('ed_date')||rec.date;
+  
+  if(cat==='Продажа'){
+    update.model=gv('ed_model');
+    update.color=gv('ed_color');
+    update.client=gv('ed_client');
+    update.phone=gv('ed_phone');
+    update.amount=parseFloat(gv('ed_amount'))||0;
+    update.payMethod=gv('ed_pay');
+    update.extra=gv('ed_extra');
+    update.commission=parseFloat(gv('ed_commission'))||0;
+  }
+  else if(cat==='Аренда'){
+    update.model=gv('ed_model');
+    update.color=gv('ed_color');
+    update.client=gv('ed_client');
+    update.dateFrom=gv('ed_from');
+    update.dateTo=gv('ed_to');
+    update.rate=parseFloat(gv('ed_rate'))||0;
+    update.amount=parseFloat(gv('ed_amount'))||0;
+    update.payMethod=gv('ed_pay');
+  }
+  else if(cat==='Транспорт'){
+    update.cargo=gv('ed_cargo');
+    update.route=gv('ed_route');
+    update.amount=parseFloat(gv('ed_amount'))||0;
+  }
+  else {
+    update.subcat=gv('ed_subcat');
+    update.desc=gv('ed_desc');
+    update.payMethod=gv('ed_pay');
+    update.amount=parseFloat(gv('ed_amount'))||0;
+  }
+  DB.collection('galaxymoto_finance_ops').doc(id).update(update);
+  closeEditModal();
 }
 
 // ===== PAYOUT =====

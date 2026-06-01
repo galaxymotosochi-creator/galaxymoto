@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 # CamSentry — детекция входа/выхода для TP-Link C210
-# Запуск: python cam.py rtsp://логин:пароль@IP:554/stream1
+#
+# Запуск:
+#   1. pip install opencv-python-headless requests
+#   2. python cam.py rtsp://логин:пароль@IP_камеры:554/stream1
+#
+# Пример: python cam.py rtsp://admin:galaxy2026@192.168.1.49:554/stream1
 
 import cv2, numpy as np, time, requests, sys, os, json, uuid
 from datetime import datetime

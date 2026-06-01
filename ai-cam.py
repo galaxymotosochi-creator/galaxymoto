@@ -28,8 +28,8 @@ CAR_ID = 2
 TARGET_CLASSES = {PERSON_ID: "Человек", MOTORCYCLE_ID: "Скутер", CAR_ID: "Машина"}
 
 # ─── Настройки детекции ───
-CONF_THRESHOLD = 0.4     # уверенность (0-1), меньше = больше срабатываний
-NO_MOTION_TIMEOUT = 8    # секунд без объекта = вышел
+CONF_THRESHOLD = 0.2     # уверенность (0-1), меньше = больше срабатываний
+NO_MOTION_TIMEOUT = 30   # секунд без объекта = вышел (30 сек, чтобы не сбрасывало если сидишь)
 COOLDOWN = 10            # секунд между уведомлениями
 FRAME_SKIP = 5           # каждый N-й кадр обрабатываем
 INPUT_SIZE = 640         # размер для нейросети
@@ -76,26 +76,45 @@ def detect_objects(net, frame):
                                   swapRB=True, crop=False)
     net.setInput(blob)
     
-    outputs = net.forward()[0]
+    outputs = net.forward()
+    
+    # YOLOv8 ONNX: (1, 84, 8400) -> берём первый -> транспонируем -> (8400, 84)
+    dets = outputs[0].T  # (8400, 84)
     
     objects = []
-    for detection in outputs:
-        scores = detection[4:]
+    for det in dets:
+        # det[0:4] = cx, cy, w, h
+        # det[4:] = class scores (80 классов COCO)
+        scores = det[4:]
         class_id = np.argmax(scores)
-        confidence = scores[class_id]
+        conf = float(scores[class_id])
         
-        if confidence > CONF_THRESHOLD and class_id in TARGET_CLASSES:
-            cx, cy, bw, bh = detection[:4] * np.array([w, h, w, h])
-            x1 = int(cx - bw/2)
-            y1 = int(cy - bh/2)
-            x2 = int(cx + bw/2)
-            y2 = int(cy + bh/2)
+        if conf > CONF_THRESHOLD and class_id in TARGET_CLASSES:
+            cx, cy, bw, bh = det[:4]
+            # Нормализуем координаты к размеру кадра
+            x1 = int((cx - bw/2) * w / INPUT_SIZE)
+            y1 = int((cy - bh/2) * h / INPUT_SIZE)
+            x2 = int((cx + bw/2) * w / INPUT_SIZE)
+            y2 = int((cy + bh/2) * h / INPUT_SIZE)
             objects.append({
                 "class": class_id,
                 "name": TARGET_CLASSES[class_id],
-                "confidence": float(confidence),
+                "confidence": conf,
                 "box": (x1, y1, x2, y2)
             })
+    
+    # DEBUG: выводим что нашли
+    if objects:
+        for o in objects:
+            print(f"  🎯 {o['name']} — {o['confidence']:.2f}")
+    else:
+        # Каждые 30 кадров пишем что никого нет
+        if hasattr(detect_objects, 'counter'):
+            detect_objects.counter += 1
+        else:
+            detect_objects.counter = 0
+        if detect_objects.counter % 30 == 0:
+            print("  👀 Смотрю... никого нет")
     
     return objects
 
