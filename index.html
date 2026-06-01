@@ -1473,12 +1473,13 @@ document.addEventListener('click', function(e) {
       if(d.workDone&&d.workDone.items&&d.workDone.items.length>0) prev.push(d);
     });
     prev.sort(function(a,b){return a.date.localeCompare(b.date)});
-    var msg="\uD83D\uDEB2 \u041d\u041e\u0412\u0410\u042f \u0417\u0410\u041f\u0418\u0421\u042c\n\n";
-    msg+="\uD83D\uDC64 "+n+"\n";
-    msg+="\uD83D\uDCDE "+p+"\n";
-    msg+="\uD83D\uDCC5 "+sd+"\n";
-    msg+="\u23F0 "+st+"\n";
-    if(dt.model) msg+="\uD83D\uDEB2 "+dt.model+"\n";
+    var msg="\uD83D\uDEF5 \u041d\u041e\u0412\u0410\u042f \u0417\u0410\u041f\u0418\u0421\u042c \u041d\u0410 \u0421\u0415\u0420\u0412\u0418\u0421!\n\n";
+    msg+="\uD83D\uDCC5 \u0414\u0430\u0442\u0430: "+sd+"\n";
+    msg+="\u0412\u0440\u0435\u043c\u044f: "+st+"\n";
+    msg+="\uD83D\uDC64 \u0418\u043c\u044f: "+n+"\n";
+    msg+="\u0422\u0435\u043b\u0435\u0444\u043e\u043d: "+p+"\n";
+    msg+="\uD83D\uDEF5 \u041c\u043e\u0434\u0435\u043b\u044c: "+(dt.model||"-")+"\n";
+    msg+="\u041a\u043e\u043c\u043c\u0435\u043d\u0442\u0430\u0440\u0438\u0439: "+(desc||"-")+"\n";
     if(desc) msg+="\uD83D\uDCDD "+desc+"\n";
     if(prev.length>0){
       var last=prev[prev.length-1];
@@ -1495,9 +1496,10 @@ document.addEventListener('click', function(e) {
     tgBroadcast(msg);
   }).catch(function(){
     // fallback: простое уведомление
-    var msg="\uD83D\uDEB2 \u041d\u041e\u0412\u0410\u042f \u0417\u0410\u041f\u0418\u0421\u042c\n\n";
-    msg+="\uD83D\uDC64 "+n+"\n\uD83D\uDCDE "+p+"\n\uD83D\uDCC5 "+sd+"\n\u23F0 "+st;
-    if(dt.model) msg+="\n\uD83D\uDEB2 "+dt.model;
+    var msg="\uD83D\uDEF5 \u041d\u041e\u0412\u0410\u042f \u0417\u0410\u041f\u0418\u0421\u042c!\n\n";
+    msg+="\uD83D\uDCC5 "+sd+"\n\u0412\u0440\u0435\u043c\u044f: "+st+"\n";
+    msg+="\uD83D\uDC64 "+n+"\n\u0422\u0435\u043b\u0435\u0444\u043e\u043d: "+p;
+    if(dt.model) msg+="\n\uD83D\uDEF5 "+dt.model;
     tgBroadcast(msg);
   });
   document.getElementById("fm").style.display="none";document.getElementById("sdt").textContent=sd.split("-").reverse().join(".")+" "+st;document.getElementById("servSuccessDateTime").textContent=sd.split("-").reverse().join(".")+" "+st;document.getElementById("servSuccessOverlay").classList.add("active")
