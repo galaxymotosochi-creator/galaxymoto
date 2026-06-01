@@ -77,6 +77,9 @@ body{font-family:Inter,sans-serif;background:#f5f5f5;color:#111;min-height:100vh
 /* .debt-item__amount removed */
 .debt-input{width:100px;padding:6px 8px;font-size:13px;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:6px;text-align:right;outline:none}
 .debt-input:focus{border-color:#111}
+.detail-row{display:flex;padding:6px 0;border-bottom:1px solid #f0f0f0;font-size:13px}
+.dl{color:#888;width:80px;flex-shrink:0}
+.dv{font-weight:500}
 .payout-summary{background:#fff8e1;border:1.5px solid #ffe082;border-radius:10px;padding:12px;margin-bottom:12px;text-align:center}
 .payout-summary__label{font-size:11px;color:#888}
 .payout-summary__value{font-size:22px;font-weight:800;color:#111}
@@ -176,6 +179,23 @@ body{font-family:Inter,sans-serif;background:#f5f5f5;color:#111;min-height:100vh
     </div>
   </div>
 </div>
+
+<!-- MODAL: Edit sale commission -->
+<div class="modal-overlay" id="saleModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeSaleModal()">&times;</button>
+    <h3 id="saleModalTitle" style="margin-bottom:14px;font-size:16px">&#x1F3CD; Продажа</h3>
+    <input type="hidden" id="saleDocId">
+    <div id="saleDetail"></div>
+    <div class="form-group">
+      <label>Комиссия с продажи</label>
+      <input type="number" id="editCommission" step="0.01" min="0" placeholder="Сумма комиссии">
+    </div>
+    <button class="btn-grad" onclick="saveCommission()">Сохранить комиссию</button>
+    <div style="margin-top:8px;font-size:11px;color:#888;text-align:center">Если комиссия не заполнена — продажа не считается в долге</div>
+  </div>
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script>
@@ -274,6 +294,7 @@ function openForm(cat){
     h+='<div class="form-group"><label>Сумма продажи *</label><input type="number" id="f_amount" step="0.01" inputmode="decimal" min="0"></div>';
     h+='<div class="form-group"><label>Способ оплаты</label><select id="f_pay">'+payMethods.map(function(m){return '<option>'+m+'</option>';}).join('')+'</select></div>';
     h+='<div class="form-group"><label>Дополнительные продажи</label><input type="text" id="f_extra" placeholder="Экипировка, страховка..."></div>';
+    h+='<div class="form-group"><label>Комиссия с продажи</label><input type="number" id="f_commission" step="0.01" min="0" placeholder="Заполняется при выплате"></div>';
   } else if(cat==='Аренда'){
     h+='<div class="form-group"><label>Дата</label><input type="date" id="f_date" value="'+d+'"></div>';
     h+='<div class="form-group"><label>Модель</label><input type="text" id="f_model" placeholder="Модель скутера"></div>';
@@ -330,7 +351,7 @@ function saveRecord(){
   if(cat==='Продажа'){
     rec.model=gv('f_model');rec.color=gv('f_color');rec.client=gv('f_client');
     rec.phone=gv('f_phone');rec.payMethod=gv('f_pay');rec.extra=gv('f_extra');
-    rec.paidOut=0;rec.fullyPaid=false;
+    rec.commission=parseFloat(gv('f_commission'))||0;rec.paidOut=0;rec.fullyPaid=false;
   } else if(cat==='Аренда'){
     rec.model=gv('f_model');rec.color=gv('f_color');rec.client=gv('f_client');
     rec.dateFrom=gv('f_from');rec.dateTo=gv('f_to');rec.rate=parseFloat(gv('f_rate'))||0;
@@ -384,7 +405,7 @@ function renderOps(){
     else if(o.category==='Прочие расходы'){sign='-';clr='#c62828';}
     else {sign='';clr='#e65100';}
     var desc=o.model||o.cargo||o.desc||o.subcat||'';
-    allItems.push({date:o.date,cat:o.category,desc:desc,pay:o.payMethod||'',amt:o.amount,sign:sign,clr:clr,type:'op',createdAt:o.createdAt});
+    allItems.push({date:o.date,cat:o.category,desc:desc,pay:o.payMethod||'',amt:o.amount,sign:sign,clr:clr,type:'op',createdAt:o.createdAt,docId:o.id,record:o});
   });
   paysArr.forEach(function(p){
     allItems.push({date:p.date,cat:'Выплата: '+p.label,desc:'',pay:p.payMethod||'—',amt:-p.total,sign:'-',clr:'#c62828',type:'pay',bg:'#fff8e1',createdAt:p.createdAt});
@@ -397,8 +418,10 @@ function renderOps(){
   } else {
     allItems.forEach(function(it){
       var bg=it.bg||'';
+      var clickable=(it.type==='op'&&it.cat==='Продажа');
+      var onclick=clickable?' onclick="editSale(\''+it.docId+'\')" style="cursor:pointer"':'';
       var descExtra=(it.type==='pay'&&(it.cat.indexOf('Выплата:')===0))?it.cat.replace('Выплата: ','')+' ':' ';
-      html+='<div class="ops-item"'+(bg?' style="background:'+bg+'"':'')+'>';
+      html+='<div class="ops-item"'+(bg?' style="background:'+bg+'"':'')+onclick+'>';
       html+='<span style="font-size:11px;color:#888;width:55px;flex-shrink:0">'+(it.date?it.date.slice(5):'')+'</span>';
       html+='<span style="font-size:12px;font-weight:'+(it.type==='pay'?600:500)+';color:'+it.clr+';flex:1;margin:0 6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(it.cat)+(it.desc?' ('+esc(it.desc)+')':'')+'</span>';
       html+='<span style="font-size:11px;color:#888;width:60px;flex-shrink:0;text-align:center">'+it.pay+'</span>';
@@ -419,11 +442,11 @@ function renderCounts(){
   document.getElementById('c5').textContent=paysArr.length;
 
   // Debt info
-  var upS=opsArr.filter(function(o){return o.category==='Продажа'&&!o.fullyPaid;});
+  var upS=opsArr.filter(function(o){return o.category==='Продажа'&&o.commission&&o.commission>0&&!o.fullyPaid;});
   var upR=opsArr.filter(function(o){return o.category==='Аренда'&&!o.fullyPaid;});
   var upT=opsArr.filter(function(o){return o.category==='Транспорт'&&!o.fullyPaid;});
   var parts=[], total=0;
-  if(upS.length>0){var sd=upS.reduce(function(s,o){return s+o.amount-(o.paidOut||0);},0);total+=sd;parts.push('Продажи: '+sd.toLocaleString()+' ₽');}
+  if(upS.length>0){var sd=upS.reduce(function(s,o){return s+o.commission-(o.paidOut||0);},0);total+=sd;parts.push('Продажи: '+sd.toLocaleString()+' ₽');}
   if(upR.length>0){var rd=upR.reduce(function(s,o){return s+(o.amount*0.15)-(o.paidOut||0);},0);total+=rd;parts.push('Аренда: '+rd.toLocaleString()+' ₽');}
   if(upT.length>0){var td=upT.reduce(function(s,o){return s+o.amount-(o.paidOut||0);},0);total+=td;parts.push('Транспорт: '+td.toLocaleString()+' ₽');}
   var di=document.getElementById('debtInfo');
@@ -445,6 +468,34 @@ function setPer(p,btn){
   renderOps();
 }
 
+// ===== SALE EDIT (COMMISSION) =====
+function editSale(id){
+  var rec=opsArr.find(function(o){return o.id===id;});
+  if(!rec||rec.category!=='Продажа') return;
+  document.getElementById('saleDocId').value=id;
+  document.getElementById('editCommission').value=rec.commission||'';
+  var h='<div style="margin-bottom:12px">';
+  h+='<div class="detail-row"><span class="dl">Дата:</span><span class="dv">'+rec.date+'</span></div>';
+  h+='<div class="detail-row"><span class="dl">Модель:</span><span class="dv">'+(rec.model||'—')+'</span></div>';
+  h+='<div class="detail-row"><span class="dl">Цвет:</span><span class="dv">'+(rec.color||'—')+'</span></div>';
+  h+='<div class="detail-row"><span class="dl">Клиент:</span><span class="dv">'+(rec.client||'—')+'</span></div>';
+  h+='<div class="detail-row"><span class="dl">Сумма:</span><span class="dv">'+rec.amount.toLocaleString()+' ₽</span></div>';
+  h+='<div class="detail-row"><span class="dl">Оплата:</span><span class="dv">'+(rec.payMethod||'—')+'</span></div>';
+  if(rec.extra) h+='<div class="detail-row"><span class="dl">Доп.:</span><span class="dv">'+esc(rec.extra)+'</span></div>';
+  h+='</div>';
+  document.getElementById('saleDetail').innerHTML=h;
+  document.getElementById('saleModal').classList.add('active');
+}
+function closeSaleModal(){
+  document.getElementById('saleModal').classList.remove('active');
+}
+function saveCommission(){
+  var id=document.getElementById('saleDocId').value;
+  var commission=parseFloat(document.getElementById('editCommission').value)||0;
+  if(!id) return;
+  DB.collection('galaxymoto_finance_ops').doc(id).update({commission:commission});
+  closeSaleModal();
+}
 
 // ===== PAYOUT =====
 function openPayoutModal(){
@@ -468,12 +519,12 @@ function paySel(type){
 function buildPayForm(type){
   var html='';
   if(type==='sale'){
-    var unpaid=opsArr.filter(function(o){return o.category==='Продажа'&&!o.fullyPaid;});
+    var unpaid=opsArr.filter(function(o){return o.category==='Продажа'&&o.commission&&o.commission>0&&!o.fullyPaid;});
     if(unpaid.length===0){html='<p style="color:#888;font-size:13px;text-align:center;padding:20px">Нет невыплаченных продаж</p>';}
     else{
       unpaid.forEach(function(o,i){
-        var debt=o.amount-(o.paidOut||0);
-        html+='<div class="debt-item"><div class="debt-item__info"><div class="debt-item__title">'+(o.model||'Скутер')+'</div><div class="debt-item__meta">'+fmtDate(o.date)+' \u2022 '+(o.client||'')+' \u2022 '+o.amount.toLocaleString()+' \u20BD</div></div>';
+        var debt=o.commission-(o.paidOut||0);
+        html+='<div class="debt-item"><div class="debt-item__info"><div class="debt-item__title">'+(o.model||'Скутер')+'</div><div class="debt-item__meta">'+fmtDate(o.date)+' \u2022 '+(o.client||'')+' \u2022 '+o.amount.toLocaleString()+' \u20BD (комиссия: '+o.commission.toLocaleString()+' \u20BD)</div></div>';
         html+='<div style="text-align:right">';
         html+='<input type="number" class="debt-input" id="pp_'+i+'" step="any" value="0"></div></div>';
       });
@@ -522,17 +573,17 @@ function confirmPay(){
 }
 
 function confirmPaySale(){
-  var unpaid=opsArr.filter(function(o){return o.category==='Продажа'&&!o.fullyPaid;});
+  var unpaid=opsArr.filter(function(o){return o.category==='Продажа'&&o.commission&&o.commission>0&&!o.fullyPaid;});
   var total=0, items=[];
   unpaid.forEach(function(o,i){
     var inp=document.getElementById('pp_'+i);
     if(inp){
       var amt=parseFloat(inp.value)||0;
       if(amt>0){
-        var debt=o.amount-(o.paidOut||0);
+        var debt=o.commission-(o.paidOut||0);
         var actual=Math.min(amt,debt);
         o.paidOut=(o.paidOut||0)+actual;
-        if(o.paidOut>=o.amount)o.fullyPaid=true;
+        if(o.paidOut>=o.commission)o.fullyPaid=true;
         total+=actual;
         items.push({type:'Продажа',desc:o.model||'Скутер',amount:actual});
         DB.collection('galaxymoto_finance_ops').doc(o.id).update({paidOut:o.paidOut,fullyPaid:o.fullyPaid});
