@@ -270,7 +270,7 @@ function openForm(cat){
     h+='<div class="form-group"><label>Модель</label><input type="text" id="f_model" placeholder="Модель скутера"></div>';
     h+='<div class="form-group"><label>Цвет</label><input type="text" id="f_color" placeholder="Цвет"></div>';
     h+='<div class="form-group"><label>Клиент</label><input type="text" id="f_client" placeholder="Имя клиента"></div>';
-    h+='<div class="form-group"><label>Номер клиента</label><input type="tel" id="f_phone" placeholder="+7 ..."></div>';
+    h+='<div class="form-group"><label>Номер клиента</label><input type="tel" id="f_phone" placeholder="+7 ..." value="+7"></div>';
     h+='<div class="form-group"><label>Сумма продажи *</label><input type="number" id="f_amount" step="0.01" inputmode="decimal" min="0"></div>';
     h+='<div class="form-group"><label>Способ оплаты</label><select id="f_pay">'+payMethods.map(function(m){return '<option>'+m+'</option>';}).join('')+'</select></div>';
     h+='<div class="form-group"><label>Дополнительные продажи</label><input type="text" id="f_extra" placeholder="Экипировка, страховка..."></div>';
