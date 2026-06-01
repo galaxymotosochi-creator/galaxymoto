@@ -216,8 +216,9 @@ function RBOK(){var d=new Date(),tm=new Date(d);tm.setDate(tm.getDate()+1);var f
 function openDet(id){
   var b=BK.find(function(x){return x.id===id});if(!b)return;
   var st=b.status||"new";
-  if(st==='completed' && b.workDone && b.workDone.items && b.workDone.items.length > 0 && b.phone){
-    renderCarousel(id);
+  if(st==='completed' && b.workDone && b.workDone.items && b.workDone.items.length > 0){
+    openWorkForm(id);
+    document.querySelector('#workModal h3').textContent='\u0412\u0438\u0434\u044B \u0440\u0430\u0431\u043E\u0442';
     return;
   }
 
