@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GALAXY MOTO — Флаер</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Inter,sans-serif;background:#f0f0f0;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px}
+
+/* Flyer — A5 portrait (148×210mm) at screen res */
+.flyer{
+  width:420px;
+  min-height:595px;
+  background:#fff;
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 10px 40px rgba(0,0,0,.12);
+  position:relative;
+}
+
+/* Top stripe */
+.flyer-top{
+  background:#111;
+  padding:24px 28px 18px;
+  text-align:center;
+}
+.flyer-top h1{
+  font-size:22px;
+  font-weight:800;
+  color:#fff;
+  letter-spacing:1px;
+}
+.flyer-top h1 span{
+  font-weight:400;
+  color:#888;
+  font-size:14px;
+  display:block;
+  margin-top:2px;
+  letter-spacing:2px;
+}
+
+/* Hero section */
+.flyer-hero{
+  padding:20px 28px 16px;
+  text-align:center;
+  background:linear-gradient(135deg,#0bc5ea08,#8b5cf608);
+}
+.flyer-hero h2{
+  font-size:26px;
+  font-weight:900;
+  color:#111;
+  line-height:1.2;
+  margin-bottom:6px;
+}
+.flyer-hero h2 em{
+  font-style:normal;
+  background:linear-gradient(135deg,#0bc5ea,#8b5cf6);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.flyer-hero p{
+  font-size:13px;
+  color:#666;
+  line-height:1.5;
+  max-width:320px;
+  margin:0 auto;
+}
+
+/* Features grid */
+.features{
+  padding:16px 28px 8px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.feature{
+  border:1.5px solid #eee;
+  border-radius:12px;
+  padding:14px 12px;
+  text-align:center;
+  transition:all .15s;
+}
+.feature__icon{
+  width:40px;
+  height:40px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:0 auto 8px;
+  font-size:20px;
+}
+.feature:nth-child(1) .feature__icon{background:#e8f5e9;color:#2e7d32}
+.feature:nth-child(2) .feature__icon{background:#e3f2fd;color:#1565c0}
+.feature:nth-child(3) .feature__icon{background:#fff8e1;color:#e65100}
+.feature:nth-child(4) .feature__icon{background:#f3e5f5;color:#7b1fa2}
+.feature__title{
+  font-size:12px;
+  font-weight:700;
+  color:#111;
+  margin-bottom:2px;
+}
+.feature__desc{
+  font-size:10px;
+  color:#999;
+  line-height:1.4;
+}
+
+/* Contact strip */
+.contact{
+  background:#111;
+  margin:8px 28px 0;
+  border-radius:12px;
+  padding:14px 16px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+.contact-item{
+  text-align:center;
+}
+.contact-item__label{
+  font-size:9px;
+  color:#888;
+  text-transform:uppercase;
+  letter-spacing:.5px;
+  font-weight:600;
+}
+.contact-item__value{
+  font-size:13px;
+  font-weight:700;
+  color:#fff;
+  margin-top:1px;
+}
+.contact-item__value a{
+  color:#fff;
+  text-decoration:none;
+}
+
+/* Bottom */
+.flyer-bottom{
+  padding:12px 28px 20px;
+  text-align:center;
+}
+.flyer-bottom p{
+  font-size:10px;
+  color:#aaa;
+  line-height:1.5;
+}
+.flyer-bottom .btn{
+  display:inline-block;
+  padding:10px 28px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:700;
+  color:#fff;
+  text-decoration:none;
+  background:linear-gradient(135deg,#0bc5ea,#8b5cf6);
+  margin-top:8px;
+}
+
+/* Address bar */
+.address-bar{
+  background:#fafafa;
+  border-top:1px solid #eee;
+  padding:10px 28px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:16px;
+  font-size:11px;
+  color:#555;
+}
+.address-bar strong{
+  color:#111;
+  font-weight:600;
+}
+</style>
+</head>
+<body>
+
+<div class="flyer">
+
+  <!-- TOP -->
+  <div class="flyer-top">
+    <h1>GALAXY MOTO <span>СКУТЕРЫ • СЕРВИС • АРЕНДА</span></h1>
+  </div>
+
+  <!-- HERO -->
+  <div class="flyer-hero">
+    <h2>Ваш <em>надёжный</em><br>мотосалон в Сочи</h2>
+    <p>Продажа скутеров, профессиональный сервис и аренда — всё в одном месте</p>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="features">
+    <div class="feature">
+      <div class="feature__icon">🏍️</div>
+      <div class="feature__title">Продажа</div>
+      <div class="feature__desc">Новые скутеры в наличии. Подбор под ваш бюджет</div>
+    </div>
+    <div class="feature">
+      <div class="feature__icon">🔧</div>
+      <div class="feature__title">Сервис</div>
+      <div class="feature__desc">Диагностика, ремонт, ТО любой сложности</div>
+    </div>
+    <div class="feature">
+      <div class="feature__icon">📋</div>
+      <div class="feature__title">Аренда</div>
+      <div class="feature__desc">Посуточная аренда скутеров</div>
+    </div>
+    <div class="feature">
+      <div class="feature__icon">📍</div>
+      <div class="feature__title">Шоурум</div>
+      <div class="feature__desc">Приходите посмотреть и прокатиться</div>
+    </div>
+  </div>
+
+  <!-- CONTACT -->
+  <div class="contact">
+    <div class="contact-item">
+      <div class="contact-item__label">Продажи</div>
+      <div class="contact-item__value"><a href="tel:+79000008023">+7 900 000-80-23</a></div>
+    </div>
+    <div class="contact-item">
+      <div class="contact-item__label">Сервис</div>
+      <div class="contact-item__value"><a href="tel:+79000018023">+7 900 001-80-23</a></div>
+    </div>
+  </div>
+
+  <!-- ADDRESS -->
+  <div class="address-bar">
+    <span>📍 <strong>Пластунская 52з/2</strong></span>
+    <span>🕐 <strong>Ежедневно 10:00–19:00</strong></span>
+  </div>
+
+  <!-- BOTTOM -->
+  <div class="flyer-bottom">
+    <a href="https://www.galaxymoto.ru" class="btn">galaxymoto.ru</a>
+    <p style="margin-top:8px">Telegram: @iuliiashimanskaia</p>
+  </div>
+
+</div>
+
+</body>
+</html>
