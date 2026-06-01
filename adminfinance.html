@@ -313,7 +313,7 @@ function calcRent(){
     var days=Math.max(0,Math.round((t-f)/(86400000)));
     var total=rate*days;
     document.getElementById('f_amount').value=total.toFixed(2);
-    document.getElementById('rentInfo').textContent=days+' сут × '+rate.toLocaleString()+' = '+total.toLocaleString()+' руб';
+    document.getElementById('rentInfo').textContent=days+' сут × '+rate.toLocaleString()+' = '+total.toLocaleString()+' ₽';
   }
 }
 
@@ -374,7 +374,7 @@ function renderOps(){
   });
   // Subtract all payouts (not filtered)
   paysArr.forEach(function(p){bal-=p.total;});
-  document.getElementById('balVal').textContent=bal.toLocaleString()+' руб';
+  document.getElementById('balVal').textContent=bal.toLocaleString()+' ₽';
 
   // Sort by date desc - combine ops and pays into one list
   var allItems=[];
@@ -402,7 +402,7 @@ function renderOps(){
       html+='<span style="font-size:11px;color:#888;width:55px;flex-shrink:0">'+(it.date?it.date.slice(5):'')+'</span>';
       html+='<span style="font-size:12px;font-weight:'+(it.type==='pay'?600:500)+';color:'+it.clr+';flex:1;margin:0 6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(it.cat)+(it.desc?' ('+esc(it.desc)+')':'')+'</span>';
       html+='<span style="font-size:11px;color:#888;width:60px;flex-shrink:0;text-align:center">'+it.pay+'</span>';
-      html+='<span style="font-size:13px;font-weight:700;color:'+it.clr+';width:90px;flex-shrink:0;text-align:right">'+it.sign+Math.abs(it.amt).toLocaleString()+' руб</span></div>';
+      html+='<span style="font-size:13px;font-weight:700;color:'+it.clr+';width:90px;flex-shrink:0;text-align:right">'+it.sign+Math.abs(it.amt).toLocaleString()+' ₽</span></div>';
     });
   }
   document.getElementById('opsList').innerHTML=html;
@@ -423,9 +423,9 @@ function renderCounts(){
   var upR=opsArr.filter(function(o){return o.category==='Аренда'&&!o.fullyPaid;});
   var upT=opsArr.filter(function(o){return o.category==='Транспорт'&&!o.fullyPaid;});
   var parts=[], total=0;
-  if(upS.length>0){var sd=upS.reduce(function(s,o){return s+o.amount-(o.paidOut||0);},0);total+=sd;parts.push('Продажи: '+sd.toLocaleString()+' руб');}
-  if(upR.length>0){var rd=upR.reduce(function(s,o){return s+(o.amount*0.15)-(o.paidOut||0);},0);total+=rd;parts.push('Аренда: '+rd.toLocaleString()+' руб');}
-  if(upT.length>0){var td=upT.reduce(function(s,o){return s+o.amount-(o.paidOut||0);},0);total+=td;parts.push('Транспорт: '+td.toLocaleString()+' руб');}
+  if(upS.length>0){var sd=upS.reduce(function(s,o){return s+o.amount-(o.paidOut||0);},0);total+=sd;parts.push('Продажи: '+sd.toLocaleString()+' ₽');}
+  if(upR.length>0){var rd=upR.reduce(function(s,o){return s+(o.amount*0.15)-(o.paidOut||0);},0);total+=rd;parts.push('Аренда: '+rd.toLocaleString()+' ₽');}
+  if(upT.length>0){var td=upT.reduce(function(s,o){return s+o.amount-(o.paidOut||0);},0);total+=td;parts.push('Транспорт: '+td.toLocaleString()+' ₽');}
   var di=document.getElementById('debtInfo');
   if(total>0){di.textContent='Не выплачено: '+parts.join(' | ');di.style.color='#c62828';}
   else{di.textContent='Все выплачено';di.style.color='#2e7d32';}
@@ -483,7 +483,7 @@ function buildPayForm(type){
     if(unpaid.length===0){html='<p style="color:#888;font-size:13px;text-align:center;padding:20px">Нет аренд для выплаты</p>';}
     else{
       var totalDebt=unpaid.reduce(function(s,o){return s+(o.amount*0.15)-(o.paidOut||0);},0);
-      html='<div class="payout-summary"><div class="payout-summary__label">15% от аренд к выплате</div><div class="payout-summary__value" id="pdTotal">'+totalDebt.toLocaleString()+' руб</div></div>';
+      html='<div class="payout-summary"><div class="payout-summary__label">15% от аренд к выплате</div><div class="payout-summary__value" id="pdTotal">'+totalDebt.toLocaleString()+' ₽</div></div>';
       unpaid.forEach(function(o,i){
         var comm=o.amount*0.15,debt=comm-(o.paidOut||0);
         html+='<div class="debt-item"><div class="debt-item__info"><div class="debt-item__title">'+(o.model||'Аренда')+'</div><div class="debt-item__meta">'+fmtDate(o.date)+' \u2022 '+o.amount.toLocaleString()+' \u20BD \u2022 15% = '+comm.toLocaleString()+' \u20BD</div></div>';
@@ -496,7 +496,7 @@ function buildPayForm(type){
     if(unpaid.length===0){html='<p style="color:#888;font-size:13px;text-align:center;padding:20px">Нет транспорта для выплаты</p>';}
     else{
       var totalDebt=unpaid.reduce(function(s,o){return s+o.amount-(o.paidOut||0);},0);
-      html='<div class="payout-summary"><div class="payout-summary__label">К выплате за транспорт</div><div class="payout-summary__value" id="pdTotal">'+totalDebt.toLocaleString()+' руб</div></div>';
+      html='<div class="payout-summary"><div class="payout-summary__label">К выплате за транспорт</div><div class="payout-summary__value" id="pdTotal">'+totalDebt.toLocaleString()+' ₽</div></div>';
       unpaid.forEach(function(o,i){
         var debt=o.amount-(o.paidOut||0);
         html+='<div class="debt-item"><div class="debt-item__info"><div class="debt-item__title">'+(o.cargo||'Перевозка')+'</div><div class="debt-item__meta">'+fmtDate(o.date)+' \u2022 '+(o.route||'')+' \u2022 '+o.amount.toLocaleString()+' \u20BD</div></div>';
@@ -607,7 +607,7 @@ function recordPay(label,total,items,note,pDate){
   };
   DB.collection('galaxymoto_finance_payouts').add(rec);
   closePayModal();
-  alert('Выплачено '+total.toLocaleString()+' руб');
+  alert('Выплачено '+total.toLocaleString()+' ₽');
   switchTab('pays');
 }
 
@@ -625,7 +625,7 @@ function renderPays(){
         '<span style="font-size:12px;color:#888;width:60px;flex-shrink:0">'+(p.date?p.date.slice(5):'')+'</span>'+
         '<span style="font-size:12px;font-weight:500;flex:1;margin:0 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(cat)+'</span>'+
         '<span style="font-size:11px;color:#888;width:70px;flex-shrink:0;text-align:center">'+payM+'</span>'+
-        '<span style="font-size:13px;font-weight:700;color:#c62828;width:100px;flex-shrink:0;text-align:right">-'+p.total.toLocaleString()+' руб</span></div>';
+        '<span style="font-size:13px;font-weight:700;color:#c62828;width:100px;flex-shrink:0;text-align:right">-'+p.total.toLocaleString()+' ₽</span></div>';
     });
   }
   document.getElementById('paysList').innerHTML=html;
