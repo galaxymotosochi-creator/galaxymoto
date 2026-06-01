@@ -10,7 +10,7 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Inter,sans-serif;background:#f5f5f5;color:#111;min-height:100vh}
-.fin-header{background:#111;color:#fff;padding:6px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:8px;z-index:100;box-shadow:0 4px 20px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.06);border-radius:12px;margin:0 12px;width:auto}
+.fin-header{background:#111;color:#fff;padding:8px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.06);width:auto;border-radius:0}
 .fin-header h1{font-size:16px;font-weight:700;letter-spacing:.3px;display:flex;align-items:center;gap:8px}
 .fin-header h1 span{font-size:12px;font-weight:500;color:#999}
 .fin-header a{color:#999;text-decoration:none;font-size:13px;font-weight:500;cursor:pointer;font-weight:600}
@@ -26,9 +26,9 @@ body{font-family:Inter,sans-serif;background:#f5f5f5;color:#111;min-height:100vh
 .login-btn{width:100%;padding:12px;margin-top:14px;font-size:15px;font-weight:600;font-family:Inter,sans-serif;color:#fff;background:#111;border:none;border-radius:10px;cursor:pointer}
 .login-btn:hover{background:#333}
 .hidden{display:none!important}
-.balance-bar{text-align:center;margin-bottom:20px;padding:16px;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);border-radius:14px;color:#fff}
+.balance-bar{text-align:center;margin:0 auto 20px;padding:12px 20px;max-width:360px;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);border-radius:14px;color:#fff}
 .balance-bar__label{font-size:11px;text-transform:uppercase;letter-spacing:1px;opacity:.8}
-.balance-bar__value{font-size:28px;font-weight:800;margin-top:4px}
+.balance-bar__value{font-size:22px;font-weight:800;margin-top:2px}
 .balance-bar__period{font-size:11px;opacity:.7;margin-top:2px}
 .date-filter{display:flex;gap:8px;justify-content:center;margin-bottom:20px}
 .date-filter button{padding:6px 14px;font-size:12px;font-weight:600;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;background:#fff;color:#888;cursor:pointer}
@@ -168,6 +168,10 @@ body{font-family:Inter,sans-serif;background:#f5f5f5;color:#111;min-height:100vh
         <span id="payStepTitle" style="font-size:14px;font-weight:600"></span>
       </div>
       <div id="payFormFields"></div>
+      <div class="form-group" id="payMethodGroup" style="margin-top:4px">
+        <label>Способ выплаты</label>
+        <select id="payMethod"><option>Наличные</option><option>Перевод</option><option>Терминал</option><option>Расчетный счет</option></select>
+      </div>
       <button class="btn-grad" onclick="confirmPay()" id="payBtn">Подтвердить выплату</button>
     </div>
   </div>
@@ -448,15 +452,12 @@ function buildPayForm(type){
     var unpaid=opsArr.filter(function(o){return o.category==='Продажа'&&!o.fullyPaid;});
     if(unpaid.length===0){html='<p style="color:#888;font-size:13px;text-align:center;padding:20px">Нет невыплаченных продаж</p>';}
     else{
-      var totalDebt=unpaid.reduce(function(s,o){return s+o.amount-(o.paidOut||0);},0);
-      html='<div class="payout-summary"><div class="payout-summary__label">Не выплачено всего</div><div class="payout-summary__value" id="pdTotal">'+totalDebt.toLocaleString()+' руб</div></div>';
       unpaid.forEach(function(o,i){
         var debt=o.amount-(o.paidOut||0);
         html+='<div class="debt-item"><div class="debt-item__info"><div class="debt-item__title">'+(o.model||'Скутер')+'</div><div class="debt-item__meta">'+o.date+' · '+(o.client||'')+' · сумма: '+o.amount.toLocaleString()+' руб</div></div>';
         html+='<div style="text-align:right"><div class="debt-item__amount" id="pd_'+i+'">'+debt.toLocaleString()+' руб</div>';
-        html+='<input type="number" class="debt-input" id="pp_'+i+'" step="any" value="'+debt+'"></div></div>';
+        html+='<input type="number" class="debt-input" id="pp_'+i+'" step="any" value="0" placeholder="'+debt+'"></div></div>';
       });
-      html+='<div style="margin-top:8px;font-size:11px;color:#888;text-align:center">Можно изменить сумму каждой выплаты</div>';
     }
   } else if(type==='rent'){
     var unpaid=opsArr.filter(function(o){return o.category==='Аренда'&&!o.fullyPaid;});
@@ -468,9 +469,8 @@ function buildPayForm(type){
         var comm=o.amount*0.15,debt=comm-(o.paidOut||0);
         html+='<div class="debt-item"><div class="debt-item__info"><div class="debt-item__title">'+(o.model||'Аренда')+'</div><div class="debt-item__meta">'+o.date+' · '+o.amount.toLocaleString()+' руб · 15% = '+comm.toLocaleString()+' руб</div></div>';
         html+='<div style="text-align:right"><div class="debt-item__amount" id="pd_'+i+'">'+debt.toLocaleString()+' руб</div>';
-        html+='<input type="number" class="debt-input" id="pp_'+i+'" step="any" value="'+debt.toFixed(0)+'"></div></div>';
+        html+='<input type="number" class="debt-input" id="pp_'+i+'" step="any" value="0" placeholder="'+debt.toFixed(0)+'"></div></div>';
       });
-      html+='<div style="margin-top:8px;font-size:11px;color:#888;text-align:center">Можно откорректировать сумму</div>';
     }
   } else if(type==='trans'){
     var unpaid=opsArr.filter(function(o){return o.category==='Транспорт'&&!o.fullyPaid;});
@@ -482,7 +482,7 @@ function buildPayForm(type){
         var debt=o.amount-(o.paidOut||0);
         html+='<div class="debt-item"><div class="debt-item__info"><div class="debt-item__title">'+(o.cargo||'Перевозка')+'</div><div class="debt-item__meta">'+o.date+' · '+(o.route||'')+' · '+o.amount.toLocaleString()+' руб</div></div>';
         html+='<div style="text-align:right"><div class="debt-item__amount" id="pd_'+i+'">'+debt.toLocaleString()+' руб</div>';
-        html+='<input type="number" class="debt-input" id="pp_'+i+'" step="any" value="'+debt+'"></div></div>';
+        html+='<input type="number" class="debt-input" id="pp_'+i+'" step="any" value="0" placeholder="'+debt+'"></div></div>';
       });
     }
   } else if(type==='other'){
@@ -580,9 +580,11 @@ function confirmPayOther(){
 }
 
 function recordPay(label,total,items,note,pDate){
+  var payMethodEl=document.getElementById('payMethod');
+  var payMethod=payMethodEl?payMethodEl.value:'';
   var rec={
     label:label,total:total,date:pDate||new Date().toISOString().split('T')[0],
-    items:items,note:note||'',createdAt:Date.now()
+    items:items,note:note||'',payMethod:payMethod,createdAt:Date.now()
   };
   DB.collection('galaxymoto_finance_payouts').add(rec);
   closePayModal();
@@ -591,17 +593,20 @@ function recordPay(label,total,items,note,pDate){
 }
 
 function renderPays(){
-  var html='<div class="ops-header"><span>Дата / за что</span><span>Сумма</span></div>';
+  var html='<div class="ops-header"><span>Дата</span><span>Категория</span><span>Способ</span><span>Сумма</span></div>';
   if(paysArr.length===0){
     html+='<div style="text-align:center;padding:30px 20px;color:#888;font-size:13px">Нет выплат</div>';
   } else {
     paysArr.forEach(function(p){
+      var cat=p.label||'';
       var detail=(p.items||[]).map(function(it){return it.desc;}).join(', ');
-      html+='<div class="ops-item"><div><span style="font-size:12px;font-weight:600">Выплата: '+esc(p.label)+'</span>'+
-        (detail?'<br><span style="font-size:11px;color:#999">'+esc(detail)+'</span>':'')+
-        (p.note?'<br><span style="font-size:10px;color:#aaa">'+esc(p.note)+'</span>':'')+'</div>'+
-        '<span style="font-size:11px;color:#aaa;margin-right:6px">'+(p.date?p.date.slice(5):'')+'</span>'+
-        '<span style="font-size:13px;font-weight:700;color:#c62828">-'+p.total.toLocaleString()+' руб</span></div>';
+      if(detail) cat+=' ('+detail+')';
+      var payM=p.payMethod||'—';
+      html+='<div class="ops-item">'+
+        '<span style="font-size:12px;color:#888;width:60px;flex-shrink:0">'+(p.date?p.date.slice(5):'')+'</span>'+
+        '<span style="font-size:12px;font-weight:500;flex:1;margin:0 8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(cat)+'</span>'+
+        '<span style="font-size:11px;color:#888;width:70px;flex-shrink:0;text-align:center">'+payM+'</span>'+
+        '<span style="font-size:13px;font-weight:700;color:#c62828;width:100px;flex-shrink:0;text-align:right">-'+p.total.toLocaleString()+' руб</span></div>';
     });
   }
   document.getElementById('paysList').innerHTML=html;
