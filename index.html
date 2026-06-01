@@ -1473,7 +1473,7 @@ document.addEventListener('click', function(e) {
       if(d.workDone&&d.workDone.items&&d.workDone.items.length>0) prev.push(d);
     });
     prev.sort(function(a,b){return a.date.localeCompare(b.date)});
-    var msg="\uD83D\uDEF5 \u041D\u041E\u0412\u0410\u042F \u0417\u0410\u041F\u0418\u0421\u042C \u041D\u0410 \u0421\u0415\u0420\u0412\u0418\u0421!\n\n";
+    var msg="\uD83D\uDEF5 \u041D\u041E\u0412\u0410\u042F \u0417\u0410\u041F\u0418\u0421\u042C \u2116 "+(dt.orderNumber||"")+" \u041D\u0410 \u0421\u0415\u0420\u0412\u0418\u0421!\n\n";
     msg+="\uD83D\uDCC5 \u0414\u0430\u0442\u0430: "+sd+"\n";
     msg+="\u0412\u0440\u0435\u043C\u044F: "+st+"\n";
     msg+="\uD83D\uDC64 \u0418\u043C\u044F: "+n+"\n";
@@ -1495,7 +1495,7 @@ document.addEventListener('click', function(e) {
     tgBroadcast(msg);
   }).catch(function(){
     // fallback: простое уведомление
-    var msg="\uD83D\uDEF5 \u041D\u041E\u0412\u0410\u042F \u0417\u0410\u041F\u0418\u0421\u042C!\n\n";
+    var msg="\uD83D\uDEF5 \u041D\u041E\u0412\u0410\u042F \u0417\u0410\u041F\u0418\u0421\u042C \u2116 "+(dt.orderNumber||"")+"!\n\n";
     msg+="\uD83D\uDCC5 "+sd+"\n";
     msg+="\u0412\u0440\u0435\u043C\u044F: "+st+"\n";
     msg+="\uD83D\uDC64 "+n+"\n";
