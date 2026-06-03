@@ -109,15 +109,30 @@ export default async function handler(req, res) {
     const now = new Date();
     const ticketId = 'S' + Date.now().toString(36).toUpperCase();
 
+    // Получаем следующий порядковый номер
+    let orderNumber = 1;
+    try {
+      const countUrl = `${FIRESTORE_URL}/galaxymoto_bookings?key=${API_KEY}&pageSize=1&orderBy=orderNumber%20desc`;
+      const countResp = await fetch(countUrl);
+      if (countResp.ok) {
+        const countData = await countResp.json();
+        if (countData.documents && countData.documents.length > 0) {
+          const lastOrder = parseInt(countData.documents[0].fields?.orderNumber?.integerValue || 0);
+          orderNumber = lastOrder + 1;
+        }
+      }
+    } catch(e) {}
+    
     const ticketData = {
       id: ticketId,
+      orderNumber: orderNumber,
       name: name,
       phone: phone,
-      comment: (service ? service : '') + (comment ? ' | ' + comment : ''),
+      model: service || '',
+      notes: comment || '',
       date: date,
       time: time,
-      status: "new",
-      
+      status: 'new',
       source: 'telegram',
       createdAt: now.toISOString(),
       updatedAt: now.toISOString(),

@@ -103,9 +103,9 @@ async function createTicket(text, chatId, from) {
       if (data.time) reply += ` ${data.time}`;
       reply += `\n👤 ${data.name}`;
       if (data.phone) reply += `\n📞 ${data.phone}`;
-      if (data.service) reply += `\n🔧 ${data.service}`;
-      if (data.comment) reply += `\n💬 ${data.comment}`;
-      reply += `\n\nСтатус: Новая`;
+      if (data.model) reply += `\n🔧 ${data.model}`;
+      if (data.notes) reply += `\n💬 ${data.notes}`;
+      reply += `\n\nСтатус: НОВАЯ`;
       return reply;
     }
     return '❌ Ошибка создания заявки. Попробуй ещё раз.';
