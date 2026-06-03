@@ -281,4 +281,4 @@ a{-webkit-tap-highlight-color:transparent}
 .faq-page__subtitle{font-size:.85rem!important;color:#888!important;font-weight:400!important;line-height:1.5!important}
 
 /* FAQ shadows */
-.home-faq__item{border:1px solid #eee;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.04);margin-bottom:12px;overflow:hidden;cursor:pointer}
+.home-faq__item{border:1px solid #eee;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.04);margin-bottom:12px;overflow:hidden;cursor:pointer
