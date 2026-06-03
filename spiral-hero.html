@@ -213,7 +213,7 @@ function Star() {
   this.dx = this.distance * Math.cos(this.angle);
   this.dy = this.distance * Math.sin(this.angle);
   this.spiralLoc = (1 - Math.pow(1 - Math.random(), 3.0)) / 1.3;
-  this.z = abs(rnd(0.5 * CAMERA_Z, TRAVEL_DIST + CAMERA_Z));
+  this.z = Math.abs(rnd(0.5 * CAMERA_Z, TRAVEL_DIST + CAMERA_Z));
   this.z = lerp(this.z, TRAVEL_DIST / 2, 0.3 * this.spiralLoc);
   this.strokeWeight = Math.pow(Math.random(), 2.0);
   this.offsetY = rnd(-20, 20);
