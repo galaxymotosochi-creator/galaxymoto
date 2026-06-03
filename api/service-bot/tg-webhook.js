@@ -18,9 +18,24 @@ export default async function handler(req, res) {
     if (!update.message) return res.json({ ok: true });
 
     const msg = update.message;
+    const msgId = msg.message_id;
     const chatId = msg.chat.id;
     const text = (msg.text || '').trim();
     const replyTo = msg.reply_to_message;
+
+    // Проверка дубликатов: если message_id уже обработан — пропускаем
+    var dedupCheckUrl = 'https://firestore.googleapis.com/v1/projects/capsulehouse-1c0c9/databases/(default)/documents/webhook_dedup/' + msgId + '?key=AIzaSyAY_1e66dxHKq46HhUVRo8x1yB7ZbyPJzc';
+    var dedupCheck = await fetch(dedupCheckUrl);
+    if (dedupCheck.ok) {
+      console.log('Dedup: message already processed');
+      return res.json({ ok: true, dedup: true });
+    }
+    // Сохраняем message_id
+    await fetch(dedupCheckUrl, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fields: { ts: { stringValue: new Date().toISOString() } } }),
+    }).catch(function(){});
 
     if (!text) return res.json({ ok: true });
 
