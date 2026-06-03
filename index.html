@@ -1890,7 +1890,7 @@ panel.addEventListener('touchend', function(e) {
       <div class="chat-msg chat-msg--system">👋 Напишите нам, мы онлайн!</div>
     </div>
     <div class="chat-input-area">
-      <input class="chat-input" id="chatInput" placeholder="Введите сообщение..." onkeydown="if(event.key===Enter)sendChatMsg()">
+      <input class="chat-input" id="chatInput" placeholder="Введите сообщение..." onkeydown="if(event.key==='Enter')sendChatMsg()">
       <button class="chat-send-btn" id="chatSendBtn" onclick="sendChatMsg()">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
@@ -1906,7 +1906,31 @@ function getVisitorId(){var id=localStorage.getItem("galaxy_visitor_id");if(!id)
 function toggleChat(){chatOpen=!chatOpen;document.getElementById("chatWindow").classList.toggle("chat-window--open",chatOpen);if(chatOpen&&!visitorName){document.getElementById("chatNameForm").classList.add("chat-name-form--show");setTimeout(function(){document.getElementById("chatNameInput").focus()},300)}else if(chatOpen){document.getElementById("chatInput").focus()}var fab=document.querySelector(".fab");if(fab)fab.style.display=chatOpen?"none":""}
 function setChatName(){var name=document.getElementById("chatNameInput").value.trim();if(!name){document.getElementById("chatNameInput").focus();return}visitorName=name;localStorage.setItem("galaxy_chat_name",name);document.getElementById("chatNameForm").classList.remove("chat-name-form--show");document.getElementById("chatInput").focus();addChatMsg("system","👋 "+name+", чем можем помочь?")}
 function addChatMsg(role,text){var msgs=document.getElementById("chatMessages");var div=document.createElement("div");div.className="chat-msg chat-msg--"+role;div.innerHTML="<div>"+text+"</div><div class=\"chat-msg__time\">"+new Date().toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"})+"</div>";msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight}
-function sendChatMsg(){var input=document.getElementById("chatInput");var text=input.value.trim();if(!text)return;input.value="";document.getElementById("chatSendBtn").disabled=true;addChatMsg("client",text);if(!visitorName){document.getElementById("chatNameForm").classList.add("chat-name-form--show");document.getElementById("chatInput").disabled=true;document.getElementById("chatSendBtn").disabled=false;return}fetch("https://galaxymoto.vercel.app/api/chat/send",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:text,name:visitorName,phone:localStorage.getItem("galaxy_chat_phone")||"",visitorId:getVisitorId()})}).catch(function(){}).then(function(){document.getElementById("chatSendBtn").disabled=false;document.getElementById("chatInput").focus()})}
+function sendChatMsg(){var input=document.getElementById("chatInput");var text=input.value.trim();if(!text)return;input.value="";document.getElementById("chatSendBtn").disabled=true;addChatMsg("client",text);if(!visitorName){document.getElementById("chatNameForm").classList.add("chat-name-form--show");document.getElementById("chatInput").disabled=true;document.getElementById("chatSendBtn").disabled=false;return}
+var vid=getVisitorId();
+if(window.db){
+  window.db.collection("chat_messages").doc(vid).collection("messages").add({role:"client",text:text,name:visitorName,createdAt:new Date().toISOString()}).catch(function(){});
+}
+fetch("https://galaxymoto.vercel.app/api/chat/send",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:text,name:visitorName,phone:localStorage.getItem("galaxy_chat_phone")||"",visitorId:vid})}).catch(function(){}).then(function(){document.getElementById("chatSendBtn").disabled=false;document.getElementById("chatInput").focus()})}
+// Поллинг ответов от менеджера
+var pollTimer=null;
+function startPolling(){
+  if(pollTimer)clearInterval(pollTimer);
+  pollTimer=setInterval(function(){
+    var vid=getVisitorId();
+    if(!window.db||!document.getElementById("chatWindow").classList.contains("chat-window--open"))return;
+    window.db.collection("chat_messages").doc(vid).collection("messages").orderBy("createdAt","asc").get().then(function(snap){
+      snap.forEach(function(doc){
+        var d=doc.data();
+        if(d.role==="manager"&&!d._shown){
+          addChatMsg("manager",d.text);
+          d._shown=true;
+        }
+      });
+    }).catch(function(){});
+  },3000);
+}
+startPolling();
 // Fallback: клик через событие мыши (срабатывает до React)
 // ПЕРЕХВАТЫВАЕМ клик на capture phase (ДО React)
 document.addEventListener("mousedown",function(e){
