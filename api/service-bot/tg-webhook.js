@@ -30,7 +30,7 @@ export default async function handler(req, res) {
     if (replyTo && replyTo.text) {
       const replyText = replyTo.text;
       // Ищем номер заявки в исходном сообщении
-      const idMatch = replyText.match(/№(\d+)/);
+      const idMatch = replyText.match(/№(\w+)/);
       if (idMatch) {
         const ticketId = idMatch[1];
         const status = parseStatus(text);
@@ -38,15 +38,47 @@ export default async function handler(req, res) {
           // Имя мастера из сообщения (после "взял")
           const masterName = extractMasterName(text);
           // Обновляем статус через API
-          await fetch('https://galaxymoto.vercel.app/api/service-bot/update-status', {
+          const statusResp = await fetch('https://galaxymoto.vercel.app/api/service-bot/update-status', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ticketId, status, masterName: masterName || msg.from?.first_name || 'Мастер' }),
-          }).catch(() => {});
+          }).then(r => r.json()).catch(() => ({}));
+          
           var statusLabels = {'new':'НОВАЯ','in_progress':'В РАБОТЕ','completed':'ВЫПОЛНЕНА','cancelled':'ОТМЕНЕНА'};
-          var replyLabel = statusLabels[status] || status;
-          if (masterName) replyLabel += ' — ' + masterName;
-          responseText = `✅ Заявка №${ticketId}: ${replyLabel}`;
+          
+          // Получаем данные заявки для ответа
+          var ticketData = null;
+          try {
+            var getUrl = 'https://firestore.googleapis.com/v1/projects/capsulehouse-1c0c9/databases/(default)/documents/galaxymoto_bookings/' + ticketId + '?key=AIzaSyAY_1e66dxHKq46HhUVRo8x1yB7ZbyPJzc';
+            var getResp = await fetch(getUrl);
+            if (getResp.ok) {
+              var json = await getResp.json();
+              var f = json.fields || {};
+              ticketData = {
+                orderNumber: f.orderNumber?.integerValue || f.orderNumber?.stringValue || '',
+                name: f.name?.stringValue || '',
+                model: f.model?.stringValue || '',
+                master: f.master?.stringValue || '',
+                date: f.date?.stringValue || '',
+                time: f.time?.stringValue || '',
+              };
+            }
+          } catch(e) {}
+          
+          if (ticketData) {
+            var displayNum = ticketData.orderNumber || ticketId;
+            var statusName = statusLabels[status] || status;
+            var masterNameDisplay = ticketData.master || masterName || '';
+            responseText = `✅ Заявка №${displayNum} принята в работу!\n`;
+            responseText += `\n📅 ${ticketData.date}`;
+            if (ticketData.time) responseText += ` ${ticketData.time}`;
+            responseText += `\n👤 ${ticketData.name}`;
+            if (ticketData.model) responseText += `\n🔧 ${ticketData.model}`;
+            if (masterNameDisplay) responseText += `\n👨‍🔧 Мастер: ${masterNameDisplay}`;
+            responseText += `\n\nСтатус: ${statusName}`;
+          } else {
+            responseText = `✅ Заявка №${ticketId} принята в работу!`;
+          }
         } else {
           responseText = '❓ Не понял статус. Напиши: "беру", "готово", "жду запчасти"';
         }
@@ -98,7 +130,7 @@ async function createTicket(text, chatId, from) {
     });
     const data = await resp.json();
     if (data.ok) {
-      let reply = `✅ Заявка №${data.orderNumber || data.ticketId} создана!\n`;
+      let reply = `✅ Заявка №${data.ticketId} создана!\n`;
       reply += `\n📅 ${data.date}`;
       if (data.time) reply += ` ${data.time}`;
       reply += `\n👤 ${data.name}`;
