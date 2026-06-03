@@ -114,7 +114,7 @@ function projectDot(x, y, z, sz, t2) {
   if (z > nc) {
     var d = z - nc;
     ctx.beginPath();
-    ctx.arc(ZOOM * x / d, ZOOM * y / d, 400 * sz / d, 0, Math.PI * 2);
+    ctx.arc(ZOOM * x / d, ZOOM * y / d, 1500 * sz / d, 0, Math.PI * 2);
     ctx.fill();
   }
 }
@@ -144,7 +144,7 @@ function render() {
   var elapsed = (Date.now() - startTime) / 1000;
   time = (elapsed % 25) / 25;
 
-  ctx.fillStyle = '#0a0a12';
+  ctx.fillStyle = '#050508';
   ctx.fillRect(0, 0, W, H);
   ctx.save();
   ctx.translate(W / 2, H / 2);
@@ -157,7 +157,7 @@ function render() {
   for (var i = 0; i < TRAIL_LENGTH; i++) {
     var f = map(i, 0, TRAIL_LENGTH, 1.1, 0.1);
     var sw = (1.3 * (1 - t1) + 3.0 * Math.sin(Math.PI * t1)) * f;
-    ctx.fillStyle = 'rgba(200,180,255,' + (f * 0.3) + ')';
+    ctx.fillStyle = 'rgba(230,210,255,' + (f * 0.6) + ')';
     var pt = t1 - 0.00015 * i;
     var pos = spiralPath(pt);
     var rot = rotatePoint(pos, { x: pos.x + 5, y: pos.y + 5 }, t1, false);
@@ -208,7 +208,7 @@ function render() {
     var vx = (s.z - CAMERA_Z) * sx / ZOOM;
     var vy = (s.z - CAMERA_Z) * sy / ZOOM;
     var sm = dp < 0.6 ? 1.0 + dp * 0.2 : 1.2 * (1.0 - (dp - 0.6) / 0.4) + s.finalScale * ((dp - 0.6) / 0.4);
-    ctx.fillStyle = 'rgba(' + s.color[0] + ',' + s.color[1] + ',' + s.color[2] + ',0.8)';
+    ctx.fillStyle = 'rgba(' + s.color[0] + ',' + s.color[1] + ',' + s.color[2] + ',1.0)';
     projectDot(vx, vy, s.z, 8.5 * s.strokeWeight * sm, t2);
   }
 
