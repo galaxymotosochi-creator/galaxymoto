@@ -158,8 +158,8 @@ export default async function handler(req, res) {
       ticketId,
       name: ticketData.name,
       phone: ticketData.phone,
-      service: service,
-      comment: comment,
+      model: ticketData.model,
+      notes: ticketData.notes,
       date: ticketData.date,
       time: ticketData.time,
     });
