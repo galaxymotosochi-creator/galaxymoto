@@ -41,7 +41,8 @@ export default async function handler(req, res) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ticketId, status, masterName: msg.from?.first_name || 'Мастер' }),
           }).catch(() => {});
-          responseText = `✅ Заявка №${ticketId}: статус изменён на «${status}»`;
+          var statusLabels = {'new':'НОВАЯ','in_progress':'В РАБОТЕ','completed':'ВЫПОЛНЕНА','cancelled':'ОТМЕНЕНА'};
+          responseText = `✅ Заявка №${ticketId}: статус изменён на «${statusLabels[status]||status}»`;
         } else {
           responseText = '❓ Не понял статус. Напиши: "беру", "готово", "жду запчасти"';
         }
@@ -68,10 +69,10 @@ export default async function handler(req, res) {
 
 function parseStatus(text) {
   const lower = text.toLowerCase();
-  if (lower.includes('беру') || lower.includes('в работу')) return 'В работе';
-  if (lower.includes('готов') || lower.includes('сделал') || lower.includes('выполнил')) return 'Выполнено';
-  if (lower.includes('жду') || lower.includes('запчасти') || lower.includes('ожид')) return 'Ожидание запчастей';
-  if (lower.includes('отмен') || lower.includes('не надо')) return 'Отменено';
+  if (lower.includes('беру') || lower.includes('в работу')) return 'in_progress';
+  if (lower.includes('готов') || lower.includes('сделал') || lower.includes('выполнил')) return 'completed';
+  if (lower.includes('жду') || lower.includes('запчасти') || lower.includes('ожид')) return 'in_progress';
+  if (lower.includes('отмен') || lower.includes('не надо')) return 'cancelled';
   return null;
 }
 

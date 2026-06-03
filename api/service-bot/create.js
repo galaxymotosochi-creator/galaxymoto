@@ -116,7 +116,7 @@ export default async function handler(req, res) {
       comment: (service ? service : '') + (comment ? ' | ' + comment : ''),
       date: date,
       time: time,
-      status: 'Новая',
+      status: "new",
       master: masterName || 'Из Telegram',
       source: 'telegram',
       createdAt: now.toISOString(),
