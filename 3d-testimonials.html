@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Testimonials — demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #0a0a0f;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    .scene {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      height: 450px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      background: #0e0e16;
+      perspective: 300px;
+    }
+
+    .scene-inner {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 16px;
+      transform: translateX(-100px) translateY(0px) translateZ(-100px) rotateX(20deg) rotateY(-10deg) rotateZ(20deg);
+    }
+
+    /* ===== Marquee Vertical ===== */
+    .marquee-col {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      animation: marqueeDown 40s linear infinite;
+      flex-shrink: 0;
+    }
+    .marquee-col--up {
+      animation-direction: reverse;
+    }
+    .scene-inner:hover .marquee-col {
+      animation-play-state: paused;
+    }
+
+    @keyframes marqueeDown {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-50%); }
+    }
+
+    /* ===== Card ===== */
+    .t-card {
+      width: 180px; flex-shrink: 0;
+      background: linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 16px;
+      transition: all .3s ease;
+    }
+    .t-card:hover {
+      border-color: rgba(139,92,246,0.3);
+      box-shadow: 0 4px 20px rgba(139,92,246,0.1);
+    }
+
+    .t-card__header {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .t-card__avatar {
+      width: 36px; height: 36px; border-radius: 50%; overflow: hidden; flex-shrink: 0;
+      background: linear-gradient(135deg, #0bc5ea, #8b5cf6);
+    }
+    .t-card__avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .t-card__avatar--fallback {
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 600; color: #fff;
+    }
+    .t-card__info { display: flex; flex-direction: column; }
+    .t-card__name { font-size: 13px; font-weight: 600; color: #fff; display: flex; align-items: center; gap: 4px; }
+    .t-card__country { font-size: 11px; }
+    .t-card__username { font-size: 11px; color: rgba(255,255,255,0.4); font-weight: 500; }
+    .t-card__body { margin-top: 10px; font-size: 12px; line-height: 1.5; color: rgba(255,255,255,0.65); }
+
+    /* ===== Gradient overlays ===== */
+    .fade-top {
+      position: absolute; left: 0; right: 0; top: 0; height: 25%;
+      background: linear-gradient(to bottom, #0e0e16, transparent);
+      pointer-events: none; z-index: 2;
+    }
+    .fade-bottom {
+      position: absolute; left: 0; right: 0; bottom: 0; height: 25%;
+      background: linear-gradient(to top, #0e0e16, transparent);
+      pointer-events: none; z-index: 2;
+    }
+
+    .title { position: absolute; top: 16px; left: 50%; transform: translateX(-50%); font-size: 13px; color: #555; z-index: 3; letter-spacing: 0.5px; }
+  </style>
+</head>
+<body>
+
+<div class="scene">
+  <div class="title">3D Testimonials · 4 колонки</div>
+  <div class="scene-inner" id="sceneInner"></div>
+  <div class="fade-top"></div>
+  <div class="fade-bottom"></div>
+</div>
+
+<script>
+const testimonials = [
+  { name: 'Ava Green', username: '@ava', body: 'Cascade AI made my workflow 10x faster!', img: 'https://randomuser.me/api/portraits/women/32.jpg', country: '🇦🇺' },
+  { name: 'Ana Miller', username: '@ana', body: 'Vertical marquee is a game changer!', img: 'https://randomuser.me/api/portraits/women/68.jpg', country: '🇩🇪' },
+  { name: 'Mateo Rossi', username: '@mat', body: 'Animations are buttery smooth!', img: 'https://randomuser.me/api/portraits/men/51.jpg', country: '🇮🇹' },
+  { name: 'Maya Patel', username: '@maya', body: 'Setup was a breeze!', img: 'https://randomuser.me/api/portraits/women/53.jpg', country: '🇮🇳' },
+  { name: 'Noah Smith', username: '@noah', body: 'Best marquee component!', img: 'https://randomuser.me/api/portraits/men/33.jpg', country: '🇺🇸' },
+  { name: 'Lucas Stone', username: '@luc', body: 'Very customizable and smooth.', img: 'https://randomuser.me/api/portraits/men/22.jpg', country: '🇫🇷' },
+  { name: 'Haruto Sato', username: '@haru', body: 'Impressive performance on mobile!', img: 'https://randomuser.me/api/portraits/men/85.jpg', country: '🇯🇵' },
+  { name: 'Emma Lee', username: '@emma', body: 'Love the pause on hover feature!', img: 'https://randomuser.me/api/portraits/women/45.jpg', country: '🇨🇦' },
+  { name: 'Carlos Ray', username: '@carl', body: 'Great for testimonials and logos.', img: 'https://randomuser.me/api/portraits/men/61.jpg', country: '🇪🇸' },
+  { name: 'Анна', username: '@anna', body: 'Отличный сервис! Сделали быстро и качественно.', img: 'https://randomuser.me/api/portraits/women/17.jpg', country: '🇷🇺' },
+  { name: 'Дмитрий', username: '@dmitry', body: 'Профессиональный подход к делу!', img: 'https://randomuser.me/api/portraits/men/44.jpg', country: '🇷🇺' },
+  { name: 'Sophie', username: '@sophie', body: 'Top quality and fast delivery!', img: 'https://randomuser.me/api/portraits/women/44.jpg', country: '🇫🇷' },
+];
+
+function cardHTML(t) {
+  var initial = t.name.charAt(0);
+  return '<div class="t-card">' +
+    '<div class="t-card__header">' +
+      '<div class="t-card__avatar">' +
+        '<img src="' + t.img + '" alt="' + t.name + '" loading="lazy" onerror="this.parentNode.innerHTML=\'' + initial + '\';this.parentNode.className+=\' t-card__avatar--fallback\'">' +
+      '</div>' +
+      '<div class="t-card__info">' +
+        '<div class="t-card__name">' + t.name + ' <span class="t-card__country">' + t.country + '</span></div>' +
+        '<div class="t-card__username">' + t.username + '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="t-card__body">"' + t.body + '"</div>' +
+  '</div>';
+}
+
+function init() {
+  var inner = document.getElementById('sceneInner');
+  var items = '';
+  for (var i = 0; i < testimonials.length; i++) items += cardHTML(testimonials[i]);
+  var itemsUp = '';
+  for (var i = 0; i < testimonials.length; i++) itemsUp += cardHTML(testimonials[i]);
+
+  // 4 колонки: вниз, вверх, вниз, вверх
+  inner.innerHTML =
+    '<div class="marquee-col">' + items + items + items + '</div>' +
+    '<div class="marquee-col marquee-col--up">' + itemsUp + itemsUp + itemsUp + '</div>' +
+    '<div class="marquee-col">' + items + items + items + '</div>' +
+    '<div class="marquee-col marquee-col--up">' + itemsUp + itemsUp + itemsUp + '</div>';
+}
+init();
+</script>
+
+</body>
+</html>
