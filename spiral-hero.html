@@ -127,111 +127,181 @@
 // ===== Spiral Animation =====
 var canvas = document.getElementById('spiral');
 var ctx = canvas.getContext('2d');
-var W, H, centerX, centerY;
-var stars = [];
+var W, H;
 var time = 0;
-var NUM_STARS = 3000;
-var TRAIL = 60;
-var CAMERA_Z = -500;
+var NUM_STARS = 5000;
+var TRAIL_LENGTH = 80;
+var CAMERA_Z = -400;
+var TRAVEL_DIST = 3400;
+var ZOOM = 100;
+var START_DOT_Y = 28;
+var CHANGE_EVENT = 0.32;
 
 function resize() {
   W = canvas.width = window.innerWidth;
   H = canvas.height = window.innerHeight;
-  centerX = W / 2;
-  centerY = H / 2;
 }
 resize();
 window.addEventListener('resize', resize);
 
-// Star class
-function Star() {
-  this.reset(true);
+// Utils
+function rnd(min, max) { return min + Math.random() * (max - min); }
+function constrain(v, mi, ma) { return Math.min(Math.max(v, mi), ma); }
+function map(v, s1, st1, s2, st2) { return s2 + (st2 - s2) * ((v - s1) / (st1 - s1)); }
+function lerp(a, b, t) { return a * (1 - t) + b * t; }
+function ease(p, g) { return p < 0.5 ? 0.5 * Math.pow(2 * p, g) : 1 - 0.5 * Math.pow(2 * (1 - p), g); }
+function easeOutElastic(x) {
+  var c4 = (2 * Math.PI) / 4.5;
+  if (x <= 0) return 0; if (x >= 1) return 1;
+  return Math.pow(2, -8 * x) * Math.sin((x * 8 - 0.75) * c4) + 1;
 }
 
-Star.prototype.reset = function(initial) {
-  this.z = initial ? Math.random() * CAMERA_Z : CAMERA_Z;
-  this.startZ = this.z;
-  this.x = (Math.random() - 0.5) * 2000;
-  this.y = (Math.random() - 0.5) * 2000;
-  this.trail = [];
-  var colors = [
-    { r: 139, g: 92, b: 246 }, // фиолетовый
-    { r: 11, g: 197, b: 234 },  // голубой
-    { r: 255, g: 107, b: 107 }, // розовый
-    { r: 100, g: 200, b: 255 }, // светлоголубой
-  ];
-  var c = colors[Math.floor(Math.random() * colors.length)];
-  this.color = c;
-  this.speed = 0.5 + Math.random() * 1.5;
-  this.angleOffset = Math.random() * Math.PI * 2;
-  this.radius = 50 + Math.random() * 150;
-};
+// Colors
+var COLORS = [
+  { r: 139, g: 92, b: 246 },
+  { r: 11, g: 197, b: 234 },
+  { r: 255, g: 107, b: 107 },
+  { r: 100, g: 200, b: 255 },
+  { r: 200, g: 150, b: 255 },
+  { r: 50, g: 220, b: 240 },
+];
 
-Star.prototype.update = function() {
-  this.z += this.speed * 2;
-  
-  // Spiral motion
-  var t = (this.z - CAMERA_Z) / 4000;
-  var angle = t * 8 + this.angleOffset;
-  var r = this.radius * (1 + t * 2);
-  
-  var sx = Math.cos(angle) * r;
-  var sy = Math.sin(angle) * r * 0.6;
-  
-  // Perspective projection
-  var scale = 300 / (this.z + 300);
-  var px = centerX + sx * scale;
-  var py = centerY + sy * scale;
-  
-  this.trail.push({ x: px, y: py, z: this.z });
-  if (this.trail.length > TRAIL) this.trail.shift();
-  
-  if (this.z > 3800) this.reset(false);
-};
+function spiralPath(p) {
+  p = constrain(1.2 * p, 0, 1);
+  p = ease(p, 1.8);
+  var turns = 6;
+  var theta = 2 * Math.PI * turns * Math.sqrt(p);
+  var r = 170 * Math.sqrt(p);
+  return { x: r * Math.cos(theta), y: r * Math.sin(theta) + START_DOT_Y };
+}
 
-Star.prototype.draw = function() {
-  if (this.trail.length < 2) return;
-  
-  for (var i = 1; i < this.trail.length; i++) {
-    var alpha = i / this.trail.length;
-    var p = this.trail[i];
-    var prev = this.trail[i - 1];
-    
-    var sz = (p.z + 300) / 4000;
-    var size = Math.max(0.5, sz * 3);
-    
+function rotatePoint(v1, v2, p, orientation) {
+  var mx = (v1.x + v2.x) / 2, my = (v1.y + v2.y) / 2;
+  var dx = v1.x - mx, dy = v1.y - my;
+  var angle = Math.atan2(dy, dx);
+  var o = orientation ? -1 : 1;
+  var rad = Math.sqrt(dx * dx + dy * dy);
+  var bounce = Math.sin(p * Math.PI) * 0.05 * (1 - p);
+  return {
+    x: mx + rad * (1 + bounce) * Math.cos(angle + o * Math.PI * easeOutElastic(p)),
+    y: my + rad * (1 + bounce) * Math.sin(angle + o * Math.PI * easeOutElastic(p))
+  };
+}
+
+function projectDot(posX, posY, posZ, sizeFactor, t2) {
+  var newCamZ = CAMERA_Z + ease(Math.pow(t2, 1.2), 1.8) * TRAVEL_DIST;
+  if (posZ > newCamZ) {
+    var depth = posZ - newCamZ;
+    var x = ZOOM * posX / depth;
+    var y = ZOOM * posY / depth;
+    var sw = 400 * sizeFactor / depth;
+    ctx.lineWidth = sw;
     ctx.beginPath();
-    ctx.moveTo(prev.x, prev.y);
-    ctx.lineTo(p.x, p.y);
-    ctx.strokeStyle = 'rgba(' + this.color.r + ',' + this.color.g + ',' + this.color.b + ',' + (alpha * 0.4) + ')';
-    ctx.lineWidth = size;
-    ctx.stroke();
+    ctx.arc(x, y, 0.5, 0, Math.PI * 2);
+    ctx.fill();
   }
-  
-  // Dot at the end
-  var last = this.trail[this.trail.length - 1];
-  var sz = (last.z + 300) / 4000;
-  var size = Math.max(1, sz * 4);
-  ctx.beginPath();
-  ctx.arc(last.x, last.y, size, 0, Math.PI * 2);
-  ctx.fillStyle = 'rgba(' + this.color.r + ',' + this.color.g + ',' + this.color.b + ',0.8)';
-  ctx.fill();
-};
+}
 
-// Create stars
+// Stars
+var stars = [];
+function Star() {
+  this.z = rnd(0, 1) * CAMERA_Z;
+  this.x = rnd(-1, 1) * 1000;
+  this.y = rnd(-1, 1) * 1000;
+  this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+  this.speed = 0.003 + Math.random() * 0.005;
+  this.offset = Math.random() * Math.PI * 2;
+  this.radius = 50 + Math.random() * 120;
+  this.maxZ = rnd(2000, 4000);
+}
+
 for (var i = 0; i < NUM_STARS; i++) stars.push(new Star());
 
-function loop() {
-  ctx.clearRect(0, 0, W, H);
+// Trail points
+var trailPoints = [];
+for (var i = 0; i < TRAIL_LENGTH; i++) trailPoints.push(0);
+
+var startTime = Date.now();
+
+function render() {
+  var elapsed = (Date.now() - startTime) / 1000;
+  time = (elapsed % 20) / 20;
   
-  for (var i = 0; i < stars.length; i++) {
-    stars[i].update();
-    stars[i].draw();
+  ctx.fillStyle = '#0a0a12';
+  ctx.fillRect(0, 0, W, H);
+  
+  ctx.save();
+  ctx.translate(W / 2, H / 2);
+  
+  var t1 = constrain(map(time, 0, CHANGE_EVENT + 0.25, 0, 1), 0, 1);
+  var t2 = constrain(map(time, CHANGE_EVENT, 1, 0, 1), 0, 1);
+  
+  // Camera rotation
+  ctx.rotate(-Math.PI * ease(t2, 2.7));
+  
+  // Draw trail
+  for (var i = 0; i < TRAIL_LENGTH; i++) {
+    var f = map(i, 0, TRAIL_LENGTH, 1.1, 0.1);
+    var sw = (1.3 * (1 - t1) + 3.0 * Math.sin(Math.PI * t1)) * f;
+    
+    ctx.fillStyle = 'rgba(200,180,255,' + (f * 0.3) + ')';
+    ctx.lineWidth = sw;
+    
+    var pathTime = t1 - 0.00015 * i;
+    var pos = spiralPath(pathTime);
+    var basePos = pos;
+    var offset = { x: pos.x + 5, y: pos.y + 5 };
+    var rotated = rotatePoint(basePos, offset, t1, false);
+    
+    var x = rotated.x * (1 - t1) + pos.x * t1;
+    var y = rotated.y * (1 - t1) + pos.y * t1;
+    
+    ctx.beginPath();
+    ctx.arc(x, y, sw * 0.5, 0, Math.PI * 2);
+    ctx.fill();
   }
   
-  requestAnimationFrame(loop);
+  // Draw stars
+  for (var i = 0; i < stars.length; i++) {
+    var s = stars[i];
+    var t = t1 * s.speed * 1000 + s.offset;
+    var angle = t * 0.5 + s.offset;
+    var r = s.radius * (1 + t * 0.01);
+    
+    var sx = Math.cos(angle) * r;
+    var sy = Math.sin(angle) * r * 0.8;
+    
+    var scale = ZOOM / (s.z + ZOOM);
+    var px = sx * scale;
+    var py = sy * scale;
+    
+    var sz = (s.z + ZOOM) / 5000;
+    var size = Math.max(0.3, sz * 2.5);
+    
+    ctx.beginPath();
+    ctx.arc(px, py, size, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(' + s.color.r + ',' + s.color.g + ',' + s.color.b + ',' + (0.3 + sz * 0.5) + ')';
+    ctx.fill();
+    
+    s.z += s.speed * 4;
+    if (s.z > s.maxZ) {
+      s.z = rnd(200, 1000);
+      s.x = rnd(-1, 1) * 1000;
+      s.y = rnd(-1, 1) * 1000;
+    }
+  }
+  
+  // Draw start dot
+  if (time > CHANGE_EVENT) {
+    var dy = CAMERA_Z * START_DOT_Y / ZOOM;
+    projectDot(0, dy, TRAVEL_DIST, 2.5, t2);
+  }
+  
+  ctx.restore();
+  requestAnimationFrame(render);
 }
-loop();
+
+render();
 </script>
 </body>
 </html>
