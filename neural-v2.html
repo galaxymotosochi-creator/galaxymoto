@@ -9,19 +9,19 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', sans-serif; background: #0a0a0f; color: rgba(255,255,255,0.9); overflow: hidden; height: 100vh; }
+    body { font-family: 'Inter', sans-serif; background: #fff; color: #111; overflow: hidden; height: 100vh; }
     canvas#bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; display: block; }
     .hero-overlay {
       position: fixed; inset: 0; z-index: 10;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       padding: 40px 20px; text-align: center;
-      background: #0a0a0f;
+      background: rgba(255,255,255,0.82);
     }
     .hero__badge {
       display: inline-flex; align-items: center; gap: 8px;
-      background: rgba(255,255,255,0.07); backdrop-filter: blur(8px);
-      border: 1px solid rgba(255,255,255,0.1);
-      color: rgba(255,255,255,0.9); font-size: 13px; font-weight: 500;
+      background: rgba(0,0,0,0.04); backdrop-filter: blur(8px);
+      border: 1px solid rgba(0,0,0,0.06);
+      color: #111; font-size: 13px; font-weight: 500;
       padding: 8px 16px; border-radius: 999px; margin-bottom: 32px;
     }
     .hero__badge-dot { width: 8px; height: 8px; background: #62b56a; border-radius: 50%; }
@@ -31,7 +31,7 @@
     }
     .hero__title-highlight { background: linear-gradient(135deg, #0bc5ea, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .hero__subtitle {
-      font-size: 17px; color: rgba(255,255,255,0.7);
+      font-size: 17px; color: #555;
       margin-bottom: 32px; max-width: 520px; line-height: 1.55;
     }
     .hero__actions { display: flex; flex-direction: column; gap: 12px; align-items: center; width: 100%; max-width: 360px; }
@@ -43,29 +43,29 @@
       font-size: 15px; font-weight: 600; border-radius: 999px;
       cursor: pointer; transition: all .25s ease; border: none; text-decoration: none; white-space: nowrap; width: 100%;
     }
-    .hero__btn--primary { background: #111; color: rgba(255,255,255,0.9); border: 1.5px solid rgba(255,255,255,0.12); }
+    .hero__btn--primary { background: #111; color: #111; border: 1.5px solid rgba(0,0,0,0.08); }
     .hero__btn--primary:hover { background: #333; transform: translateY(-1px); }
-    .hero__btn--outline { background: transparent; color: rgba(255,255,255,0.9); border: 1.5px solid rgba(0,0,0,0.15); }
+    .hero__btn--outline { background: transparent; color: #111; border: 1.5px solid rgba(0,0,0,0.15); }
     .hero__btn--outline:hover { background: rgba(255,255,255,0.08); transform: translateY(-1px); }
-    .hero__btn--gradient { background: linear-gradient(135deg, #0bc5ea, #8b5cf6); color: rgba(255,255,255,0.9); }
+    .hero__btn--gradient { background: linear-gradient(135deg, #0bc5ea, #8b5cf6); color: #111; }
     .hero__btn--gradient:hover { opacity: .9; transform: translateY(-1px); }
     .reviews-trigger {
       display: inline-flex; align-items: center; gap: 10px;
       cursor: pointer; margin-bottom: 24px; padding: 8px 20px 8px 16px;
-      border-radius: 999px; background: rgba(255,255,255,0.07);
-      backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px; background: rgba(0,0,0,0.04);
+      backdrop-filter: blur(8px); border: 1px solid rgba(0,0,0,0.06);
       transition: all .25s; text-decoration: none;
     }
-    .reviews-trigger:hover { background: rgba(255,255,255,0.12); transform: translateY(-1px); }
+    .reviews-trigger:hover { background: rgba(0,0,0,0.08); transform: translateY(-1px); }
     .reviews-trigger__star { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: linear-gradient(135deg,#0bc5ea,#8b5cf6); border-radius: 50%; font-size: 16px; }
-    .reviews-trigger__text { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.9); }
-    .reviews-trigger__badge { background: #fc0; padding: 1px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.9); }
-    .reviews-trigger__label { font-size: 12px; color: rgba(255,255,255,0.4); }
+    .reviews-trigger__text { font-size: 13px; font-weight: 600; color: #111; }
+    .reviews-trigger__badge { background: #fc0; padding: 1px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; color: #111; }
+    .reviews-trigger__label { font-size: 12px; color: #999; }
     .chat-fab {
       position: fixed; bottom: 24px; right: 24px; z-index: 100;
       width: 56px; height: 56px;
       background: linear-gradient(135deg, #0bc5ea, #8b5cf6);
-      color: rgba(255,255,255,0.9); border-radius: 50%; border: none;
+      color: #111; border-radius: 50%; border: none;
       display: flex; align-items: center; justify-content: center;
       box-shadow: 0 4px 20px rgba(0,0,0,0.3); cursor: pointer; transition: all .25s; text-decoration: none;
     }
@@ -185,10 +185,10 @@ var fsSrc = [
   '  float noise = neuro_shape(uv, t, p);',
   '  noise = 1.2 * pow(noise, 3.);',
   '  noise += pow(noise, 10.);',
-  '  noise = max(.0, noise - .5);',
-  '  noise *= (1. - length(vUv - .5));',
-  '  color = vec3(0.5, 0.15, 0.65);',
-  '  color = mix(color, vec3(0.02, 0.7, 0.9), 0.32 + 0.16 * sin(2.0 * u_scroll_progress + 1.2));',
+  '  noise = max(.0, noise - .2);',
+  '  noise *= (1. - length(vUv - .5)) * 2.0;',
+  '  color = vec3(0.8, 0.4, 1.0);',
+  '  color = mix(color, vec3(0.3, 1.0, 1.0), 0.32 + 0.16 * sin(2.0 * u_scroll_progress + 1.2));',
   '  color += vec3(0.15, 0.0, 0.6) * sin(2.0 * u_scroll_progress + 1.5);',
   '  color = color * noise;',
   '  gl_FragColor = vec4(color, noise);',
