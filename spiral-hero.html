@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GALAXY MOTO — Spiral Hero</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #fff; color: #111; overflow: hidden; height: 100vh; }
+    
+    canvas#spiral {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      display: block;
+      z-index: 0;
+    }
+
+    .hero-overlay {
+      position: fixed; inset: 0; z-index: 10;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 40px 20px; text-align: center;
+      background: rgba(255,255,255,0.88);
+    }
+
+    .hero__badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(0,0,0,0.04); backdrop-filter: blur(8px);
+      border: 1px solid rgba(0,0,0,0.06);
+      color: #666; font-size: 13px; font-weight: 500;
+      padding: 8px 16px; border-radius: 999px; margin-bottom: 32px;
+    }
+    .hero__badge-dot { width: 8px; height: 8px; background: #62b56a; border-radius: 50%; }
+
+    .hero__title {
+      font-size: 44px; font-weight: 800; line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    .hero__title-highlight { background: linear-gradient(135deg, #0bc5ea, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    .hero__subtitle {
+      font-size: 17px; color: #555;
+      margin-bottom: 32px; max-width: 520px; line-height: 1.55;
+    }
+
+    .hero__actions { display: flex; flex-direction: column; gap: 12px; align-items: center; width: 100%; max-width: 360px; }
+    .hero__actions-row { display: flex; gap: 10px; width: 100%; }
+    .hero__actions-row .hero__btn { flex: 1; }
+
+    .hero__btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 13px 28px; font-family: 'Inter', sans-serif;
+      font-size: 15px; font-weight: 600; border-radius: 999px;
+      cursor: pointer; transition: all .25s ease; border: none; text-decoration: none; white-space: nowrap; width: 100%;
+    }
+    .hero__btn--primary { background: #111; color: #fff; border: 1.5px solid rgba(0,0,0,0.08); }
+    .hero__btn--primary:hover { background: #333; transform: translateY(-1px); }
+    .hero__btn--outline { background: transparent; color: #111; border: 1.5px solid rgba(0,0,0,0.15); }
+    .hero__btn--outline:hover { background: rgba(0,0,0,0.05); transform: translateY(-1px); }
+    .hero__btn--gradient { background: linear-gradient(135deg, #0bc5ea, #8b5cf6); color: #fff; }
+    .hero__btn--gradient:hover { opacity: .9; transform: translateY(-1px); }
+
+    .reviews-trigger {
+      display: inline-flex; align-items: center; gap: 10px;
+      cursor: pointer; margin-bottom: 24px; padding: 8px 20px 8px 16px;
+      border-radius: 999px; background: rgba(0,0,0,0.04);
+      backdrop-filter: blur(8px); border: 1px solid rgba(0,0,0,0.06);
+      transition: all .25s; text-decoration: none;
+    }
+    .reviews-trigger:hover { background: rgba(0,0,0,0.08); transform: translateY(-1px); }
+    .reviews-trigger__star { width: 36px; height: 36px; background: linear-gradient(135deg,#0bc5ea,#8b5cf6); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+    .reviews-trigger__text { font-size: 13px; font-weight: 600; color: #111; }
+    .reviews-trigger__badge { background: #fc0; padding: 1px 6px; border-radius: 4px; font-size: 11px; font-weight: 700; color: #111; }
+    .reviews-trigger__label { font-size: 12px; color: #999; }
+
+    .chat-fab {
+      position: fixed; bottom: 24px; right: 24px; z-index: 100;
+      width: 56px; height: 56px;
+      background: linear-gradient(135deg, #0bc5ea, #8b5cf6);
+      color: #fff; border-radius: 50%; border: none;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3); cursor: pointer; transition: all .25s; text-decoration: none;
+    }
+    .chat-fab:hover { transform: scale(1.1); }
+
+    @keyframes slideInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-seq { animation: slideInUp 1.2s both; opacity: 0; }
+    .animate-seq-1 { animation: slideInUp 1.2s both; animation-delay: 0.3s; opacity: 0; }
+    .animate-seq-2 { animation: slideInUp 1.2s both; animation-delay: 0.6s; opacity: 0; }
+    .animate-seq-3 { animation: slideInUp 1.2s both; animation-delay: 0.9s; opacity: 0; }
+    .animate-seq-4 { animation: slideInUp 1.2s both; animation-delay: 1.2s; opacity: 0; }
+    .animate-seq-5 { animation: slideInUp 1.2s both; animation-delay: 1.5s; opacity: 0; }
+
+    @media (max-width: 768px) { .hero__title { font-size: 28px; } .hero__subtitle { font-size: 15px; } .hero__btn { font-size: 13px; padding: 11px 20px; } }
+    @media (max-width: 480px) { .hero__title { font-size: 24px; } .hero__actions-row { flex-direction: column; } }
+  </style>
+</head>
+<body>
+
+<canvas id="spiral"></canvas>
+
+<div class="hero-overlay">
+  <div class="hero__badge animate-seq"><span class="hero__badge-dot"></span> Мототехника и сервис в Сочи</div>
+  <div class="hero__title animate-seq-1">GALAXY <span class="hero__title-highlight">MOTO</span><br>Полный цикл твоего движения</div>
+  <div class="hero__subtitle animate-seq-2">Покупка, аренда, честный сервис и<br>оригинальные запчасти для мототехники.<br>Берем все заботы на себя</div>
+  <a class="reviews-trigger animate-seq-3" href="#">
+    <div class="reviews-trigger__star">⭐</div>
+    <span class="reviews-trigger__text">Рейтинг <span class="reviews-trigger__badge">5.0</span></span>
+    <span class="reviews-trigger__label">на Яндекс.Картах</span>
+    <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#0bc5ea"/><stop offset="100%" stop-color="#8b5cf6"/></linearGradient></defs><path d="M8 5C8 5 13 9 13 10C13 11 8 15 8 15" stroke="url(#g)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+  </a>
+  <div class="hero__actions animate-seq-4">
+    <button class="hero__btn hero__btn--primary">Выбрать технику</button>
+    <div class="hero__actions-row animate-seq-5">
+      <button class="hero__btn hero__btn--outline">Взять в аренду</button>
+      <button class="hero__btn hero__btn--gradient">Записаться на сервис</button>
+    </div>
+  </div>
+</div>
+
+<a class="chat-fab" href="#">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+</a>
+
+<script>
+// ===== Spiral Animation =====
+var canvas = document.getElementById('spiral');
+var ctx = canvas.getContext('2d');
+var W, H, centerX, centerY;
+var stars = [];
+var time = 0;
+var NUM_STARS = 3000;
+var TRAIL = 60;
+var CAMERA_Z = -500;
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  centerX = W / 2;
+  centerY = H / 2;
+}
+resize();
+window.addEventListener('resize', resize);
+
+// Star class
+function Star() {
+  this.reset(true);
+}
+
+Star.prototype.reset = function(initial) {
+  this.z = initial ? Math.random() * CAMERA_Z : CAMERA_Z;
+  this.startZ = this.z;
+  this.x = (Math.random() - 0.5) * 2000;
+  this.y = (Math.random() - 0.5) * 2000;
+  this.trail = [];
+  var colors = [
+    { r: 139, g: 92, b: 246 }, // фиолетовый
+    { r: 11, g: 197, b: 234 },  // голубой
+    { r: 255, g: 107, b: 107 }, // розовый
+    { r: 100, g: 200, b: 255 }, // светлоголубой
+  ];
+  var c = colors[Math.floor(Math.random() * colors.length)];
+  this.color = c;
+  this.speed = 0.5 + Math.random() * 1.5;
+  this.angleOffset = Math.random() * Math.PI * 2;
+  this.radius = 50 + Math.random() * 150;
+};
+
+Star.prototype.update = function() {
+  this.z += this.speed * 2;
+  
+  // Spiral motion
+  var t = (this.z - CAMERA_Z) / 4000;
+  var angle = t * 8 + this.angleOffset;
+  var r = this.radius * (1 + t * 2);
+  
+  var sx = Math.cos(angle) * r;
+  var sy = Math.sin(angle) * r * 0.6;
+  
+  // Perspective projection
+  var scale = 300 / (this.z + 300);
+  var px = centerX + sx * scale;
+  var py = centerY + sy * scale;
+  
+  this.trail.push({ x: px, y: py, z: this.z });
+  if (this.trail.length > TRAIL) this.trail.shift();
+  
+  if (this.z > 3800) this.reset(false);
+};
+
+Star.prototype.draw = function() {
+  if (this.trail.length < 2) return;
+  
+  for (var i = 1; i < this.trail.length; i++) {
+    var alpha = i / this.trail.length;
+    var p = this.trail[i];
+    var prev = this.trail[i - 1];
+    
+    var sz = (p.z + 300) / 4000;
+    var size = Math.max(0.5, sz * 3);
+    
+    ctx.beginPath();
+    ctx.moveTo(prev.x, prev.y);
+    ctx.lineTo(p.x, p.y);
+    ctx.strokeStyle = 'rgba(' + this.color.r + ',' + this.color.g + ',' + this.color.b + ',' + (alpha * 0.4) + ')';
+    ctx.lineWidth = size;
+    ctx.stroke();
+  }
+  
+  // Dot at the end
+  var last = this.trail[this.trail.length - 1];
+  var sz = (last.z + 300) / 4000;
+  var size = Math.max(1, sz * 4);
+  ctx.beginPath();
+  ctx.arc(last.x, last.y, size, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(' + this.color.r + ',' + this.color.g + ',' + this.color.b + ',0.8)';
+  ctx.fill();
+};
+
+// Create stars
+for (var i = 0; i < NUM_STARS; i++) stars.push(new Star());
+
+function loop() {
+  ctx.clearRect(0, 0, W, H);
+  
+  for (var i = 0; i < stars.length; i++) {
+    stars[i].update();
+    stars[i].draw();
+  }
+  
+  requestAnimationFrame(loop);
+}
+loop();
+</script>
+</body>
+</html>
