@@ -108,6 +108,27 @@
     }
 
     .title { position: absolute; top: 16px; left: 50%; transform: translateX(-50%); font-size: 13px; color: #555; z-index: 3; letter-spacing: 0.5px; }
+
+    @media (max-width: 768px) {
+      .scene { height: 500px; max-width: 100vw; border-radius: 0; border: none; }
+      .scene-inner { transform: translateX(-40px) translateY(0px) translateZ(-60px) rotateX(15deg) rotateY(-5deg) rotateZ(15deg); gap: 8px; }
+      .marquee-col { gap: 8px; animation-duration: 30s; }
+      .t-card { width: 140px; padding: 10px; }
+      .t-card__avatar { width: 28px; height: 28px; }
+      .t-card__name { font-size: 11px; }
+      .t-card__body { font-size: 10px; margin-top: 6px; }
+      .title { font-size: 11px; }
+    }
+
+    @media (max-width: 480px) {
+      .scene { height: 460px; }
+      .scene-inner { transform: translateX(-30px) translateY(0px) translateZ(-40px) rotateX(12deg) rotateY(-3deg) rotateZ(12deg); gap: 6px; }
+      .marquee-col { gap: 6px; animation-duration: 25s; }
+      .t-card { width: 120px; padding: 8px; }
+      .t-card__avatar { width: 24px; height: 24px; }
+      .t-card__name { font-size: 10px; }
+      .t-card__body { font-size: 9px; margin-top: 4px; }
+    }
   </style>
 </head>
 <body>
