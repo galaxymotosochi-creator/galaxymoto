@@ -35,14 +35,18 @@ export default async function handler(req, res) {
         const ticketId = idMatch[1];
         const status = parseStatus(text);
         if (status) {
+          // Имя мастера из сообщения (после "взял")
+          const masterName = extractMasterName(text);
           // Обновляем статус через API
           await fetch('https://galaxymoto.vercel.app/api/service-bot/update-status', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ticketId, status, masterName: msg.from?.first_name || 'Мастер' }),
+            body: JSON.stringify({ ticketId, status, masterName: masterName || msg.from?.first_name || 'Мастер' }),
           }).catch(() => {});
           var statusLabels = {'new':'НОВАЯ','in_progress':'В РАБОТЕ','completed':'ВЫПОЛНЕНА','cancelled':'ОТМЕНЕНА'};
-          responseText = `✅ Заявка №${ticketId}: статус изменён на «${statusLabels[status]||status}»`;
+          var replyLabel = statusLabels[status] || status;
+          if (masterName) replyLabel += ' — ' + masterName;
+          responseText = `✅ Заявка №${ticketId}: ${replyLabel}`;
         } else {
           responseText = '❓ Не понял статус. Напиши: "беру", "готово", "жду запчасти"';
         }
@@ -68,12 +72,21 @@ export default async function handler(req, res) {
 }
 
 function parseStatus(text) {
-  const lower = text.toLowerCase();
-  if (lower.includes('беру') || lower.includes('в работу')) return 'in_progress';
+  const lower = text.toLowerCase().trim();
+  if (lower.startsWith('взял')) return 'in_progress';
   if (lower.includes('готов') || lower.includes('сделал') || lower.includes('выполнил')) return 'completed';
   if (lower.includes('жду') || lower.includes('запчасти') || lower.includes('ожид')) return 'in_progress';
   if (lower.includes('отмен') || lower.includes('не надо')) return 'cancelled';
   return null;
+}
+
+function extractMasterName(text) {
+  const lower = text.toLowerCase().trim();
+  if (lower.startsWith('взял')) {
+    const name = text.trim().substring(4).trim(); // всё после "взял"
+    return name || '';
+  }
+  return '';
 }
 
 async function createTicket(text, chatId, from) {
