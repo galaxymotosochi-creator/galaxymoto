@@ -68,7 +68,7 @@
 .hero__btn--outline {
   background: transparent;
   color: #111;
-  border: 2px solid #111;
+  border: 1.5px solid #111;
 }
 .hero__btn--outline:hover {
   background: #111;
