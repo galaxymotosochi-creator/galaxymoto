@@ -1864,11 +1864,11 @@ panel.addEventListener('touchend', function(e) {
 </script>
 
 <!-- ===== Чат-виджет ===== -->
-<button class="chat-fab" id="chatFab">
+<a class="chat-fab" id="chatFab" href="javascript:void(0)" onclick="toggleChat()" style="z-index:2147483647!important;position:fixed!important;pointer-events:auto!important;display:flex!important">
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
   </svg>
-</button>
+</a>
 <div class="chat-window" id="chatWindow">
   <div class="chat-header">
     <div class="chat-header__avatar">💬</div>
@@ -1907,8 +1907,8 @@ function toggleChat(){chatOpen=!chatOpen;document.getElementById("chatWindow").c
 function setChatName(){var name=document.getElementById("chatNameInput").value.trim();if(!name){document.getElementById("chatNameInput").focus();return}visitorName=name;localStorage.setItem("galaxy_chat_name",name);document.getElementById("chatNameForm").classList.remove("chat-name-form--show");document.getElementById("chatInput").focus();addChatMsg("system","👋 "+name+", чем можем помочь?")}
 function addChatMsg(role,text){var msgs=document.getElementById("chatMessages");var div=document.createElement("div");div.className="chat-msg chat-msg--"+role;div.innerHTML="<div>"+text+"</div><div class=\"chat-msg__time\">"+new Date().toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"})+"</div>";msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight}
 function sendChatMsg(){var input=document.getElementById("chatInput");var text=input.value.trim();if(!text)return;input.value="";document.getElementById("chatSendBtn").disabled=true;addChatMsg("client",text);if(!visitorName){document.getElementById("chatNameForm").classList.add("chat-name-form--show");document.getElementById("chatInput").disabled=true;document.getElementById("chatSendBtn").disabled=false;return}fetch("/api/chat/send",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:text,name:visitorName,phone:localStorage.getItem("galaxy_chat_phone")||"",visitorId:getVisitorId()})}).catch(function(){}).then(function(){document.getElementById("chatSendBtn").disabled=false;document.getElementById("chatInput").focus()})}
-document.getElementById("chatFab").addEventListener("click",toggleChat);
-document.addEventListener("click",function(e){if(e.target.id==="chatFab"||e.target.closest("#chatFab")){if(!chatOpen)toggleChat()}});
+// Fallback: клик через событие мыши (срабатывает до React)
+document.getElementById("chatFab").onmousedown = toggleChat;
 if(visitorName){document.getElementById("chatNameForm").classList.remove("chat-name-form--show")}
 </script>
 
