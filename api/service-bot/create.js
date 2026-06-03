@@ -43,9 +43,26 @@ export default async function handler(req, res) {
 
     let dateTimeStr = lines[0] || '';
     let name = lines[1] || '—';
-    let phone = lines[2] || '';
-    let service = lines[3] || '';
-    let comment = lines[4] || '';
+    
+    // Определяем телефон по наличию 7+ цифр
+    function isPhone(s) { return (s.match(/\d/g) || []).length >= 7; }
+    
+    let phone = '';
+    let service = '';
+    let comment = '';
+    
+    // lines[2] может быть телефоном или услугой
+    if (lines[2]) {
+      if (isPhone(lines[2])) {
+        phone = lines[2];
+        service = lines[3] || '';
+        comment = lines[4] || '';
+      } else {
+        phone = '';
+        service = lines[2];
+        comment = lines[3] || '';
+      }
+    }
 
     // Преобразуем дату
     let date = '', time = '';
@@ -155,7 +172,8 @@ export default async function handler(req, res) {
 
     res.json({
       ok: true,
-      ticketId,
+      ticketId: data.ticketId || ticketId,
+      orderNumber,
       name: ticketData.name,
       phone: ticketData.phone,
       model: ticketData.model,

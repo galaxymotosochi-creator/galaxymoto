@@ -98,7 +98,7 @@ async function createTicket(text, chatId, from) {
     });
     const data = await resp.json();
     if (data.ok) {
-      let reply = `✅ Заявка №${data.ticketId} создана!\n`;
+      let reply = `✅ Заявка №${data.orderNumber || data.ticketId} создана!\n`;
       reply += `\n📅 ${data.date}`;
       if (data.time) reply += ` ${data.time}`;
       reply += `\n👤 ${data.name}`;
