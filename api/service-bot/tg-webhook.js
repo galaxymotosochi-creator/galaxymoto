@@ -85,11 +85,13 @@ async function createTicket(text, chatId, from) {
     const data = await resp.json();
     if (data.ok) {
       let reply = `✅ Заявка №${data.ticketId} создана!\n`;
-      reply += `\n👤 Имя: ${data.name}`;
-      if (data.phone) reply += `\n📞 Телефон: ${data.phone}`;
-      if (data.comment) reply += `\n📝 Комментарий: ${data.comment}`;
-      reply += `\n📅 Дата: ${data.date}`;
-      if (data.time) reply += `\n⏰ Время: ${data.time}`;
+      reply += `\n📅 ${data.date}`;
+      if (data.time) reply += ` ${data.time}`;
+      reply += `\n👤 ${data.name}`;
+      if (data.phone) reply += `\n📞 ${data.phone}`;
+      if (data.service) reply += `\n🔧 ${data.service}`;
+      if (data.comment) reply += `\n💬 ${data.comment}`;
+      reply += `\n\nСтатус: Новая`;
       return reply;
     }
     return '❌ Ошибка создания заявки. Попробуй ещё раз.';

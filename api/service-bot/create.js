@@ -1,17 +1,16 @@
-// Создание заявки через AI-парсинг сообщения мастера
+// Создание заявки — мастер пишет поля построчно
 const API_KEY = 'AIzaSyAY_1e66dxHKq46HhUVRo8x1yB7ZbyPJzc';
 const PROJECT_ID = 'capsulehouse-1c0c9';
 const FIRESTORE_URL = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents`;
 
 function toFirestoreValue(val) {
-  if (typeof val === 'number') return { integerValue: String(Math.round(val)) };
   return { stringValue: String(val) };
 }
 
 function toFields(obj) {
   const fields = {};
   for (const [k, v] of Object.entries(obj)) {
-    if (v !== undefined && v !== null) fields[k] = toFirestoreValue(v);
+    if (v !== undefined && v !== null && v !== '') fields[k] = toFirestoreValue(v);
   }
   return { fields };
 }
@@ -32,84 +31,91 @@ export default async function handler(req, res) {
     const { text, masterName } = req.body;
     if (!text) return res.status(400).json({ error: 'Text required' });
 
-    // AI-парсинг через DeepSeek
-    let name = '', phone = '', comment = '', date = '', time = '';
+    // Разбиваем по строкам
+    const lines = text.split('\n').map(s => s.trim()).filter(Boolean);
     
-    const DEEPSEEK_KEY = process.env.DEEPSEEK_API_KEY || 'sk-6490952906544f3b85771c4ee1dccbaa';
+    // Формат:
+    // Строка 1: дата время (напр. "3 июня 15:00" или "завтра 14:00")
+    // Строка 2: имя клиента
+    // Строка 3: телефон (или пусто, можно пропустить)
+    // Строка 4: что сделать
+    // Строка 5: комментарий (опционально)
+
+    let dateTimeStr = lines[0] || '';
+    let name = lines[1] || '—';
+    let phone = lines[2] || '';
+    let service = lines[3] || '';
+    let comment = lines[4] || '';
+
+    // Преобразуем дату
+    let date = '', time = '';
+    const ruMonths = {
+      'января': 0, 'февраля': 1, 'марта': 2, 'апреля': 3, 'мая': 4, 'июня': 5,
+      'июля': 6, 'августа': 7, 'сентября': 8, 'октября': 9, 'ноября': 10, 'декабря': 11
+    };
     
-    const todayStr = new Date().toISOString().slice(0, 10);
-
-    try {
-      const aiResp = await fetch('https://api.deepseek.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${DEEPSEEK_KEY}`,
-        },
-        body: JSON.stringify({
-          model: 'deepseek-chat',
-          messages: [{
-            role: 'system',
-            content: `Ты — парсер заявок для сервиса мототехники.
-Из сообщения мастера извлеки данные и верни ТОЛЬКО JSON:
-{"name":"","phone":"","comment":"","date":"","time":""}
-
-Правила:
-- name — имя клиента (всегда заполнено)
-- phone — номер телефона (если есть, может быть без +)
-- comment — что нужно сделать (адв, замена масла, ремонт и т.д.)
-- date — дата в формате ГГГГ-ММ-ДД. "завтра" = ${(() => { const d = new Date(); d.setDate(d.getDate() + 1); return d.toISOString().slice(0,10); })()}. "сегодня" или без даты = пустая строка. "15 мая" преобразуй в дату.
-- time — время в формате ЧЧ:ММ (если есть)
-
-Примеры:
-"Игорь адв 15 мая 16:00" → {"name":"Игорь","phone":"","comment":"адв","date":"${new Date(new Date().getFullYear(), 4, 15).toISOString().slice(0,10)}","time":"16:00"}
-"Петров +79001234567 замена цепи завтра 11:30" → {"name":"Петров","phone":"+79001234567","comment":"замена цепи","date":"${(() => { const d = new Date(); d.setDate(d.getDate() + 1); return d.toISOString().slice(0,10); })()}","time":"11:30"}
-"Сергей 15:00" → {"name":"Сергей","phone":"","comment":"","date":"","time":"15:00"}
-"Анна замена масла" → {"name":"Анна","phone":"","comment":"замена масла","date":"","time":""}
-
-Сегодня: ${todayStr}
-Верни ТОЛЬКО JSON, без пояснений.`,
-          }, {
-            role: 'user',
-            content: text,
-          }],
-          temperature: 0,
-        }),
-      });
-      const aiData = await aiResp.json();
-      const aiText = aiData.choices?.[0]?.message?.content || '';
-      try {
-        const parsed = JSON.parse(aiText.replace(/```json|```/g, '').trim());
-        name = parsed.name || '';
-        phone = parsed.phone || '';
-        comment = parsed.comment || '';
-        date = parsed.date || '';
-        time = parsed.time || '';
-      } catch(e) {
-        console.error('AI parse error:', aiText);
+    if (dateTimeStr) {
+      const dt = dateTimeStr.toLowerCase().trim();
+      
+      // Проверяем "сегодня" / "завтра"
+      const now = new Date();
+      if (dt.includes('сегодня')) {
+        date = now.toISOString().slice(0, 10);
+        // Время после слова
+        const tMatch = dt.match(/(\d{1,2}):(\d{2})/);
+        if (tMatch) time = tMatch[1].padStart(2,'0') + ':' + tMatch[2];
+      } else if (dt.includes('завтра')) {
+        const tom = new Date(now);
+        tom.setDate(tom.getDate() + 1);
+        date = tom.toISOString().slice(0, 10);
+        const tMatch = dt.match(/(\d{1,2}):(\d{2})/);
+        if (tMatch) time = tMatch[1].padStart(2,'0') + ':' + tMatch[2];
+      } else {
+        // Парсим "3 июня 15:00" или "03.06 15:00"
+        const ruMatch = dt.match(/(\d{1,2})\s+(\S+)\s+(\d{1,2}):(\d{2})/);
+        if (ruMatch) {
+          const day = ruMatch[1].padStart(2, '0');
+          const monthName = ruMatch[2];
+          const month = ruMonths[monthName];
+          if (month !== undefined) {
+            const year = now.getFullYear();
+            date = `${year}-${String(month + 1).padStart(2, '0')}-${day}`;
+            time = ruMatch[3].padStart(2, '0') + ':' + ruMatch[4];
+          }
+        } else {
+          // Попробуем через Date
+          const dMatch = dt.match(/(\d{1,2}[\.\/]\d{1,2}[\.\/]?\d{0,4})\s*(\d{1,2}):(\d{2})/);
+          if (dMatch) {
+            time = dMatch[2].padStart(2,'0') + ':' + dMatch[3];
+            const parts = dMatch[1].split(/[\.\/]/);
+            if (parts.length >= 2) {
+              date = parts[2] ? `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}` 
+                             : `${now.getFullYear()}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
+            }
+          } else {
+            // Только время
+            const tMatch = dt.match(/(\d{1,2}):(\d{2})/);
+            if (tMatch) {
+              date = now.toISOString().slice(0, 10);
+              time = tMatch[1].padStart(2,'0') + ':' + tMatch[2];
+            }
+          }
+        }
       }
-    } catch(e) {
-      console.error('AI call error:', e);
     }
 
-    // Fallback: если AI не сработал
-    if (!name) {
-      const parts = text.split(/[,;]/).map(s => s.trim()).filter(Boolean);
-      name = parts[0] || '—';
-      comment = parts.slice(1).join(', ') || text;
-    }
+    if (!date) date = new Date().toISOString().slice(0, 10);
 
     const now = new Date();
-    const today = now.toISOString().slice(0, 10);
     const ticketId = 'S' + Date.now().toString(36).toUpperCase();
 
     const ticketData = {
       id: ticketId,
-      name: name || '—',
-      phone: phone || '',
-      comment: comment || '',
-      date: date || today,
-      time: time || '',
+      name: name,
+      phone: phone,
+      comment: (service ? service : '') + (comment ? ' | ' + comment : ''),
+      date: date,
+      time: time,
       status: 'Новая',
       master: masterName || 'Из Telegram',
       source: 'telegram',
@@ -137,7 +143,8 @@ export default async function handler(req, res) {
       ticketId,
       name: ticketData.name,
       phone: ticketData.phone,
-      comment: ticketData.comment,
+      service: service,
+      comment: comment,
       date: ticketData.date,
       time: ticketData.time,
     });
