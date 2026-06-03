@@ -32,17 +32,20 @@ export default async function handler(req, res) {
     const existing = await getResp.json();
     const currentStatus = existing.fields?.status?.stringValue || '';
     
-    // Обновляем только статус
+    // Собираем поля для обновления
+    const updateFields = {
+      status: { stringValue: status },
+      updatedAt: { stringValue: new Date().toISOString() },
+    };
+    // Если берут в работу — записываем мастера
+    if (status === 'in_progress' && masterName) {
+      updateFields.master = { stringValue: masterName };
+    }
+    
     const updateResp = await fetch(updateUrl, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        fields: {
-          status: { stringValue: status },
-          updatedAt: { stringValue: new Date().toISOString() },
-          masterName: { stringValue: masterName || currentStatus },
-        }
-      }),
+      body: JSON.stringify({ fields: updateFields }),
     });
 
     if (!updateResp.ok) {

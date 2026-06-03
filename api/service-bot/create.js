@@ -117,7 +117,7 @@ export default async function handler(req, res) {
       date: date,
       time: time,
       status: "new",
-      master: masterName || 'Из Telegram',
+      
       source: 'telegram',
       createdAt: now.toISOString(),
       updatedAt: now.toISOString(),
