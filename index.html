@@ -1731,10 +1731,10 @@ setTimeout(function(){
 .reviews-trigger-label { font-size: 11px; color: #999; letter-spacing: .5px; text-transform: uppercase; text-align: left; }
 .reviews-trigger-rating { font-size: 14px; font-weight: 600; color: #111; text-align: left; }
 /* ===== Чат-виджет ===== */
-.chat-fab{position:fixed;bottom:80px;right:var(--space-6);width:56px;height:56px;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff;border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,.3);cursor:pointer;z-index:10000;transition:all .25s}
+.chat-fab{position:fixed;bottom:80px;right:var(--space-6);width:56px;height:56px;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff;border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,.3);cursor:pointer;z-index:2147483647;transition:all .25s;pointer-events:auto}
 .chat-fab:hover{transform:scale(1.1)}
-.fab{display:none!important}
-.chat-window{position:fixed;bottom:80px;right:var(--space-6);width:360px;max-width:calc(100vw - 32px);height:520px;max-height:calc(100vh - 120px);background:#1c1c1e;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,.4);z-index:9999;display:none;flex-direction:column;overflow:hidden;animation:chatSlideUp .3s ease}
+.fab{display:none!important;pointer-events:none!important}
+.chat-window{position:fixed;bottom:80px;right:var(--space-6);width:360px;pointer-events:auto;max-width:calc(100vw - 32px);height:520px;max-height:calc(100vh - 120px);background:#1c1c1e;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,.4);z-index:9999;display:none;flex-direction:column;overflow:hidden;animation:chatSlideUp .3s ease}
 .chat-window--open{display:flex}
 @keyframes chatSlideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 .chat-header{display:flex;align-items:center;gap:12px;padding:16px;background:#2c2c2e;border-bottom:1px solid #3a3a3c}
@@ -1864,7 +1864,7 @@ panel.addEventListener('touchend', function(e) {
 </script>
 
 <!-- ===== Чат-виджет ===== -->
-<button class="chat-fab" id="chatFab" onclick="toggleChat()">
+<button class="chat-fab" id="chatFab">
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
   </svg>
@@ -1905,10 +1905,10 @@ var chatOpen = false;
 function getVisitorId(){var id=localStorage.getItem("galaxy_visitor_id");if(!id){id="v_"+Date.now()+"_"+Math.random().toString(36).slice(2,8);localStorage.setItem("galaxy_visitor_id",id)}return id}
 function toggleChat(){chatOpen=!chatOpen;document.getElementById("chatWindow").classList.toggle("chat-window--open",chatOpen);if(chatOpen&&!visitorName){document.getElementById("chatNameForm").classList.add("chat-name-form--show");setTimeout(function(){document.getElementById("chatNameInput").focus()},300)}else if(chatOpen){document.getElementById("chatInput").focus()}var fab=document.querySelector(".fab");if(fab)fab.style.display=chatOpen?"none":""}
 function setChatName(){var name=document.getElementById("chatNameInput").value.trim();if(!name){document.getElementById("chatNameInput").focus();return}visitorName=name;localStorage.setItem("galaxy_chat_name",name);document.getElementById("chatNameForm").classList.remove("chat-name-form--show");document.getElementById("chatInput").focus();addChatMsg("system","👋 "+name+", чем можем помочь?")}
-function addChatMsg(role,text){var msgs=document.getElementById("chatMessages");var div=document.createElement("div");div.className="chat-msg chat-msg--"+role;div.innerHTML="<div>"+text+"</div><div class="chat-msg__time">"+new Date().toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"})+"</div>";msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight}
+function addChatMsg(role,text){var msgs=document.getElementById("chatMessages");var div=document.createElement("div");div.className="chat-msg chat-msg--"+role;div.innerHTML="<div>"+text+"</div><div class=\"chat-msg__time\">"+new Date().toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"})+"</div>";msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight}
 function sendChatMsg(){var input=document.getElementById("chatInput");var text=input.value.trim();if(!text)return;input.value="";document.getElementById("chatSendBtn").disabled=true;addChatMsg("client",text);if(!visitorName){document.getElementById("chatNameForm").classList.add("chat-name-form--show");document.getElementById("chatInput").disabled=true;document.getElementById("chatSendBtn").disabled=false;return}fetch("/api/chat/send",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:text,name:visitorName,phone:localStorage.getItem("galaxy_chat_phone")||"",visitorId:getVisitorId()})}).catch(function(){}).then(function(){document.getElementById("chatSendBtn").disabled=false;document.getElementById("chatInput").focus()})}
+document.getElementById("chatFab").addEventListener("click",toggleChat);
 if(visitorName){document.getElementById("chatNameForm").classList.remove("chat-name-form--show")}
-document.addEventListener("click",function(e){if(e.target.closest(".fab")){e.preventDefault();if(!chatOpen)toggleChat()}});
 </script>
 
 </body>
