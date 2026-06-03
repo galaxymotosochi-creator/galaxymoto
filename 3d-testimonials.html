@@ -121,18 +121,21 @@
 
 <script>
 const testimonials = [
-  { name: 'Ava Green', username: '@ava', body: 'Cascade AI made my workflow 10x faster!', img: 'https://randomuser.me/api/portraits/women/32.jpg', country: '🇦🇺' },
-  { name: 'Ana Miller', username: '@ana', body: 'Vertical marquee is a game changer!', img: 'https://randomuser.me/api/portraits/women/68.jpg', country: '🇩🇪' },
-  { name: 'Mateo Rossi', username: '@mat', body: 'Animations are buttery smooth!', img: 'https://randomuser.me/api/portraits/men/51.jpg', country: '🇮🇹' },
-  { name: 'Maya Patel', username: '@maya', body: 'Setup was a breeze!', img: 'https://randomuser.me/api/portraits/women/53.jpg', country: '🇮🇳' },
-  { name: 'Noah Smith', username: '@noah', body: 'Best marquee component!', img: 'https://randomuser.me/api/portraits/men/33.jpg', country: '🇺🇸' },
-  { name: 'Lucas Stone', username: '@luc', body: 'Very customizable and smooth.', img: 'https://randomuser.me/api/portraits/men/22.jpg', country: '🇫🇷' },
-  { name: 'Haruto Sato', username: '@haru', body: 'Impressive performance on mobile!', img: 'https://randomuser.me/api/portraits/men/85.jpg', country: '🇯🇵' },
-  { name: 'Emma Lee', username: '@emma', body: 'Love the pause on hover feature!', img: 'https://randomuser.me/api/portraits/women/45.jpg', country: '🇨🇦' },
-  { name: 'Carlos Ray', username: '@carl', body: 'Great for testimonials and logos.', img: 'https://randomuser.me/api/portraits/men/61.jpg', country: '🇪🇸' },
-  { name: 'Анна', username: '@anna', body: 'Отличный сервис! Сделали быстро и качественно.', img: 'https://randomuser.me/api/portraits/women/17.jpg', country: '🇷🇺' },
-  { name: 'Дмитрий', username: '@dmitry', body: 'Профессиональный подход к делу!', img: 'https://randomuser.me/api/portraits/men/44.jpg', country: '🇷🇺' },
-  { name: 'Sophie', username: '@sophie', body: 'Top quality and fast delivery!', img: 'https://randomuser.me/api/portraits/women/44.jpg', country: '🇫🇷' },
+  { name: "Александр", body: "Недавно обратился в Galaxy Moto Service для ремонта своего скутера. Остался очень доволен качеством обслуживания. Скутер после ремонта едет отлично, никаких посторонних шумов. Рекомендую!", img: "https://randomuser.me/api/portraits/men/1.jpg" },
+  { name: "Дарина", body: "Очень крутой сервис! Через них нашла себе Jilang Max. Было такое что аккумулятор перестал работать — приезжали ребята меня зажигать. Максимально рекомендую!", img: "https://randomuser.me/api/portraits/women/5.jpg" },
+  { name: "Павел З.", body: "Заказал скутер с Калининграда, привезли в целости сохранности. Отличный сервис, всегда на связи. Приятная цена! Всем советую, не пожалеете.", img: "https://randomuser.me/api/portraits/men/8.jpg" },
+  { name: "Рома С.", body: "Хороший мотосервис! Поставили дополнительный свет на скутер. Мастера помогли с выбором места, всё подключили грамотно. Результатом очень доволен!", img: "https://randomuser.me/api/portraits/men/12.jpg" },
+  { name: "Эльвира", body: "Приезжала со своим Yamaha Vino, жаловалась что в горку еле ползёт. Настроили вариатор — сделали всё очень быстро. Теперь скутер летит, горки не замечает!", img: "https://randomuser.me/api/portraits/women/10.jpg" },
+  { name: "Диана", body: "Отличное место! Купили мопед по выгодной цене, в идеальном состоянии. Ездим долго без поломок. У пацанов есть выездной сервис в случае чего.", img: "https://randomuser.me/api/portraits/women/15.jpg" },
+  { name: "Иван Б.", body: "Приехал первый раз, встретили, проконсультировали. Всё сделали от души, без навязывания лишних услуг. Скутер освежили, едет как новый! Спасибо Денису!", img: "https://randomuser.me/api/portraits/men/20.jpg" },
+  { name: "Ровшан З.", body: "Отличный сервис! Приехал на Honda Dio с убитым коленвалом. Ребята быстро всё разобрали, заменили. Теперь двигатель работает тихо, как новый.", img: "https://randomuser.me/api/portraits/men/22.jpg" },
+  { name: "Глеб М.", body: "Отличный мотосервис! Приехал на настройку вариатора. Насколько быстрее стал ехать скутер после работы Дениса! Механик действительно знает своё дело!", img: "https://randomuser.me/api/portraits/men/25.jpg" },
+  { name: "Наталья М.", body: "Быстро, качественно, с душой! Починили мопед за считанные часы. Как девушке мне было важно получить не только ремонт, но и понятные консультации — здесь это есть.", img: "https://randomuser.me/api/portraits/women/20.jpg" },
+  { name: "Vadim L.", body: "Отличный мастер! Быстро качественно, без обмана!", img: "https://randomuser.me/api/portraits/men/30.jpg" },
+  { name: "Алексей Н.", body: "Приезжал для планового ТО. Профессиональный подход и к клиенту и к технике. Обслуживаться буду только у них. Всем мотоциклистам советую!", img: "https://randomuser.me/api/portraits/men/33.jpg" },
+  { name: "Антропов С.", body: "Приехал без записи с внезапной поломкой. Не отказали, быстро нашли запчасть и всё починили. Спасибо за человеческое отношение!", img: "https://randomuser.me/api/portraits/men/35.jpg" },
+  { name: "Мария С.", body: "Проткнула колесо поздно вечером, позвонила. Мастер сразу смог подъехать, за что отдельное спасибо! Колесо поменяли, всё супер!", img: "https://randomuser.me/api/portraits/women/25.jpg" },
+  { name: "Артур В.", body: "Парни хорошие, приятные, отзывчивые! Всё сделали как доктор прописал. Недорого, быстро, качественно. Рекомендую к посещению!", img: "https://randomuser.me/api/portraits/men/40.jpg" },
 ];
 
 function cardHTML(t) {
