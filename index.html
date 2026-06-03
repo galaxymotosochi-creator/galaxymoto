@@ -1756,7 +1756,10 @@ setTimeout(function(){
 <div class="reviews-overlay" id="reviewsOverlay" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.4);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)"></div>
 
 <div class="reviews-panel" id="reviewsPanel" style="position:fixed;bottom:0;left:0;right:0;z-index:1000;background:#fff;border-radius:24px 24px 0 0;padding:20px 20px 32px;transform:translateY(100%);transition:transform .35s cubic-bezier(0.32,0.72,0,1);max-height:92vh;overflow-y:auto">
-  <div style="width:40px;height:4px;background:#ddd;border-radius:4px;margin:0 auto 16px"></div>
+  <div style="position:relative">
+    <div style="width:40px;height:4px;background:#ddd;border-radius:4px;margin:0 auto 16px"></div>
+    <button onclick="closeReviewsPanel()" style="position:absolute;top:-8px;right:0;width:32px;height:32px;border-radius:50%;background:#f0f0f0;border:none;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#888;line-height:1">&times;</button>
+  </div>
   <div style="text-align:center">
     <div style="font-size:22px;font-weight:700;margin-bottom:4px">Наши отзывы</div>
     <div style="font-size:13px;color:#888;margin-bottom:20px">Реальные отзывы с Яндекс Карт</div>
@@ -1790,14 +1793,43 @@ setTimeout(function(){
 
 document.addEventListener('click', function(e){
   if (e.target.closest('#reviewsTriggerWrap')) {
-    document.getElementById('reviewsPanel').style.transform = 'translateY(0)';
-    document.getElementById('reviewsOverlay').style.display = '';
+    openReviewsPanel();
   }
   if (e.target.closest('#reviewsOverlay')) {
-    document.getElementById('reviewsPanel').style.transform = 'translateY(100%)';
-    document.getElementById('reviewsOverlay').style.display = 'none';
+    closeReviewsPanel();
   }
 });
+
+function openReviewsPanel() {
+  document.getElementById('reviewsPanel').style.transform = 'translateY(0)';
+  document.getElementById('reviewsOverlay').style.display = '';
+}
+
+function closeReviewsPanel() {
+  document.getElementById('reviewsPanel').style.transform = 'translateY(100%)';
+  document.getElementById('reviewsOverlay').style.display = 'none';
+}
+
+// Swipe to close
+var panel = document.getElementById('reviewsPanel');
+var startY = 0;
+panel.addEventListener('touchstart', function(e) {
+  startY = e.touches[0].clientY;
+}, {passive: true});
+panel.addEventListener('touchmove', function(e) {
+  var diff = e.touches[0].clientY - startY;
+  if (diff > 0) {
+    panel.style.transform = 'translateY(' + diff + 'px)';
+  }
+}, {passive: true});
+panel.addEventListener('touchend', function(e) {
+  var diff = e.changedTouches[0].clientY - startY;
+  if (diff > 80) {
+    closeReviewsPanel();
+  } else {
+    panel.style.transform = 'translateY(0)';
+  }
+}, {passive: true});
 </script>
 
   }
