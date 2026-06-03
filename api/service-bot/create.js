@@ -27,9 +27,22 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  // Простой кэш для защиты от дубликатов
+  var dedupCache = global.__dedupCache || {};
+  global.__dedupCache = dedupCache;
+
   try {
     const { text, masterName } = req.body;
     if (!text) return res.status(400).json({ error: 'Text required' });
+    
+    // Если такой же текст был менее 30 секунд назад — пропускаем
+    var textHash = text.trim().substring(0, 50);
+    var now = Date.now();
+    if (dedupCache[textHash] && now - dedupCache[textHash] < 30000) {
+      console.log('Dedup: skipping duplicate request');
+      return res.json({ ok: true, dedup: true });
+    }
+    dedupCache[textHash] = now;
 
     // Разбиваем по строкам
     const lines = text.split('\n').map(s => s.trim()).filter(Boolean);
