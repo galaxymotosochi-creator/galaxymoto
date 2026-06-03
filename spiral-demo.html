@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spiral Animation</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #000; overflow: hidden; height: 100vh; width: 100vw; }
+    canvas#spiral { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+
+    .enter-btn {
+      position: fixed; left: 50%; top: 50%; z-index: 10;
+      transform: translate(-50%, -50%);
+      opacity: 0; transition: all 1.5s ease-out;
+    }
+    .enter-btn--visible {
+      opacity: 1; transform: translate(-50%, -50%) translateY(0);
+    }
+    .enter-btn button {
+      background: none; border: none; cursor: pointer;
+      color: #fff; font-size: 24px;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      font-weight: 200; font-family: 'Inter', -apple-system, sans-serif;
+      transition: all 0.7s;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    .enter-btn button:hover { letter-spacing: 0.3em; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+<canvas id="spiral"></canvas>
+
+<div class="enter-btn" id="enterBtn">
+  <button onclick="window.location.href='https://galaxymoto.ru'">Enter</button>
+</div>
+
+<script>
+// ===== Spiral Animation (from prompt spec) =====
+var canvas = document.getElementById('spiral');
+var ctx = canvas.getContext('2d');
+var DPR = Math.min(window.devicePixelRatio || 1, 2);
+var W = window.innerWidth, H = window.innerHeight;
+var time = 0;
+var NUM_STARS = 5000;
+var TRAIL_LENGTH = 80;
+var CAMERA_Z = -400;
+var TRAVEL_DIST = 3400;
+var ZOOM = 100;
+var START_DOT_Y = 28;
+var CHANGE_EVENT = 0.32;
+
+function resize() {
+  W = window.innerWidth; H = window.innerHeight;
+  DPR = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width = W * DPR;
+  canvas.height = H * DPR;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+}
+resize();
+window.addEventListener('resize', resize);
+
+// Fade in button after 2s
+setTimeout(function() {
+  document.getElementById('enterBtn').classList.add('enter-btn--visible');
+}, 2000);
+
+// ===== Math =====
+function rnd(mi, ma) { return mi + Math.random() * (ma - mi); }
+function constrain(v, mi, ma) { return Math.min(Math.max(v, mi), ma); }
+function map(v, s1, e1, s2, e2) { return s2 + (e2 - s2) * ((v - s1) / (e1 - s1)); }
+function lerp(a, b, t) { return a * (1 - t) + b * t; }
+function ease(p, g) { return p < 0.5 ? 0.5 * Math.pow(2 * p, g) : 1 - 0.5 * Math.pow(2 * (1 - p), g); }
+function easeOutElastic(x) {
+  var c4 = (2 * Math.PI) / 4.5;
+  if (x <= 0) return 0; if (x >= 1) return 1;
+  return Math.pow(2, -8 * x) * Math.sin((x * 8 - 0.75) * c4) + 1;
+}
+
+var COLORS = [[139, 92, 246], [11, 197, 234], [255, 107, 107],
+              [100, 200, 255], [200, 150, 255], [50, 220, 240]];
+
+function spiralPath(p) {
+  p = constrain(1.2 * p, 0, 1);
+  p = ease(p, 1.8);
+  var theta = 2 * Math.PI * 6 * Math.sqrt(p);
+  var rad = 170 * Math.sqrt(p);
+  return { x: rad * Math.cos(theta), y: rad * Math.sin(theta) + START_DOT_Y };
+}
+
+function rotatePoint(v1, v2, p, orientation) {
+  var mx = (v1.x + v2.x) / 2, my = (v1.y + v2.y) / 2;
+  var dx = v1.x - mx, dy = v1.y - my;
+  var angle = Math.atan2(dy, dx);
+  var o = orientation ? -1 : 1;
+  var rad = Math.sqrt(dx * dx + dy * dy);
+  var bounce = Math.sin(p * Math.PI) * 0.05 * (1 - p);
+  return {
+    x: mx + rad * (1 + bounce) * Math.cos(angle + o * Math.PI * easeOutElastic(p)),
+    y: my + rad * (1 + bounce) * Math.sin(angle + o * Math.PI * easeOutElastic(p))
+  };
+}
+
+function projectDot(x, y, z, sz, t2) {
+  var nc = CAMERA_Z + ease(Math.pow(t2, 1.2), 1.8) * TRAVEL_DIST;
+  if (z > nc) {
+    var d = z - nc;
+    ctx.beginPath();
+    ctx.arc(ZOOM * x / d, ZOOM * y / d, 400 * sz / d, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+// Stars
+var stars = [];
+function Star() {
+  this.angle = Math.random() * Math.PI * 2;
+  this.distance = 30 * Math.random() + 15;
+  this.rotDir = Math.random() > 0.5 ? 1 : -1;
+  this.expandRate = 1.2 + Math.random() * 0.8;
+  this.finalScale = 0.7 + Math.random() * 0.6;
+  this.dx = this.distance * Math.cos(this.angle);
+  this.dy = this.distance * Math.sin(this.angle);
+  this.spiralLoc = (1 - Math.pow(1 - Math.random(), 3.0)) / 1.3;
+  this.z = lerp(rnd(0.5 * CAMERA_Z, TRAVEL_DIST + CAMERA_Z)), TRAVEL_DIST / 2, 0.3 * this.spiralLoc);
+  this.strokeWeight = Math.pow(Math.random(), 2.0);
+  this.offsetY = rnd(-20, 20);
+  this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+}
+
+for (var i = 0; i < NUM_STARS; i++) stars.push(new Star());
+
+var startTime = Date.now();
+
+function render() {
+  var elapsed = (Date.now() - startTime) / 1000;
+  time = (elapsed % 25) / 25;
+
+  ctx.fillStyle = '#0a0a12';
+  ctx.fillRect(0, 0, W, H);
+  ctx.save();
+  ctx.translate(W / 2, H / 2);
+
+  var t1 = constrain(map(time, 0, CHANGE_EVENT + 0.25, 0, 1), 0, 1);
+  var t2 = constrain(map(time, CHANGE_EVENT, 1, 0, 1), 0, 1);
+  ctx.rotate(-Math.PI * ease(t2, 2.7));
+
+  // Trail
+  for (var i = 0; i < TRAIL_LENGTH; i++) {
+    var f = map(i, 0, TRAIL_LENGTH, 1.1, 0.1);
+    var sw = (1.3 * (1 - t1) + 3.0 * Math.sin(Math.PI * t1)) * f;
+    ctx.fillStyle = 'rgba(200,180,255,' + (f * 0.3) + ')';
+    var pt = t1 - 0.00015 * i;
+    var pos = spiralPath(pt);
+    var rot = rotatePoint(pos, { x: pos.x + 5, y: pos.y + 5 }, t1, false);
+    var rx = rot.x * (1 - t1) + pos.x * t1;
+    var ry = rot.y * (1 - t1) + pos.y * t1;
+    ctx.beginPath();
+    ctx.arc(rx, ry, sw * 0.5, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Stars
+  for (var i = 0; i < stars.length; i++) {
+    var s = stars[i];
+    var sp = spiralPath(s.spiralLoc);
+    var q = t1 - s.spiralLoc;
+    if (q <= 0) continue;
+
+    var dp = constrain(4 * q, 0, 1);
+    var le = dp, ee = easeOutElastic(dp), pe = Math.pow(dp, 2);
+    var easing;
+    if (dp < 0.3) easing = lerp(le, pe, dp / 0.3);
+    else if (dp < 0.7) easing = lerp(pe, ee, (dp - 0.3) / 0.4);
+    else easing = ee;
+
+    var sx, sy;
+    if (dp < 0.3) {
+      sx = lerp(sp.x, sp.x + s.dx * 0.3, easing / 0.3);
+      sy = lerp(sp.y, sp.y + s.dy * 0.3, easing / 0.3);
+    } else if (dp < 0.7) {
+      var mp = (dp - 0.3) / 0.4;
+      var cs = Math.sin(mp * Math.PI) * s.rotDir * 1.5;
+      var bx = sp.x + s.dx * 0.3, by = sp.y + s.dy * 0.3;
+      var tx = sp.x + s.dx * 0.7, ty = sp.y + s.dy * 0.7;
+      var px = -s.dy * 0.4 * cs, py = s.dx * 0.4 * cs;
+      sx = lerp(bx, tx, mp) + px * mp;
+      sy = lerp(by, ty, mp) + py * mp;
+    } else {
+      var fp = (dp - 0.7) / 0.3;
+      var bx = sp.x + s.dx * 0.7, by = sp.y + s.dy * 0.7;
+      var td = s.distance * s.expandRate * 1.5;
+      var sa = s.angle + 1.2 * s.rotDir * fp * Math.PI;
+      var fx = sp.x + td * Math.cos(sa);
+      var fy = sp.y + td * Math.sin(sa);
+      sx = lerp(bx, fx, fp);
+      sy = lerp(by, fy, fp);
+    }
+
+    var vx = (s.z - CAMERA_Z) * sx / ZOOM;
+    var vy = (s.z - CAMERA_Z) * sy / ZOOM;
+    var sm = dp < 0.6 ? 1.0 + dp * 0.2 : 1.2 * (1.0 - (dp - 0.6) / 0.4) + s.finalScale * ((dp - 0.6) / 0.4);
+    ctx.fillStyle = 'rgba(' + s.color[0] + ',' + s.color[1] + ',' + s.color[2] + ',0.8)';
+    projectDot(vx, vy, s.z, 8.5 * s.strokeWeight * sm, t2);
+  }
+
+  if (time > CHANGE_EVENT) projectDot(0, CAMERA_Z * START_DOT_Y / ZOOM, TRAVEL_DIST, 2.5, t2);
+
+  ctx.restore();
+  requestAnimationFrame(render);
+}
+render();
+</script>
+</body>
+</html>
