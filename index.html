@@ -1711,28 +1711,46 @@ setTimeout(function(){
 
 
 <style>
-.hero__reviews-trigger {
+
+<style>
+.reviews-trigger-wrap {
   display: flex; align-items: center; justify-content: center; gap: 8px;
-  margin: 0 auto 32px; padding: 10px 20px; cursor: pointer;
-  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 999px; max-width: 320px; transition: all .25s ease;
-  -webkit-tap-highlight-color: transparent;
+  cursor: pointer; margin-bottom: 24px; transition: all .2s;
 }
-.hero__reviews-trigger:active { transform: scale(0.97); background: rgba(255,255,255,0.1); }
-.hero__reviews-star { font-size: 18px; line-height: 1; }
-.hero__reviews-text { color: rgba(255,255,255,0.8); font-size: 13px; font-weight: 500; white-space: nowrap; }
-.hero__reviews-badge {
-  background: #fc0; color: #111; font-size: 11px; font-weight: 700;
-  padding: 2px 7px; border-radius: 6px; margin-left: 2px;
+.reviews-trigger-plate {
+  display: flex; align-items: center; gap: 10px;
+  border: 1.5px solid #e0e0e0; border-radius: 16px;
+  padding: 10px 18px;
 }
-.hero__reviews-arrow { color: rgba(255,255,255,0.4); font-size: 16px; transition: transform .3s; }
-.hero__reviews-trigger:hover .hero__reviews-arrow { transform: translateX(3px); }
+.reviews-trigger-star {
+  display: flex; align-items: center; justify-content: center;
+  width: 46px; height: 46px;
+  background: linear-gradient(135deg, #0bc5ea, #8b5cf6);
+  border-radius: 50%; font-size: 26px; flex-shrink: 0;
+}
+.reviews-trigger-label { font-size: 11px; color: #999; letter-spacing: .5px; text-transform: uppercase; text-align: left; }
+.reviews-trigger-rating { font-size: 14px; font-weight: 600; color: #111; text-align: left; }
 </style>
 
-<div class="hero__reviews-trigger" id="reviewsTrigger" style="display:none">
-  <span class="hero__reviews-star">⭐</span>
-  <span class="hero__reviews-text">Рейтинг <span class="hero__reviews-badge">5.0</span> на Яндекс.Картах</span>
-  <span class="hero__reviews-arrow">›</span>
+<div class="reviews-trigger-wrap" id="reviewsTriggerWrap" style="display:none">
+  <div class="reviews-trigger-plate">
+    <div class="reviews-trigger-star">⭐</div>
+    <div>
+      <div class="reviews-trigger-label">Яндекс.Карты</div>
+      <div class="reviews-trigger-rating">Рейтинг 5.0 · читайте отзывы</div>
+    </div>
+  </div>
+  <svg width="36" height="30" viewBox="0 0 36 30" fill="none" style="flex-shrink:0">
+    <defs>
+      <linearGradient id="ag" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#0bc5ea"/>
+        <stop offset="100%" stop-color="#8b5cf6"/>
+      </linearGradient>
+    </defs>
+    <path d="M4 14 C10 12, 20 10, 24 16 C26 19, 24 24, 20 26" stroke="url(#ag)" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+    <path d="M20 26 L26 22" stroke="url(#ag)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <path d="M20 26 L22 20" stroke="url(#ag)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </svg>
 </div>
 
 <div class="reviews-overlay" id="reviewsOverlay" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.4);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)"></div>
@@ -1763,7 +1781,7 @@ setTimeout(function(){
 <script>
 setTimeout(function(){
   var sub = document.querySelector('.hero__subtitle');
-  var trigger = document.getElementById('reviewsTrigger');
+  var trigger = document.getElementById('reviewsTriggerWrap');
   if (sub && trigger) {
     sub.parentNode.insertBefore(trigger, sub.nextSibling);
     trigger.style.display = '';
@@ -1771,13 +1789,17 @@ setTimeout(function(){
 }, 1500);
 
 document.addEventListener('click', function(e){
-  if (e.target.closest('#reviewsTrigger')) {
+  if (e.target.closest('#reviewsTriggerWrap')) {
     document.getElementById('reviewsPanel').style.transform = 'translateY(0)';
     document.getElementById('reviewsOverlay').style.display = '';
   }
   if (e.target.closest('#reviewsOverlay')) {
     document.getElementById('reviewsPanel').style.transform = 'translateY(100%)';
     document.getElementById('reviewsOverlay').style.display = 'none';
+  }
+});
+</script>
+
   }
 });
 </script>
