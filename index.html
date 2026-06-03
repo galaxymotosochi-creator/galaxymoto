@@ -1864,7 +1864,7 @@ panel.addEventListener('touchend', function(e) {
 </script>
 
 <!-- ===== Чат-виджет ===== -->
-<a class="chat-fab" id="chatFab" href="javascript:void(0)" onclick="toggleChat()" style="z-index:2147483647!important;position:fixed!important;pointer-events:auto!important;display:flex!important">
+<a class="chat-fab" id="chatFab" style="z-index:2147483647!important;position:fixed!important;pointer-events:auto!important;display:flex!important;cursor:pointer">
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
   </svg>
@@ -1908,7 +1908,16 @@ function setChatName(){var name=document.getElementById("chatNameInput").value.t
 function addChatMsg(role,text){var msgs=document.getElementById("chatMessages");var div=document.createElement("div");div.className="chat-msg chat-msg--"+role;div.innerHTML="<div>"+text+"</div><div class=\"chat-msg__time\">"+new Date().toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"})+"</div>";msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight}
 function sendChatMsg(){var input=document.getElementById("chatInput");var text=input.value.trim();if(!text)return;input.value="";document.getElementById("chatSendBtn").disabled=true;addChatMsg("client",text);if(!visitorName){document.getElementById("chatNameForm").classList.add("chat-name-form--show");document.getElementById("chatInput").disabled=true;document.getElementById("chatSendBtn").disabled=false;return}fetch("/api/chat/send",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:text,name:visitorName,phone:localStorage.getItem("galaxy_chat_phone")||"",visitorId:getVisitorId()})}).catch(function(){}).then(function(){document.getElementById("chatSendBtn").disabled=false;document.getElementById("chatInput").focus()})}
 // Fallback: клик через событие мыши (срабатывает до React)
-document.getElementById("chatFab").onmousedown = toggleChat;
+// ПЕРЕХВАТЫВАЕМ клик на capture phase (ДО React)
+document.addEventListener("mousedown",function(e){
+  var target = e.target;
+  if(target.id==="chatFab"||target.closest&&target.closest("#chatFab")){
+    e.stopPropagation();
+    e.preventDefault();
+    toggleChat();
+    return false;
+  }
+},true);
 if(visitorName){document.getElementById("chatNameForm").classList.remove("chat-name-form--show")}
 </script>
 
