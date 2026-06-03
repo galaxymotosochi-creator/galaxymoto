@@ -1711,7 +1711,6 @@ setTimeout(function(){
 </script>
 
 
-<style>
 
 <style>
 .reviews-trigger-wrap {
@@ -1731,6 +1730,44 @@ setTimeout(function(){
 }
 .reviews-trigger-label { font-size: 11px; color: #999; letter-spacing: .5px; text-transform: uppercase; text-align: left; }
 .reviews-trigger-rating { font-size: 14px; font-weight: 600; color: #111; text-align: left; }
+/* ===== Чат-виджет ===== */
+.chat-fab{position:fixed;bottom:80px;right:var(--space-6);width:56px;height:56px;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff;border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,.3);cursor:pointer;z-index:10000;transition:all .25s}
+.chat-fab:hover{transform:scale(1.1)}
+.chat-window{position:fixed;bottom:80px;right:var(--space-6);width:360px;max-width:calc(100vw - 32px);height:520px;max-height:calc(100vh - 120px);background:#1c1c1e;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,.4);z-index:9999;display:none;flex-direction:column;overflow:hidden;animation:chatSlideUp .3s ease}
+.chat-window--open{display:flex}
+@keyframes chatSlideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.chat-header{display:flex;align-items:center;gap:12px;padding:16px;background:#2c2c2e;border-bottom:1px solid #3a3a3c}
+.chat-header__avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.chat-header__info{flex:1}
+.chat-header__name{font-size:15px;font-weight:600;color:#fff}
+.chat-header__status{font-size:12px;color:#30d158}
+.chat-header__close{width:32px;height:32px;border-radius:50%;border:none;background:transparent;color:#888;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center}
+.chat-header__close:hover{background:#3a3a3c;color:#fff}
+.chat-body{flex:1;display:flex;flex-direction:column}
+.chat-name-form{padding:16px;background:#2c2c2e;border-bottom:1px solid #3a3a3c;display:none}
+.chat-name-form--show{display:block}
+.chat-name-form__label{font-size:13px;color:#888;margin-bottom:8px;display:block}
+.chat-name-form__row{display:flex;gap:8px}
+.chat-name-form__input{flex:1;border:none;border-radius:20px;padding:10px 16px;font-size:14px;font-family:inherit;background:#3a3a3c;color:#fff;outline:none}
+.chat-name-form__btn{padding:10px 20px;border-radius:20px;border:none;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff;font-weight:600;cursor:pointer;font-size:14px}
+.chat-messages{flex:1;overflow-y:auto;padding:12px 16px;display:flex;flex-direction:column;gap:8px}
+.chat-messages::-webkit-scrollbar{width:4px}
+.chat-messages::-webkit-scrollbar-track{background:transparent}
+.chat-messages::-webkit-scrollbar-thumb{background:#3a3a3c;border-radius:4px}
+.chat-msg{max-width:80%;padding:10px 14px;border-radius:14px;font-size:14px;line-height:1.5;word-wrap:break-word;animation:msgIn .3s ease}
+@keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.chat-msg--client{align-self:flex-end;background:#0a84ff;color:#fff;border-bottom-right-radius:4px}
+.chat-msg--manager{align-self:flex-start;background:#2c2c2e;color:#fff;border-bottom-left-radius:4px}
+.chat-msg--system{align-self:center;background:transparent;color:#888;font-size:12px;padding:4px 8px}
+.chat-msg__time{font-size:10px;opacity:.6;margin-top:4px;text-align:right}
+.chat-input-area{display:flex;gap:8px;padding:12px 16px;background:#2c2c2e;border-top:1px solid #3a3a3c}
+.chat-input{flex:1;border:none;border-radius:20px;padding:10px 16px;font-size:14px;font-family:inherit;background:#3a3a3c;color:#fff;outline:none}
+.chat-input::placeholder{color:#888}
+.chat-send-btn{width:40px;height:40px;border-radius:50%;border:none;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.chat-send-btn:hover{transform:scale(1.05)}
+.chat-send-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+@media(max-width:480px){.chat-window{right:0;bottom:0;width:100%;max-width:100%;height:100%;max-height:100%;border-radius:0}}
+
 </style>
 
 <div class="reviews-trigger-wrap" id="reviewsTriggerWrap" style="display:none;position:relative;min-height:60px;margin:0 auto 40px;width:fit-content">
@@ -1823,6 +1860,54 @@ panel.addEventListener('touchend', function(e) {
     panel.style.transform = 'translateY(0)';
   }
 }, {passive: true});
+</script>
+
+<!-- ===== Чат-виджет ===== -->
+<button class="chat-fab" id="chatFab" onclick="toggleChat()">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+  </svg>
+</button>
+<div class="chat-window" id="chatWindow">
+  <div class="chat-header">
+    <div class="chat-header__avatar">💬</div>
+    <div class="chat-header__info">
+      <div class="chat-header__name">GALAXY MOTO</div>
+      <div class="chat-header__status">🟢 онлайн</div>
+    </div>
+    <button class="chat-header__close" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="chat-body">
+    <div class="chat-name-form chat-name-form--show" id="chatNameForm">
+      <span class="chat-name-form__label">Как к вам обращаться?</span>
+      <div class="chat-name-form__row">
+        <input class="chat-name-form__input" id="chatNameInput" placeholder="Ваше имя" maxlength="50">
+        <button class="chat-name-form__btn" onclick="setChatName()">Готово</button>
+      </div>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="chat-msg chat-msg--system">👋 Напишите нам, мы онлайн!</div>
+    </div>
+    <div class="chat-input-area">
+      <input class="chat-input" id="chatInput" placeholder="Введите сообщение..." onkeydown="if(event.key===Enter)sendChatMsg()">
+      <button class="chat-send-btn" id="chatSendBtn" onclick="sendChatMsg()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+<script>
+var visitorName = localStorage.getItem("galaxy_chat_name") || "";
+var chatOpen = false;
+function getVisitorId(){var id=localStorage.getItem("galaxy_visitor_id");if(!id){id="v_"+Date.now()+"_"+Math.random().toString(36).slice(2,8);localStorage.setItem("galaxy_visitor_id",id)}return id}
+function toggleChat(){chatOpen=!chatOpen;document.getElementById("chatWindow").classList.toggle("chat-window--open",chatOpen);if(chatOpen&&!visitorName){document.getElementById("chatNameForm").classList.add("chat-name-form--show");setTimeout(function(){document.getElementById("chatNameInput").focus()},300)}else if(chatOpen){document.getElementById("chatInput").focus()}var fab=document.querySelector(".fab");if(fab)fab.style.display=chatOpen?"none":""}
+function setChatName(){var name=document.getElementById("chatNameInput").value.trim();if(!name){document.getElementById("chatNameInput").focus();return}visitorName=name;localStorage.setItem("galaxy_chat_name",name);document.getElementById("chatNameForm").classList.remove("chat-name-form--show");document.getElementById("chatInput").focus();addChatMsg("system","👋 "+name+", чем можем помочь?")}
+function addChatMsg(role,text){var msgs=document.getElementById("chatMessages");var div=document.createElement("div");div.className="chat-msg chat-msg--"+role;div.innerHTML="<div>"+text+"</div><div class="chat-msg__time">"+new Date().toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"})+"</div>";msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight}
+function sendChatMsg(){var input=document.getElementById("chatInput");var text=input.value.trim();if(!text)return;input.value="";document.getElementById("chatSendBtn").disabled=true;addChatMsg("client",text);if(!visitorName){document.getElementById("chatNameForm").classList.add("chat-name-form--show");document.getElementById("chatInput").disabled=true;document.getElementById("chatSendBtn").disabled=false;return}fetch("/api/chat/send",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:text,name:visitorName,phone:localStorage.getItem("galaxy_chat_phone")||"",visitorId:getVisitorId()})}).catch(function(){}).then(function(){document.getElementById("chatSendBtn").disabled=false;document.getElementById("chatInput").focus()})}
+if(visitorName){document.getElementById("chatNameForm").classList.remove("chat-name-form--show")}
+document.addEventListener("click",function(e){if(e.target.closest(".fab")){e.preventDefault();if(!chatOpen)toggleChat()}});
 </script>
 
 </body>
