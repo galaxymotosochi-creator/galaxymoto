@@ -172,7 +172,7 @@ export default async function handler(req, res) {
 
     res.json({
       ok: true,
-      ticketId: data.ticketId || ticketId,
+      ticketId,
       orderNumber,
       name: ticketData.name,
       phone: ticketData.phone,
