@@ -1709,5 +1709,78 @@ setTimeout(function(){
 }, 1000);
 </script>
 
+
+<style>
+.hero__reviews-trigger {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  margin: 0 auto 32px; padding: 10px 20px; cursor: pointer;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 999px; max-width: 320px; transition: all .25s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.hero__reviews-trigger:active { transform: scale(0.97); background: rgba(255,255,255,0.1); }
+.hero__reviews-star { font-size: 18px; line-height: 1; }
+.hero__reviews-text { color: rgba(255,255,255,0.8); font-size: 13px; font-weight: 500; white-space: nowrap; }
+.hero__reviews-badge {
+  background: #fc0; color: #111; font-size: 11px; font-weight: 700;
+  padding: 2px 7px; border-radius: 6px; margin-left: 2px;
+}
+.hero__reviews-arrow { color: rgba(255,255,255,0.4); font-size: 16px; transition: transform .3s; }
+.hero__reviews-trigger:hover .hero__reviews-arrow { transform: translateX(3px); }
+</style>
+
+<div class="hero__reviews-trigger" id="reviewsTrigger" style="display:none">
+  <span class="hero__reviews-star">⭐</span>
+  <span class="hero__reviews-text">Рейтинг <span class="hero__reviews-badge">5.0</span> на Яндекс.Картах</span>
+  <span class="hero__reviews-arrow">›</span>
+</div>
+
+<div class="reviews-overlay" id="reviewsOverlay" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.4);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)"></div>
+
+<div class="reviews-panel" id="reviewsPanel" style="position:fixed;bottom:0;left:0;right:0;z-index:1000;background:#fff;border-radius:24px 24px 0 0;padding:20px 20px 32px;transform:translateY(100%);transition:transform .35s cubic-bezier(0.32,0.72,0,1);max-height:92vh;overflow-y:auto">
+  <div style="width:40px;height:4px;background:#ddd;border-radius:4px;margin:0 auto 16px"></div>
+  <div style="text-align:center">
+    <div style="font-size:22px;font-weight:700;margin-bottom:4px">Наши отзывы</div>
+    <div style="font-size:13px;color:#888;margin-bottom:20px">Реальные отзывы с Яндекс Карт</div>
+    <div style="position:relative;width:280px;height:598px;margin:0 auto;background:linear-gradient(145deg,#1a1a1e,#0d0d0f);border-radius:38px;box-shadow:0 0 0 2px #3a3a3e,0 20px 60px rgba(0,0,0,0.4)">
+      <div style="position:absolute;left:8px;top:12px;width:264px;height:574px;background:#000;border-radius:28px;overflow:hidden">
+        <video autoplay muted loop playsinline preload="auto" style="width:100%;height:100%;object-fit:cover;display:block">
+          <source src="https://litter.catbox.moe/hdu5hc.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div style="position:absolute;left:8px;top:12px;width:264px;height:574px;border-radius:28px;background:linear-gradient(135deg,rgba(255,255,255,0.04) 0%,transparent 35%,transparent 70%,rgba(255,255,255,0.015) 100%);pointer-events:none;z-index:3"></div>
+      <div style="position:absolute;left:50%;top:14px;transform:translateX(-50%);width:90px;height:18px;background:#0d0d0f;border-radius:0 0 10px 10px;z-index:4"></div>
+      <div style="position:absolute;left:8px;top:12px;width:264px;height:574px;border-radius:28px;box-shadow:inset 0 0 0 2px #0d0d0f;pointer-events:none;z-index:4"></div>
+    </div>
+    <div style="margin-top:14px">
+      <div style="display:flex;gap:4px;justify-content:center;color:#ffd700;font-size:20px">★★★★★</div>
+      <div style="color:#ffd700;font-size:28px;font-weight:800;margin-top:6px">5.0</div>
+      <div style="color:#888;font-size:13px">Средняя оценка · Более 100 отзывов</div>
+    </div>
+  </div>
+</div>
+
+<script>
+setTimeout(function(){
+  var sub = document.querySelector('.hero__subtitle');
+  var trigger = document.getElementById('reviewsTrigger');
+  if (sub && trigger) {
+    sub.parentNode.insertBefore(trigger, sub.nextSibling);
+    trigger.style.display = '';
+  }
+}, 1500);
+
+document.addEventListener('click', function(e){
+  if (e.target.closest('#reviewsTrigger')) {
+    document.getElementById('reviewsPanel').style.transform = 'translateY(0)';
+    document.getElementById('reviewsOverlay').style.display = '';
+  }
+  if (e.target.closest('#reviewsOverlay')) {
+    document.getElementById('reviewsPanel').style.transform = 'translateY(100%)';
+    document.getElementById('reviewsOverlay').style.display = 'none';
+  }
+});
+</script>
+
 </body>
 </html>
