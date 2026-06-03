@@ -1,13 +1,10 @@
 // Создание заявки через AI-парсинг сообщения мастера
-import { createHash } from 'crypto';
-
 const API_KEY = 'AIzaSyAY_1e66dxHKq46HhUVRo8x1yB7ZbyPJzc';
 const PROJECT_ID = 'capsulehouse-1c0c9';
 const FIRESTORE_URL = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents`;
 
 function toFirestoreValue(val) {
   if (typeof val === 'number') return { integerValue: String(Math.round(val)) };
-  if (typeof val === 'boolean') return { booleanValue: val };
   return { stringValue: String(val) };
 }
 
@@ -32,14 +29,16 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { text, masterName, chatId } = req.body;
+    const { text, masterName } = req.body;
     if (!text) return res.status(400).json({ error: 'Text required' });
 
     // AI-парсинг через DeepSeek
-    let client = '', work = '', date = '', time = '';
+    let name = '', phone = '', comment = '', date = '', time = '';
     
     const DEEPSEEK_KEY = process.env.DEEPSEEK_API_KEY || 'sk-6490952906544f3b85771c4ee1dccbaa';
     
+    const todayStr = new Date().toISOString().slice(0, 10);
+
     try {
       const aiResp = await fetch('https://api.deepseek.com/v1/chat/completions', {
         method: 'POST',
@@ -51,11 +50,25 @@ export default async function handler(req, res) {
           model: 'deepseek-chat',
           messages: [{
             role: 'system',
-            content: `Извлеки из сообщения мастера: клиент, работа, дата, время. 
-Ответь ТОЛЬКО JSON: {"client":"","work":"","date":"","time":""}
-Если дата не указана — поставь пустую строку. Если "завтра" — вычисли дату.
-Если "сегодня" или нет даты — тоже пустая строка.
-Сегодняшняя дата: ${new Date().toISOString().slice(0,10)}`,
+            content: `Ты — парсер заявок для сервиса мототехники.
+Из сообщения мастера извлеки данные и верни ТОЛЬКО JSON:
+{"name":"","phone":"","comment":"","date":"","time":""}
+
+Правила:
+- name — имя клиента (всегда заполнено)
+- phone — номер телефона (если есть, может быть без +)
+- comment — что нужно сделать (адв, замена масла, ремонт и т.д.)
+- date — дата в формате ГГГГ-ММ-ДД. "завтра" = ${(() => { const d = new Date(); d.setDate(d.getDate() + 1); return d.toISOString().slice(0,10); })()}. "сегодня" или без даты = пустая строка. "15 мая" преобразуй в дату.
+- time — время в формате ЧЧ:ММ (если есть)
+
+Примеры:
+"Игорь адв 15 мая 16:00" → {"name":"Игорь","phone":"","comment":"адв","date":"${new Date(new Date().getFullYear(), 4, 15).toISOString().slice(0,10)}","time":"16:00"}
+"Петров +79001234567 замена цепи завтра 11:30" → {"name":"Петров","phone":"+79001234567","comment":"замена цепи","date":"${(() => { const d = new Date(); d.setDate(d.getDate() + 1); return d.toISOString().slice(0,10); })()}","time":"11:30"}
+"Сергей 15:00" → {"name":"Сергей","phone":"","comment":"","date":"","time":"15:00"}
+"Анна замена масла" → {"name":"Анна","phone":"","comment":"замена масла","date":"","time":""}
+
+Сегодня: ${todayStr}
+Верни ТОЛЬКО JSON, без пояснений.`,
           }, {
             role: 'user',
             content: text,
@@ -67,8 +80,9 @@ export default async function handler(req, res) {
       const aiText = aiData.choices?.[0]?.message?.content || '';
       try {
         const parsed = JSON.parse(aiText.replace(/```json|```/g, '').trim());
-        client = parsed.client || '';
-        work = parsed.work || '';
+        name = parsed.name || '';
+        phone = parsed.phone || '';
+        comment = parsed.comment || '';
         date = parsed.date || '';
         time = parsed.time || '';
       } catch(e) {
@@ -78,11 +92,11 @@ export default async function handler(req, res) {
       console.error('AI call error:', e);
     }
 
-    // Fallback: простой разбор
-    if (!client && !work) {
+    // Fallback: если AI не сработал
+    if (!name) {
       const parts = text.split(/[,;]/).map(s => s.trim()).filter(Boolean);
-      client = parts[0] || '—';
-      work = parts.slice(1).join(', ') || text;
+      name = parts[0] || '—';
+      comment = parts.slice(1).join(', ') || text;
     }
 
     const now = new Date();
@@ -91,19 +105,19 @@ export default async function handler(req, res) {
 
     const ticketData = {
       id: ticketId,
-      client: client || '—',
-      work: work || text,
+      name: name || '—',
+      phone: phone || '',
+      comment: comment || '',
       date: date || today,
-      time: time || now.toLocaleTimeString('ru-RU', {hour:'2-digit',minute:'2-digit'}),
+      time: time || '',
       status: 'Новая',
-      masterName: masterName || 'Мастер',
-      source: 'telegram_bot',
+      master: masterName || 'Из Telegram',
+      source: 'telegram',
       createdAt: now.toISOString(),
       updatedAt: now.toISOString(),
-      originalText: text,
     };
 
-    // Сохраняем в Firestore через REST API
+    // Сохраняем в Firestore
     const docUrl = `${FIRESTORE_URL}/galaxymoto_bookings?documentId=${ticketId}&key=${API_KEY}`;
     
     const fireResp = await fetch(docUrl, {
@@ -112,18 +126,18 @@ export default async function handler(req, res) {
       body: JSON.stringify(toFields(ticketData)),
     });
 
-    const fireResult = await fireResp.json();
-    
     if (!fireResp.ok) {
-      console.error('Firestore error:', fireResult);
+      const err = await fireResp.json();
+      console.error('Firestore error:', err);
       return res.status(500).json({ error: 'Firestore write failed' });
     }
 
     res.json({
       ok: true,
       ticketId,
-      client: ticketData.client,
-      work: ticketData.work,
+      name: ticketData.name,
+      phone: ticketData.phone,
+      comment: ticketData.comment,
       date: ticketData.date,
       time: ticketData.time,
     });

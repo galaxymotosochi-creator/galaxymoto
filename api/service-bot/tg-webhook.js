@@ -84,7 +84,13 @@ async function createTicket(text, chatId, from) {
     });
     const data = await resp.json();
     if (data.ok) {
-      return `✅ Заявка №${data.ticketId} создана!\n\n👤 Клиент: ${data.client}\n🔧 Работа: ${data.work}\n📅 ${data.date} ${data.time}\n\nСоздана из твоего сообщения:\n${text}`;
+      let reply = `✅ Заявка №${data.ticketId} создана!\n`;
+      reply += `\n👤 Имя: ${data.name}`;
+      if (data.phone) reply += `\n📞 Телефон: ${data.phone}`;
+      if (data.comment) reply += `\n📝 Комментарий: ${data.comment}`;
+      reply += `\n📅 Дата: ${data.date}`;
+      if (data.time) reply += `\n⏰ Время: ${data.time}`;
+      return reply;
     }
     return '❌ Ошибка создания заявки. Попробуй ещё раз.';
   } catch (e) {
