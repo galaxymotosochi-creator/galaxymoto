@@ -14,7 +14,7 @@
       position: fixed; inset: 0; z-index: 10;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       padding: 40px 20px; text-align: center;
-      background: rgba(255,255,255,0.92);
+      background: rgba(255,255,255,0.55);
     }
     .hero__badge {
       display: inline-flex; align-items: center; gap: 8px;
@@ -119,9 +119,9 @@ function easeOutElastic(x) {
   return Math.pow(2, -8 * x) * Math.sin((x * 8 - 0.75) * c4) + 1;
 }
 
-var COLORS = [[30, 30, 35], [50, 50, 55], [70, 70, 75],
-              [15, 15, 20], [40, 40, 45], [60, 60, 65],
-              [20, 20, 25], [10, 10, 15]];
+var COLORS = [[0, 0, 0], [10, 10, 10], [20, 20, 20],
+              [5, 5, 5], [15, 15, 15], [25, 25, 25],
+              [0, 0, 0], [10, 10, 10]];
 
 function spiralPath(p) {
   p = constrain(1.2 * p, 0, 1);
@@ -149,7 +149,7 @@ function projectDot(x, y, z, sz, t2) {
   if (z > nc) {
     var d = z - nc;
     ctx.beginPath();
-    ctx.arc(ZOOM * x / d, ZOOM * y / d, 1500 * sz / d, 0, Math.PI * 2);
+    ctx.arc(ZOOM * x / d, ZOOM * y / d, 3500 * sz / d, 0, Math.PI * 2);
     ctx.fill();
   }
 }
@@ -192,7 +192,7 @@ function render() {
   for (var i = 0; i < TRAIL_LENGTH; i++) {
     var f = map(i, 0, TRAIL_LENGTH, 1.1, 0.1);
     var sw = (1.3 * (1 - t1) + 3.0 * Math.sin(Math.PI * t1)) * f;
-    ctx.fillStyle = 'rgba(40,40,45,' + (f * 0.5) + ')';
+    ctx.fillStyle = 'rgba(0,0,0,' + (f * 0.7) + ')';
     var pt = t1 - 0.00015 * i;
     var pos = spiralPath(pt);
     var rot = rotatePoint(pos, { x: pos.x + 5, y: pos.y + 5 }, t1, false);
