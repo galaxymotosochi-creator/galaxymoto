@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', sans-serif; background: #fff; color: #111; overflow: hidden; height: 100vh; }
+    body { font-family: 'Inter', sans-serif; background: #fff; color: #111;  height: 100vh; }
     
     .beam-wrapper {
       position: fixed; inset: 0; z-index: 10;
@@ -17,19 +17,18 @@
       padding: 40px 20px; text-align: center;
     }
 
-    .beam-container {
+    /* FIXED */
+.beam-container {
       position: relative;
       padding: 60px 80px;
       border-radius: 20px;
-      border: 1px solid rgba(0,0,0,0.04);
-      background: #fff;
+      border: 2px solid transparent;
+      background: linear-gradient(#fff,#fff) padding-box, linear-gradient(135deg,#ffaa40,#9c40ff) border-box;
       box-shadow: 0 4px 40px rgba(0,0,0,0.04);
-      overflow: hidden;
+      
     }
 
-    /* ===== Border Beam (CSS only) ===== */
-    .beam-container::before {
-      content: '';
+    /* ===== Border Beam (fixed) (CSS only) ===== */
       position: absolute;
       inset: -2px;
       border-radius: 22px;
@@ -82,12 +81,14 @@
       .hero__title { font-size: 28px; } 
       .hero__subtitle { font-size: 15px; } 
       .hero__btn { font-size: 13px; padding: 11px 20px; } 
-      .beam-container { padding: 40px 30px; }
+      /* FIXED */
+.beam-container { padding: 40px 30px; }
     }
     @media (max-width: 480px) { 
       .hero__title { font-size: 24px; } 
       .hero__actions-row { flex-direction: column; } 
-      .beam-container { padding: 30px 20px; border-radius: 16px; }
+      /* FIXED */
+.beam-container { padding: 30px 20px; border-radius: 16px; }
     }
   </style>
 </head>
