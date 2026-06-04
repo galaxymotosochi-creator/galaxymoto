@@ -17,35 +17,38 @@
       padding: 40px 20px; text-align: center;
     }
 
-    .beam-container {
+        .beam-container {
       position: relative;
       padding: 60px 80px;
       border-radius: 20px;
       border: 1px solid rgba(0,0,0,0.06);
       background: #fff;
       box-shadow: 0 4px 40px rgba(0,0,0,0.04);
-      overflow: hidden;
     }
-    .beam-container::before {
-      content: '';
+
+    .beam-snake {
       position: absolute;
-      inset: -1px;
-      border-radius: 21px;
-      padding: 1.5px;
-      background: conic-gradient(from 0deg at 50% 50%, 
-        transparent 325deg, 
-        #8b5cf6 340deg, 
-        #0bc5ea 350deg, 
-        transparent 360deg
-      );
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      animation: beamSlide 2.5s linear infinite;
+      inset: -2px;
+      width: calc(100% + 4px);
+      height: calc(100% + 4px);
       pointer-events: none;
     }
-    @keyframes beamSlide {
-      to { transform: rotate(360deg); }
+    .beam-snake rect {
+      fill: none;
+      stroke-width: 2;
+      stroke: rgba(0,0,0,0.06);  /* серый фон рамки */
+      rx: 21; ry: 21;
+    }
+    .beam-snake .snake {
+      stroke: url(#snakeGrad);
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-dasharray: 40 1000;
+      animation: snakeMove 2s linear infinite;
+    }
+    @keyframes snakeMove {
+      to { stroke-dashoffset: -1040; }
+    }
     }
 
     /* ===== Hero content ===== */
@@ -79,6 +82,7 @@
     .chat-fab { position: fixed; bottom: 24px; right: 24px; z-index: 100; width: 56px; height: 56px; background: linear-gradient(135deg, #0bc5ea, #8b5cf6); color: #fff; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(0,0,0,0.3); cursor: pointer; transition: all .25s; text-decoration: none; }
     .chat-fab:hover { transform: scale(1.1); }
 
+    @keyframes snakeMove { to { stroke-dashoffset: -1040; } }
     @media (max-width: 768px) { 
       .hero__title { font-size: 28px; } 
       .hero__subtitle { font-size: 15px; } 
@@ -96,6 +100,16 @@
 
 <div class="beam-wrapper">
   <div class="beam-container">
+      <svg class="beam-snake" style="position:absolute;inset:-2px;width:calc(100%+4px);height:calc(100%+4px);pointer-events:none" viewBox="0 0 100% 100%" preserveAspectRatio="none">
+    <defs>
+      <linearGradient id="snakeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#8b5cf6"/>
+        <stop offset="100%" stop-color="#0bc5ea"/>
+      </linearGradient>
+    </defs>
+    <rect fill="none" stroke="rgba(0,0,0,0.06)" stroke-width="2" rx="21" ry="21" x="1" y="1" width="calc(100% - 2px)" height="calc(100% - 2px)"/>
+    <rect class="snake" fill="none" stroke="url(#snakeGrad)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="40 1000" rx="21" ry="21" x="1" y="1" width="calc(100% - 2px)" height="calc(100% - 2px)" style="animation:snakeMove 2s linear infinite"/>
+  </svg>
     <div class="hero__badge"><span class="hero__badge-dot"></span> Мототехника и сервис в Сочи</div>
     <div class="hero__title">GALAXY <span class="hero__title-highlight">MOTO</span><br>Полный цикл твоего движения</div>
     <div class="hero__subtitle">Покупка, аренда, честный сервис и<br>оригинальные запчасти для мототехники.<br>Берем все заботы на себя</div>
