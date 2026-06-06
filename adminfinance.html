@@ -450,7 +450,7 @@ function renderOps(){
       var onclick=clickable?' onclick="editRecord(\''+it.docId+'\')" style="cursor:pointer"':'';
       var descExtra=(it.type==='pay'&&(it.cat.indexOf('Выплата:')===0))?it.cat.replace('Выплата: ','')+' ':' ';
       html+='<div class="ops-item"'+(bg?' style="background:'+bg+'"':'')+onclick+'>';
-      html+='<span style="font-size:11px;color:#888;width:55px;flex-shrink:0">'+(it.date?it.date.slice(5):'')+'</span>';
+      html+='<span style="font-size:11px;color:#888;width:55px;flex-shrink:0">'+(it.date?parseInt(it.date.slice(8,10))+'.'+it.date.slice(5,7):'')+'</span>';
       html+='<span style="font-size:12px;font-weight:'+(it.type==='pay'?600:500)+';color:'+it.clr+';flex:1;margin:0 6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(it.cat)+(it.desc?' ('+esc(it.desc)+')':'')+'</span>';
       html+='<span style="font-size:11px;color:#888;width:60px;flex-shrink:0;text-align:left">'+it.pay+'</span>';
       html+='<span style="font-size:13px;font-weight:700;color:'+it.clr+';width:90px;flex-shrink:0;text-align:right">'+it.sign+Math.abs(it.amt).toLocaleString()+' ₽</span></div>';
