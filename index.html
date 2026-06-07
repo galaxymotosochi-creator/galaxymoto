@@ -2092,7 +2092,7 @@ setTimeout(function(){
   var b=document.querySelector('.guide-onpage');if(!b)return;
   var heads=document.querySelectorAll('.section__title');var cat=null;
   heads.forEach(function(h){if(h.textContent.trim().indexOf('Каталог')>=0)cat=h;});
-  if(cat)cat.parentElement.insertBefore(b,cat.parentElement.children[cat.parentElement.children.length-1].nextSibling);
+  if(cat){var sec=cat;while(sec.parentElement&&!sec.matches('section,body'))sec=sec.parentElement;sec.parentElement.insertBefore(b,sec.nextSibling);}
   else b.parentElement.insertBefore(b,document.querySelector('.reviews-trigger-wrap'));
 },3000);
 </script>
