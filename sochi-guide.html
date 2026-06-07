@@ -22,7 +22,7 @@ body{font-family:Inter,sans-serif;background:#f8f9fa;color:#111}
 @media(max-width:600px){#map{height:320px}.load{height:320px}}
 .panel{display:none;background:#fff;border-radius:16px;margin:16px 0;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08)}
 .panel.show{display:block}
-.panel img{width:100%;height:200px;object-fit:cover;display:block;background:#eee}
+.panel .loc-photo{width:100%;height:200px;display:flex;align-items:center;justify-content:center;font-size:4rem}
 .panel .pi{padding:16px 20px 20px}
 .panel .hdr{display:flex;align-items:center;gap:10px;margin-bottom:4px}
 .panel .ico{font-size:1.8rem}
@@ -72,7 +72,7 @@ body{font-family:Inter,sans-serif;background:#f8f9fa;color:#111}
 <div id="map"></div>
 
 <div class="panel" id="locPanel">
-  <img id="locImg" src="" alt="">
+  <div class="loc-photo" id="locPhoto">🏖️</div>
   <div class="pi">
     <div class="hdr"><div class="ico" id="locIco"></div><div class="ttl" id="locTtl"></div></div>
     <div class="dsc" id="locDsc"></div>
@@ -121,25 +121,25 @@ body{font-family:Inter,sans-serif;background:#f8f9fa;color:#111}
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 var LOCS = [
-  {id:'p1',ico:'🏔️',t:'Красная Поляна',la:43.6796,lo:40.2070,ct:'g',d:'Горный курорт. Серпантин и виды — идеально для TANK 180',di:'40 км',ti:'50 мин',rt:'https://yandex.ru/maps/?rtext=~43.6796,40.2070',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Krasnaya_Polyana_2018.jpg/800px-Krasnaya_Polyana_2018.jpg'},
-  {id:'p2',ico:'🎿',t:'Роза Хутор',la:43.6581,lo:40.3075,ct:'g',d:'Лучший курорт России! Поднимитесь на высоту 2320 м',di:'45 км',ti:'55 мин',rt:'https://yandex.ru/maps/?rtext=~43.6581,40.3075',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Rosa_Khutor_panorama.jpg/800px-Rosa_Khutor_panorama.jpg'},
-  {id:'p3',ico:'🗼',t:'Гора Ахун',la:43.5552,lo:39.8420,ct:'g',d:'Смотровая башня на 663 м. Панорама всего Сочи!',di:'8 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.5552,39.8420',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Mount_Akhun_Tower%2C_Sochi.jpg/800px-Mount_Akhun_Tower%2C_Sochi.jpg'},
-  {id:'p4',ico:'⛰️',t:'Орлиные скалы',la:43.5646,lo:39.8318,ct:'g',d:'Обрыв над морем. Красивейший вид! Популярное место для фото',di:'9 км',ti:'18 мин',rt:'https://yandex.ru/maps/?rtext=~43.5646,39.8318',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Eagle_Rocks_Sochi.jpg/800px-Eagle_Rocks_Sochi.jpg'},
-  {id:'p5',ico:'🏞️',t:'Агурские водопады',la:43.5488,lo:39.8486,ct:'w',d:'Каскад из трёх водопадов в ущелье. Сказочный маршрут!',di:'10 км',ti:'20 мин',rt:'https://yandex.ru/maps/?rtext=~43.5488,39.8486',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Agura_Waterfalls_Sochi.jpg/800px-Agura_Waterfalls_Sochi.jpg'},
-  {id:'p6',ico:'💧',t:'33 водопада',la:43.6379,lo:39.8254,ct:'w',d:'Джазовые водопады в лесу. Красивейшее место!',di:'25 км',ti:'35 мин',rt:'https://yandex.ru/maps/?rtext=~43.6379,39.8254',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/33_waterfalls.jpg/800px-33_waterfalls.jpg'},
-  {id:'p7',ico:'💦',t:'Девичьи слёзы',la:43.5609,lo:39.8380,ct:'w',d:'Красивый водопад в центре Сочи. Рядом кафе и сувениры',di:'9 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.5609,39.8380',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Maiden%27s_tears_waterfall_Sochi.jpg/800px-Maiden%27s_tears_waterfall_Sochi.jpg'},
-  {id:'p8',ico:'🏖️',t:'Пляж в Адлере',la:43.4297,lo:39.9428,ct:'b',d:'Широкий пляж. Идеально для вечерней покатушки! Закаты — космос',di:'5 км',ti:'10 мин',rt:'https://yandex.ru/maps/?rtext=~43.4297,39.9428',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Adler_beach_Sochi.jpg/800px-Adler_beach_Sochi.jpg'},
-  {id:'p9',ico:'🌊',t:'Набережная Сочи',la:43.5807,lo:39.7207,ct:'b',d:'Главный променад города. Кататься вдоль моря — кайф',di:'2 км',ti:'5 мин',rt:'https://yandex.ru/maps/?rtext=~43.5807,39.7207',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Sochi_Sea_Port_1.jpg/800px-Sochi_Sea_Port_1.jpg'},
-  {id:'p10',ico:'🌃',t:'Олимпийский парк',la:43.4025,lo:39.9564,ct:'p',d:'Ночная подсветка, поющие фонтаны. Обязательно к посещению!',di:'7 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.4025,39.9564',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Sochi_Autodrom_2014.jpg/800px-Sochi_Autodrom_2014.jpg'},
-  {id:'p11',ico:'🌴',t:'Дендрарий',la:43.5767,lo:39.7419,ct:'p',d:'Парк с редкими растениями со всего мира. Красиво круглый год',di:'3 км',ti:'7 мин',rt:'https://yandex.ru/maps/?rtext=~43.5767,39.7419',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Sochi_Dendrarium_3.jpg/800px-Sochi_Dendrarium_3.jpg'},
-  {id:'p12',ico:'🌳',t:'Парк Ривьера',la:43.5706,lo:39.7323,ct:'p',d:'Старейший парк Сочи. Аттракционы, аллеи, пруды',di:'2 км',ti:'5 мин',rt:'https://yandex.ru/maps/?rtext=~43.5706,39.7323',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Sochi_Rivera_Park.jpg/800px-Sochi_Rivera_Park.jpg'},
-  {id:'p13',ico:'🌸',t:'Южные Культуры',la:43.4189,lo:39.9642,ct:'p',d:'Парк с прудами, мостиками, редкими растениями. Жемчужина Адлера!',di:'6 км',ti:'12 мин',rt:'https://yandex.ru/maps/?rtext=~43.4189,39.9642',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Sochi_Yuzhnye_Kultury_park.jpg/800px-Sochi_Yuzhnye_Kultury_park.jpg'},
-  {id:'p14',ico:'🎢',t:'Сочи Парк',la:43.3975,lo:39.9663,ct:'p',d:'Диснейленд по-русски! Американские горки и аттракционы',di:'8 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.3975,39.9663',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Sochi_Park_2019.jpg/800px-Sochi_Park_2019.jpg'},
-  {id:'p15',ico:'✈️',t:'Смотровая (самолёты)',la:43.4481,lo:39.9397,ct:'s',d:'Самолёты заходят прямо над головой! Легендарное место для фото',di:'8 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.4481,39.9397',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Sochi_International_Airport_2014.jpg/800px-Sochi_International_Airport_2014.jpg'},
-  {id:'p16',ico:'⛵',t:'Морской порт',la:43.5832,lo:39.7190,ct:'s',d:'Яхты, чайки, закаты. Самое атмосферное место Сочи',di:'2 км',ti:'5 мин',rt:'https://yandex.ru/maps/?rtext=~43.5832,39.7190',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Sochi_Seaport_2018.jpg/800px-Sochi_Seaport_2018.jpg'},
-  {id:'p17',ico:'🗽',t:'Адлерский маяк',la:43.4244,lo:39.9324,ct:'s',d:'Маяк с 1898 года! Красивое место для прогулок у моря',di:'5 км',ti:'10 мин',rt:'https://yandex.ru/maps/?rtext=~43.4244,39.9324',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Adler_Lighthouse.jpg/800px-Adler_Lighthouse.jpg'},
-  {id:'p18',ico:'🏛️',t:'Зимний театр',la:43.5739,lo:39.7253,ct:'s',d:'Жемчужина архитектуры Сочи. Красивейшее здание с колоннадой',di:'2 км',ti:'5 мин',rt:'https://yandex.ru/maps/?rtext=~43.5739,39.7253',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Sochi_Winter_Theatre_2017.jpg/800px-Sochi_Winter_Theatre_2017.jpg'},
-  {id:'p19',ico:'✈️',t:'Аэропорт Адлер',la:43.4437,lo:39.9478,ct:'s',d:'Встречайте гостей на скутере! Парковка у терминала',di:'10 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.4437,39.9478',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Aeroport_Sochi_2021.jpg/800px-Aeroport_Sochi_2021.jpg'}
+  {id:'p1',ico:'🏔️',t:'Красная Поляна',la:43.6796,lo:40.2070,ct:'g',d:'Горный курорт. Серпантин и виды — идеально для TANK 180',di:'40 км',ti:'50 мин',rt:'https://yandex.ru/maps/?rtext=~43.6796,40.2070',c1:'#7c3aed',c2:'#a78bfa'},
+  {id:'p2',ico:'🎿',t:'Роза Хутор',la:43.6581,lo:40.3075,ct:'g',d:'Лучший курорт России! Поднимитесь на высоту 2320 м',di:'45 км',ti:'55 мин',rt:'https://yandex.ru/maps/?rtext=~43.6581,40.3075',c1:'#7c3aed',c2:'#a78bfa'},
+  {id:'p3',ico:'🗼',t:'Гора Ахун',la:43.5552,lo:39.8420,ct:'g',d:'Смотровая башня на 663 м. Панорама всего Сочи!',di:'8 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.5552,39.8420',c1:'#7c3aed',c2:'#a78bfa'},
+  {id:'p4',ico:'⛰️',t:'Орлиные скалы',la:43.5646,lo:39.8318,ct:'g',d:'Обрыв над морем. Красивейший вид! Популярное место для фото',di:'9 км',ti:'18 мин',rt:'https://yandex.ru/maps/?rtext=~43.5646,39.8318',c1:'#7c3aed',c2:'#a78bfa'},
+  {id:'p5',ico:'🏞️',t:'Агурские водопады',la:43.5488,lo:39.8486,ct:'w',d:'Каскад из трёх водопадов в ущелье. Сказочный маршрут!',di:'10 км',ti:'20 мин',rt:'https://yandex.ru/maps/?rtext=~43.5488,39.8486',c1:'#0bc5ea',c2:'#06b6d4'},
+  {id:'p6',ico:'💧',t:'33 водопада',la:43.6379,lo:39.8254,ct:'w',d:'Джазовые водопады в лесу. Красивейшее место!',di:'25 км',ti:'35 мин',rt:'https://yandex.ru/maps/?rtext=~43.6379,39.8254',c1:'#0bc5ea',c2:'#06b6d4'},
+  {id:'p7',ico:'💦',t:'Девичьи слёзы',la:43.5609,lo:39.8380,ct:'w',d:'Красивый водопад в центре Сочи. Рядом кафе и сувениры',di:'9 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.5609,39.8380',c1:'#0bc5ea',c2:'#06b6d4'},
+  {id:'p8',ico:'🏖️',t:'Пляж в Адлере',la:43.4297,lo:39.9428,ct:'b',d:'Широкий пляж. Идеально для вечерней покатушки! Закаты — космос',di:'5 км',ti:'10 мин',rt:'https://yandex.ru/maps/?rtext=~43.4297,39.9428',c1:'#f59e0b',c2:'#f97316'},
+  {id:'p9',ico:'🌊',t:'Набережная Сочи',la:43.5807,lo:39.7207,ct:'b',d:'Главный променад города. Кататься вдоль моря — кайф',di:'2 км',ti:'5 мин',rt:'https://yandex.ru/maps/?rtext=~43.5807,39.7207',c1:'#f59e0b',c2:'#f97316'},
+  {id:'p10',ico:'🌃',t:'Олимпийский парк',la:43.4025,lo:39.9564,ct:'p',d:'Ночная подсветка, поющие фонтаны. Обязательно к посещению!',di:'7 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.4025,39.9564',c1:'#10b981',c2:'#34d399'},
+  {id:'p11',ico:'🌴',t:'Дендрарий',la:43.5767,lo:39.7419,ct:'p',d:'Парк с редкими растениями со всего мира. Красиво круглый год',di:'3 км',ti:'7 мин',rt:'https://yandex.ru/maps/?rtext=~43.5767,39.7419',c1:'#10b981',c2:'#34d399'},
+  {id:'p12',ico:'🌳',t:'Парк Ривьера',la:43.5706,lo:39.7323,ct:'p',d:'Старейший парк Сочи. Аттракционы, аллеи, пруды',di:'2 км',ti:'5 мин',rt:'https://yandex.ru/maps/?rtext=~43.5706,39.7323',c1:'#10b981',c2:'#34d399'},
+  {id:'p13',ico:'🌸',t:'Южные Культуры',la:43.4189,lo:39.9642,ct:'p',d:'Парк с прудами, мостиками, редкими растениями. Жемчужина Адлера!',di:'6 км',ti:'12 мин',rt:'https://yandex.ru/maps/?rtext=~43.4189,39.9642',c1:'#10b981',c2:'#34d399'},
+  {id:'p14',ico:'🎢',t:'Сочи Парк',la:43.3975,lo:39.9663,ct:'p',d:'Диснейленд по-русски! Американские горки и аттракционы',di:'8 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.3975,39.9663',c1:'#10b981',c2:'#34d399'},
+  {id:'p15',ico:'✈️',t:'Смотровая (самолёты)',la:43.4481,lo:39.9397,ct:'s',d:'Самолёты заходят прямо над головой! Легендарное место для фото',di:'8 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.4481,39.9397',c1:'#ef4444',c2:'#f87171'},
+  {id:'p16',ico:'⛵',t:'Морской порт',la:43.5832,lo:39.7190,ct:'s',d:'Яхты, чайки, закаты. Самое атмосферное место Сочи',di:'2 км',ti:'5 мин',rt:'https://yandex.ru/maps/?rtext=~43.5832,39.7190',c1:'#ef4444',c2:'#f87171'},
+  {id:'p17',ico:'🗽',t:'Адлерский маяк',la:43.4244,lo:39.9324,ct:'s',d:'Маяк с 1898 года! Красивое место для прогулок у моря',di:'5 км',ti:'10 мин',rt:'https://yandex.ru/maps/?rtext=~43.4244,39.9324',c1:'#ef4444',c2:'#f87171'},
+  {id:'p18',ico:'🏛️',t:'Зимний театр',la:43.5739,lo:39.7253,ct:'s',d:'Жемчужина архитектуры Сочи. Красивейшее здание с колоннадой',di:'2 км',ti:'5 мин',rt:'https://yandex.ru/maps/?rtext=~43.5739,39.7253',c1:'#ef4444',c2:'#f87171'},
+  {id:'p19',ico:'✈️',t:'Аэропорт Адлер',la:43.4437,lo:39.9478,ct:'s',d:'Встречайте гостей на скутере! Парковка у терминала',di:'10 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.4437,39.9478',c1:'#ef4444',c2:'#f87171'}
 ];
 
 var map;
@@ -159,7 +159,8 @@ function init(){
 function show(id){
   var l=LOCS.find(function(x){return x.id===id});if(!l)return;
   var p=document.getElementById('locPanel');
-  document.getElementById('locImg').src=l.im;
+  document.getElementById('locPhoto').style.background='linear-gradient(135deg,'+l.c1+','+l.c2+')';
+  document.getElementById('locPhoto').textContent=l.ico;
   document.getElementById('locIco').textContent=l.ico;
   document.getElementById('locTtl').textContent=l.t;
   document.getElementById('locDsc').textContent=l.d;
