@@ -1,295 +1,195 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Сочи на скутере</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Сочи на скутере — путеводитель</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:Inter,sans-serif;background:#f8f9fa;color:#111}
 .header{background:linear-gradient(135deg,#0f0f1a,#1a1a2e 50%,#16213e);color:#fff;padding:36px 20px 28px;text-align:center}
 .header h1{font-size:1.8rem;font-weight:800}
 .header h1 span{background:linear-gradient(135deg,#0bc5ea,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .header p{font-size:.95rem;color:rgba(255,255,255,.6);margin-top:4px}
-.header .big{font-size:2.4rem;display:block;margin-bottom:6px}
+.header .big{font-size:2.4rem;display:block;margin-bottom:4px}
 .wrap{max-width:820px;margin:0 auto;padding:0 16px}
-#map{width:100%;height:440px;border-radius:16px;margin:20px 0 0;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08);z-index:1}
-.loading{display:flex;align-items:center;justify-content:center;height:440px;background:#eef1f5;border-radius:16px;margin:20px 0 0;font-size:1rem;color:#888}
-@media(max-width:600px){#map{height:320px}.loading{height:320px}}
+#map{width:100%;height:440px;border-radius:16px;margin:20px 0 0;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08)}
+.load{display:flex;align-items:center;justify-content:center;height:440px;background:#eef1f5;border-radius:16px;margin:20px 0 0;font-size:1rem;color:#888}
+@media(max-width:600px){#map{height:320px}.load{height:320px}}
 .panel{display:none;background:#fff;border-radius:16px;margin:16px 0;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08)}
 .panel.show{display:block}
-.panel img{width:100%;height:200px;object-fit:cover;display:block}
+.panel img{width:100%;height:200px;object-fit:cover;display:block;background:#eee}
 .panel .pi{padding:16px 20px 20px}
-.panel .hdr{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.panel .hdr{display:flex;align-items:center;gap:10px;margin-bottom:4px}
 .panel .ico{font-size:1.8rem}
 .panel .ttl{font-size:1.2rem;font-weight:700}
 .panel .dsc{font-size:.9rem;color:#555;line-height:1.5;margin:6px 0 10px}
 .panel .st{display:flex;gap:16px;flex-wrap:wrap;font-size:.82rem;color:#888;margin-bottom:12px}
 .panel .st strong{color:#333}
-.panel a{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;background:#111;color:#fff;border-radius:10px;font-weight:600;font-size:.85rem;text-decoration:none;font-family:Inter,sans-serif}
+.panel a{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;background:#111;color:#fff;border-radius:10px;font-weight:600;font-size:.85rem;text-decoration:none;font-family:Inter}
 .panel a:hover{background:#333}
-.steps-section{padding:24px 0 32px}
-.steps-title{font-size:1.3rem;font-weight:700;margin-bottom:18px;text-align:center}
-.step-card{background:#fff;border-radius:14px;padding:16px 18px;box-shadow:0 2px 12px rgba(0,0,0,.05);border:1px solid #f0f0f0;margin-bottom:12px}
-.step-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.step-num{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}
-.step-label{font-size:.9rem;font-weight:600}
-.flex{display:flex;gap:8px;flex-wrap:wrap}
-.chip{display:flex;flex-direction:column;align-items:center;padding:10px 14px;border:1.5px solid #eee;border-radius:10px;cursor:pointer;min-width:100px;background:#fff;transition:all .15s}
+.sec{padding:24px 0 32px}
+.st{font-size:1.3rem;font-weight:700;margin-bottom:18px;text-align:center}
+.card{background:#fff;border-radius:14px;padding:16px 18px;box-shadow:0 2px 12px rgba(0,0,0,.05);border:1px solid #f0f0f0;margin-bottom:12px}
+.sh{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.sn{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}
+.sl{font-size:.9rem;font-weight:600}
+.fx{display:flex;gap:8px;flex-wrap:wrap}
+.chip{display:flex;flex-direction:column;align-items:center;padding:10px 14px;border:1.5px solid #eee;border-radius:10px;cursor:pointer;min-width:100px;background:#fff;transition:all .15s;user-select:none}
 .chip:hover{border-color:#0bc5ea}
 .chip.on{border-color:#0bc5ea;background:#f0faff}
 .chip .e{font-size:1.4rem}
 .chip .n{font-size:.82rem;font-weight:600;margin-top:2px}
 .chip .p{font-size:.78rem;color:#888}
-.gr2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.gr2 input{padding:10px 12px;border:1.5px solid #ddd;border-radius:10px;font-size:.85rem;font-family:Inter,sans-serif}
-.chip2{display:flex;align-items:center;gap:4px;padding:8px 14px;border:1.5px solid #eee;border-radius:20px;font-size:.82rem;cursor:pointer;background:#fff;transition:all .15s}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.g2 input{padding:10px 12px;border:1.5px solid #ddd;border-radius:10px;font-size:.85rem;font-family:Inter}
+.chip2{display:flex;align-items:center;gap:4px;padding:8px 14px;border:1.5px solid #eee;border-radius:20px;font-size:.82rem;cursor:pointer;background:#fff;transition:all .15s;user-select:none}
 .chip2:hover{border-color:#0bc5ea}
 .chip2.on{background:#f0faff;border-color:#0bc5ea}
-.gr2i input{padding:10px 12px;border:1.5px solid #ddd;border-radius:10px;font-size:.85rem;font-family:Inter,sans-serif;width:100%}
-.total{text-align:center;font-size:1.05rem;font-weight:700;margin-top:10px}
-.total span{color:#8b5cf6}
-.btn{display:block;width:100%;padding:16px;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff;border:none;border-radius:14px;font-size:1.05rem;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;margin-top:18px}
-.btn:hover{opacity:.92}
-.footer{text-align:center;padding:20px;font-size:.8rem;color:#999}
-  </style>
+.g2i input{padding:10px 12px;border:1.5px solid #ddd;border-radius:10px;font-size:.85rem;font-family:Inter;width:100%}
+.tt{text-align:center;font-size:1.05rem;font-weight:700;margin-top:10px}
+.tt span{color:#8b5cf6}
+.bb{display:block;width:100%;padding:16px;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff;border:none;border-radius:14px;font-size:1.05rem;font-weight:700;cursor:pointer;font-family:Inter;margin-top:18px}
+.bb:hover{opacity:.92}
+.foot{text-align:center;padding:20px;font-size:.8rem;color:#999}
+</style>
 </head>
 <body>
 
 <div class="header">
   <span class="big">🛵</span>
   <h1>Сочи <span>на скутере</span></h1>
-  <p>Исследуйте лучшие места на скутере TANK</p>
+  <p>Исследуйте лучшие места за рулём TANK</p>
 </div>
 
 <div class="wrap">
 
-  <div class="loading" id="mapLoading">🗺️ Загружаем карту...</div>
-  <div id="map"></div>
+<div class="load" id="mapLoad">🗺️ Загружаем карту...</div>
+<div id="map"></div>
 
-  <div class="panel" id="locPanel">
-    <img id="locImg" src="" alt="">
-    <div class="pi">
-      <div class="hdr"><div class="ico" id="locIco">🏖️</div><div class="ttl" id="locTtl"></div></div>
-      <div class="dsc" id="locDsc"></div>
-      <div class="st"><span>📏 <strong id="locDist"></strong> от центра</span><span>⏱️ <strong id="locTime"></strong> на скутере</span></div>
-      <a id="locBtn" href="#" target="_blank">🚗 Построить маршрут</a>
-    </div>
-  </div>
-
-  <div class="steps-section">
-    <div class="steps-title">Забронировать скутер</div>
-
-    <div class="step-card">
-      <div class="step-head"><div class="step-num">1</div><div class="step-label">Выберите скутер</div></div>
-      <div class="flex" id="scooters">
-        <div class="chip on" data-p="1500"><div class="e">🛵</div><div class="n">TANK 150</div><div class="p">1 500 ₽/сут</div></div>
-        <div class="chip" data-p="1800"><div class="e">🛵</div><div class="n">TANK 180</div><div class="p">1 800 ₽/сут</div></div>
-        <div class="chip" data-p="1500"><div class="e">🛵</div><div class="n">Jilang Tank</div><div class="p">1 500 ₽/сут</div></div>
-        <div class="chip" data-p="2000"><div class="e">🛵</div><div class="n">Leopard 180</div><div class="p">2 000 ₽/сут</div></div>
-      </div>
-    </div>
-
-    <div class="step-card">
-      <div class="step-head"><div class="step-num">2</div><div class="step-label">Выберите даты</div></div>
-      <div class="gr2"><input type="date" id="dFrom"><input type="date" id="dTo"></div>
-    </div>
-
-    <div class="step-card">
-      <div class="step-head"><div class="step-num">3</div><div class="step-label">Дополнительно</div></div>
-      <div class="flex">
-        <div class="chip2 on">🪖 Шлем</div>
-        <div class="chip2 on">📦 Кофр</div>
-        <div class="chip2">🚚 Доставка</div>
-        <div class="chip2">📍 Встреча у отеля</div>
-      </div>
-    </div>
-
-    <div class="step-card">
-      <div class="step-head"><div class="step-num">4</div><div class="step-label">Контакты</div></div>
-      <div class="gr2 gr2i"><input placeholder="Ваше имя"><input placeholder="+7 (___) ___ __ __"></div>
-      <div class="total">Итого: <span id="total">1 500 ₽</span></div>
-    </div>
-
-    <button class="btn" onclick="alert('✅ Бронирование отправлено! Мы перезвоним в течение 15 минут ☎️')">🚀 Забронировать</button>
+<div class="panel" id="locPanel">
+  <img id="locImg" src="" alt="">
+  <div class="pi">
+    <div class="hdr"><div class="ico" id="locIco"></div><div class="ttl" id="locTtl"></div></div>
+    <div class="dsc" id="locDsc"></div>
+    <div class="st"><span>📏 <strong id="locDist"></strong> от центра</span><span>⏱️ <strong id="locTime"></strong> на скутере</span></div>
+    <a id="locBtn" href="#" target="_blank">🚗 Построить маршрут</a>
   </div>
 </div>
 
-<div class="footer">GALAXY MOTO · Сочи · +7 (900) 001-80-23</div>
+<div class="sec">
+<div class="st">Забронировать скутер</div>
+
+<div class="card">
+<div class="sh"><div class="sn">1</div><div class="sl">Выберите скутер</div></div>
+<div class="fx" id="scooters">
+<div class="chip on" data-p="1500"><div class="e">🛵</div><div class="n">TANK 150</div><div class="p">1 500 ₽/сут</div></div>
+<div class="chip" data-p="1800"><div class="e">🛵</div><div class="n">TANK 180</div><div class="p">1 800 ₽/сут</div></div>
+<div class="chip" data-p="1500"><div class="e">🛵</div><div class="n">Jilang Tank</div><div class="p">1 500 ₽/сут</div></div>
+<div class="chip" data-p="2000"><div class="e">🛵</div><div class="n">Leopard 180</div><div class="p">2 000 ₽/сут</div></div>
+</div></div>
+
+<div class="card">
+<div class="sh"><div class="sn">2</div><div class="sl">Выберите даты</div></div>
+<div class="g2"><input type="date" id="dF"><input type="date" id="dT"></div></div>
+
+<div class="card">
+<div class="sh"><div class="sn">3</div><div class="sl">Дополнительно</div></div>
+<div class="fx">
+<div class="chip2 on">🪖 Шлем</div>
+<div class="chip2 on">📦 Кофр</div>
+<div class="chip2">🚚 Доставка</div>
+<div class="chip2">📍 Встреча у отеля</div>
+</div></div>
+
+<div class="card">
+<div class="sh"><div class="sn">4</div><div class="sl">Контакты</div></div>
+<div class="g2 g2i"><input placeholder="Ваше имя"><input placeholder="+7 (___) ___ __ __"></div>
+<div class="tt">Итого: <span id="total">1 500 ₽</span></div>
+</div>
+
+<button class="bb" onclick="alert('✅ Бронирование отправлено! Мы перезвоним в течение 15 минут ☎️')">🚀 Забронировать</button>
+</div>
+</div>
+
+<div class="foot">GALAXY MOTO · Сочи · +7 (900) 001-80-23</div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-// Все локации с разными смайликами, координатами и фото
-const LOCS = [
-  { id:'polyana', ico:'🏔️', ttl:'Красная Поляна', lat:43.6796, lon:40.2070, cat:'gori',
-    dsc:'Горный курорт. Серпантин, виды — идеально для покатушки на TANK 180! 🔥',
-    d:'40 км', t:'50 мин', rt:'https://yandex.ru/maps/?rtext=~43.6796,40.2070',
-    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Krasnaya_Polyana_2018.jpg/800px-Krasnaya_Polyana_2018.jpg' },
-  { id:'roza', ico:'🎿', ttl:'Роза Хутор', lat:43.6581, lon:40.3075, cat:'gori',
-    dsc:'Один из лучших курортов России. Поднимитесь на высоту 2320 м!',
-    d:'45 км', t:'55 мин', rt:'https://yandex.ru/maps/?rtext=~43.6581,40.3075',
-    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Rosa_Khutor_panorama.jpg/800px-Rosa_Khutor_panorama.jpg' },
-  { id:'ahun', ico:'🗼', ttl:'Гора Ахун (смотровая)', lat:43.5552, lon:39.8420, cat:'gori',
-    dsc:'Смотровая башня на высоте 663 м. Панорама всего Сочи! Обязательно к посещению 🏆',
-    d:'8 км', t:'15 мин', rt:'https://yandex.ru/maps/?rtext=~43.5552,39.8420',
-    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Mount_Akhun_Tower%2C_Sochi.jpg/800px-Mount_Akhun_Tower%2C_Sochi.jpg' },
-  { id:'orlinie', ico:'⛰️', ttl:'Орлиные скалы', lat:43.5646, lon:39.8318, cat:'gori',
-    dsc:'Обрыв над морем, красивейший вид! Популярное место для фото 📸',
-    d:'9 км', t:'18 мин', rt:'https://yandex.ru/maps/?rtext=~43.5646,39.8318',
-    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Eagle_Rocks_Sochi.jpg/800px-Eagle_Rocks_Sochi.jpg' },
-  { id:'agurskie', ico:'🏞️', ttl:'Агурские водопады', lat:43.5488, lon:39.8486, cat:'voda',
-    dsc:'Каскад из трёх водопадов в ущелье. Маршрут — сказка! 💦',
-    d:'10 км', t:'20 мин', rt:'https://yandex.ru/maps/?rtext=~43.5488,39.8486',
-    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Agura_Waterfalls_Sochi.jpg/800px-Agura_Waterfalls_Sochi.jpg' },
-  { id:'33voda', ico:'💧', ttl:'33 водопада', lat:43.6379, lon:39.8254, cat:'voda',
-    dsc:'Джазовые водопады в лесу. Красивейшее место в окрестностях Сочи!',
-    d:'25 км', t:'35 мин', rt:'https://yandex.ru/maps/?rtext=~43.6379,39.8254',
-    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/33_waterfalls.jpg/800px-33_waterfalls.jpg' },
-  { id:'devsl', ico:'💦', ttl:'Водопад Девичьи слёзы', lat:43.5609, lon:39.8380, cat:'voda',
-    dsc:'Небольшой, но очень красивый водопад в центре Сочи. Рядом — кафе и сувениры 🍃',
-    d:'9 км', t:'15 мин', rt:'https://yandex.ru/maps/?rtext=~43.5609,39.8380',
-    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Maiden%27s_tears_waterfall_Sochi.jpg/800px-Maiden%27s_tears_waterfall_Sochi.jpg' },
-  { id:'beach', ico:'🏖️', ttl:'Пляж в Адлере', lat:43.4297, lon:39.9428, cat:'plyazh',
-    dsc:'Широкий галечный пляж. Идеально для вечерней покатушки вдоль моря! Закаты — космос 🔥',
-    d:'5 км', t:'10 мин', rt:'https://yandex.ru/maps/?rtext=~43.4297,39.9428',
-    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Adler_beach_Sochi.jpg/800px-Adler_beach_Sochi.jpg' },
-  { id:'nab', ico:'🌊', ttl:'Набережная Сочи', lat:43.5807, lon:39.7207, cat:'plyazh',
-    dsc:'Главный променад города. Кататься вдоль моря, слушать чаек — кайф 🕊️',
-    d:'2 км', t:'5 мин', rt:'https://yandex.ru/maps/?rtext=~43.5807,39.7207',
-    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Sochi_Sea_Port_1.jpg/800px-Sochi_Sea_Port_1.jpg' },
-  { id:'park', ico:'🌃', ttl:'Олимпийский парк', lat:43.4025, lon:39.9564, cat:'park',
-    dsc:'Ночная подсветка, шикарные аллеи, поющие фонтаны. Обязательно к посещению! 🎆',
-    d:'7 км', t:'15 мин', rt:'https://yandex.ru/maps/?rtext=~43.4025,39.9564',
-    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Sochi_Autodrom_2014.jpg/800px-Sochi_Autodrom_2014.jpg' },
-  { id:'dend', ico:'🌴', ttl:'Дендрарий', lat:43.5767, lon:39.7419, cat:'park',
-    dsc:'Парк с редкими растениями со всего мира. Красиво в любое время года 🌺',
-    d:'3 км', t:'7 мин', rt:'https://yandex.ru/maps/?rtext=~43.5767,39.7419',
-    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Sochi_Dendrarium_3.jpg/800px-Sochi_Dendrarium_3.jpg' },
-  { id:'riviera', ico:'🌳', ttl:'Парк Ривьера', lat:43.5706, lon:39.7323, cat:'park',
-    dsc:'Старейший парк Сочи. Аттракционы, аллеи, пруды — отлично для прогулок всей семьёй 🎠',
-    d:'2 км', t:'5 мин', rt:'https://yandex.ru/maps/?rtext=~43.5706,39.7323',
-    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Sochi_Rivera_Park.jpg/800px-Sochi_Rivera_Park.jpg' },
-  { id:'yug', ico:'🌸', ttl:'Парк Южные Культуры', lat:43.4189, lon:39.9642, cat:'park',
-    dsc:'Удивительный парк с прудами, мостиками и редкими растениями. Настоящая жемчужина Адлера! 🦢',
-    d:'6 км', t:'12 мин', rt:'https://yandex.ru/maps/?rtext=~43.4189,39.9642',
-    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Sochi_Yuzhnye_Kultury_park.jpg/800px-Sochi_Yuzhnye_Kultury_park.jpg' },
-  { id:'smotr', ico:'✈️', ttl:'Смотровая у аэропорта', lat:43.4481, lon:39.9397, cat:'smotr',
-    dsc:'Легендарная смотровая! Самолёты заходят прямо над головой 🔥 Идеально для фото! 📸',
-    d:'8 км', t:'15 мин', rt:'https://yandex.ru/maps/?rtext=~43.4481,39.9397',
-    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Sochi_International_Airport_2014.jpg/800px-Sochi_International_Airport_2014.jpg' },
-  { id:'port', ico:'⛵', ttl:'Морской порт', lat:43.5832, lon:39.7190, cat:'smotr',
-    dsc:'Яхты, чайки, закаты. Романтика 🔥 Одно из самых атмосферных мест Сочи',
-    d:'2 км', t:'5 мин', rt:'https://yandex.ru/maps/?rtext=~43.5832,39.7190',
-    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Sochi_Seaport_2018.jpg/800px-Sochi_Seaport_2018.jpg' },
-  { id:'spark', ico:'🎢', ttl:'Сочи Парк', lat:43.3975, lon:39.9663, cat:'park',
-    dsc:'Диснейленд по-русски! Американские горки и аттракционы для всей семьи 🎡',
-    d:'8 км', t:'15 мин', rt:'https://yandex.ru/maps/?rtext=~43.3975,39.9663',
-    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Sochi_Park_2019.jpg/800px-Sochi_Park_2019.jpg' },
-  { id:'mayak', ico:'🗽', ttl:'Адлерский маяк', lat:43.4244, lon:39.9324, cat:'smotr',
-    dsc:'Старый маяк в Адлере, работает с 1898 года! Красивое место для прогулок у моря 🚢',
-    d:'5 км', t:'10 мин', rt:'https://yandex.ru/maps/?rtext=~43.4244,39.9324',
-    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Adler_Lighthouse.jpg/800px-Adler_Lighthouse.jpg' },
-  { id:'sochi', ico:'🏛️', ttl:'Зимний театр', lat:43.5739, lon:39.7253, cat:'smotr',
-    dsc:'Жемчужина сочинской архитектуры. Красивейшее здание с колоннадой и пальмами 🏛️',
-    d:'2 км', t:'5 мин', rt:'https://yandex.ru/maps/?rtext=~43.5739,39.7253',
-    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Sochi_Winter_Theatre_2017.jpg/800px-Sochi_Winter_Theatre_2017.jpg' },
-  { id:'air', ico:'✈️', ttl:'Аэропорт Адлер', lat:43.4437, lon:39.9478, cat:'smotr',
-    dsc:'Встречайте гостей на скутере! Парковка прямо у терминала. Удобно и стильно 🛵',
-    d:'10 км', t:'15 мин', rt:'https://yandex.ru/maps/?rtext=~43.4437,39.9478',
-    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Aeroport_Sochi_2021.jpg/800px-Aeroport_Sochi_2021.jpg' }
+var LOCS = [
+  {id:'p1',ico:'🏔️',t:'Красная Поляна',la:43.6796,lo:40.2070,ct:'g',d:'Горный курорт. Серпантин и виды — идеально для TANK 180',di:'40 км',ti:'50 мин',rt:'https://yandex.ru/maps/?rtext=~43.6796,40.2070',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Krasnaya_Polyana_2018.jpg/800px-Krasnaya_Polyana_2018.jpg'},
+  {id:'p2',ico:'🎿',t:'Роза Хутор',la:43.6581,lo:40.3075,ct:'g',d:'Лучший курорт России! Поднимитесь на высоту 2320 м',di:'45 км',ti:'55 мин',rt:'https://yandex.ru/maps/?rtext=~43.6581,40.3075',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Rosa_Khutor_panorama.jpg/800px-Rosa_Khutor_panorama.jpg'},
+  {id:'p3',ico:'🗼',t:'Гора Ахун',la:43.5552,lo:39.8420,ct:'g',d:'Смотровая башня на 663 м. Панорама всего Сочи!',di:'8 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.5552,39.8420',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Mount_Akhun_Tower%2C_Sochi.jpg/800px-Mount_Akhun_Tower%2C_Sochi.jpg'},
+  {id:'p4',ico:'⛰️',t:'Орлиные скалы',la:43.5646,lo:39.8318,ct:'g',d:'Обрыв над морем. Красивейший вид! Популярное место для фото',di:'9 км',ti:'18 мин',rt:'https://yandex.ru/maps/?rtext=~43.5646,39.8318',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Eagle_Rocks_Sochi.jpg/800px-Eagle_Rocks_Sochi.jpg'},
+  {id:'p5',ico:'🏞️',t:'Агурские водопады',la:43.5488,lo:39.8486,ct:'w',d:'Каскад из трёх водопадов в ущелье. Сказочный маршрут!',di:'10 км',ti:'20 мин',rt:'https://yandex.ru/maps/?rtext=~43.5488,39.8486',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Agura_Waterfalls_Sochi.jpg/800px-Agura_Waterfalls_Sochi.jpg'},
+  {id:'p6',ico:'💧',t:'33 водопада',la:43.6379,lo:39.8254,ct:'w',d:'Джазовые водопады в лесу. Красивейшее место!',di:'25 км',ti:'35 мин',rt:'https://yandex.ru/maps/?rtext=~43.6379,39.8254',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/33_waterfalls.jpg/800px-33_waterfalls.jpg'},
+  {id:'p7',ico:'💦',t:'Девичьи слёзы',la:43.5609,lo:39.8380,ct:'w',d:'Красивый водопад в центре Сочи. Рядом кафе и сувениры',di:'9 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.5609,39.8380',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Maiden%27s_tears_waterfall_Sochi.jpg/800px-Maiden%27s_tears_waterfall_Sochi.jpg'},
+  {id:'p8',ico:'🏖️',t:'Пляж в Адлере',la:43.4297,lo:39.9428,ct:'b',d:'Широкий пляж. Идеально для вечерней покатушки! Закаты — космос',di:'5 км',ti:'10 мин',rt:'https://yandex.ru/maps/?rtext=~43.4297,39.9428',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Adler_beach_Sochi.jpg/800px-Adler_beach_Sochi.jpg'},
+  {id:'p9',ico:'🌊',t:'Набережная Сочи',la:43.5807,lo:39.7207,ct:'b',d:'Главный променад города. Кататься вдоль моря — кайф',di:'2 км',ti:'5 мин',rt:'https://yandex.ru/maps/?rtext=~43.5807,39.7207',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Sochi_Sea_Port_1.jpg/800px-Sochi_Sea_Port_1.jpg'},
+  {id:'p10',ico:'🌃',t:'Олимпийский парк',la:43.4025,lo:39.9564,ct:'p',d:'Ночная подсветка, поющие фонтаны. Обязательно к посещению!',di:'7 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.4025,39.9564',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Sochi_Autodrom_2014.jpg/800px-Sochi_Autodrom_2014.jpg'},
+  {id:'p11',ico:'🌴',t:'Дендрарий',la:43.5767,lo:39.7419,ct:'p',d:'Парк с редкими растениями со всего мира. Красиво круглый год',di:'3 км',ti:'7 мин',rt:'https://yandex.ru/maps/?rtext=~43.5767,39.7419',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Sochi_Dendrarium_3.jpg/800px-Sochi_Dendrarium_3.jpg'},
+  {id:'p12',ico:'🌳',t:'Парк Ривьера',la:43.5706,lo:39.7323,ct:'p',d:'Старейший парк Сочи. Аттракционы, аллеи, пруды',di:'2 км',ti:'5 мин',rt:'https://yandex.ru/maps/?rtext=~43.5706,39.7323',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Sochi_Rivera_Park.jpg/800px-Sochi_Rivera_Park.jpg'},
+  {id:'p13',ico:'🌸',t:'Южные Культуры',la:43.4189,lo:39.9642,ct:'p',d:'Парк с прудами, мостиками, редкими растениями. Жемчужина Адлера!',di:'6 км',ti:'12 мин',rt:'https://yandex.ru/maps/?rtext=~43.4189,39.9642',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Sochi_Yuzhnye_Kultury_park.jpg/800px-Sochi_Yuzhnye_Kultury_park.jpg'},
+  {id:'p14',ico:'🎢',t:'Сочи Парк',la:43.3975,lo:39.9663,ct:'p',d:'Диснейленд по-русски! Американские горки и аттракционы',di:'8 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.3975,39.9663',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Sochi_Park_2019.jpg/800px-Sochi_Park_2019.jpg'},
+  {id:'p15',ico:'✈️',t:'Смотровая (самолёты)',la:43.4481,lo:39.9397,ct:'s',d:'Самолёты заходят прямо над головой! Легендарное место для фото',di:'8 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.4481,39.9397',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Sochi_International_Airport_2014.jpg/800px-Sochi_International_Airport_2014.jpg'},
+  {id:'p16',ico:'⛵',t:'Морской порт',la:43.5832,lo:39.7190,ct:'s',d:'Яхты, чайки, закаты. Самое атмосферное место Сочи',di:'2 км',ti:'5 мин',rt:'https://yandex.ru/maps/?rtext=~43.5832,39.7190',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Sochi_Seaport_2018.jpg/800px-Sochi_Seaport_2018.jpg'},
+  {id:'p17',ico:'🗽',t:'Адлерский маяк',la:43.4244,lo:39.9324,ct:'s',d:'Маяк с 1898 года! Красивое место для прогулок у моря',di:'5 км',ti:'10 мин',rt:'https://yandex.ru/maps/?rtext=~43.4244,39.9324',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Adler_Lighthouse.jpg/800px-Adler_Lighthouse.jpg'},
+  {id:'p18',ico:'🏛️',t:'Зимний театр',la:43.5739,lo:39.7253,ct:'s',d:'Жемчужина архитектуры Сочи. Красивейшее здание с колоннадой',di:'2 км',ti:'5 мин',rt:'https://yandex.ru/maps/?rtext=~43.5739,39.7253',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Sochi_Winter_Theatre_2017.jpg/800px-Sochi_Winter_Theatre_2017.jpg'},
+  {id:'p19',ico:'✈️',t:'Аэропорт Адлер',la:43.4437,lo:39.9478,ct:'s',d:'Встречайте гостей на скутере! Парковка у терминала',di:'10 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.4437,39.9478',im:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Aeroport_Sochi_2021.jpg/800px-Aeroport_Sochi_2021.jpg'}
 ];
 
 var map;
-
-function initMap() {
-  var el = document.getElementById('map');
-  document.getElementById('mapLoading').style.display = 'none';
-  
-  map = L.map('map', { center: [43.55, 39.77], zoom: 11, zoomControl: true });
-  
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 18,
-    attribution: '© OpenStreetMap'
-  }).addTo(map);
-  
-  LOCS.forEach(function(loc) {
-    // Цвет метки по категории
-    var colors = {gori:'#8b5cf6', voda:'#0bc5ea', plyazh:'#f59e0b', park:'#10b981', smotr:'#ef4444'};
-    var color = colors[loc.cat] || '#8b5cf6';
-    
-    var mkr = L.marker([loc.lat, loc.lon], {
-      icon: L.divIcon({
-        className: '',
-        html: '<div style="width:38px;height:38px;border-radius:50%;background:'+color+';color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 2px 10px rgba(0,0,0,.35);border:2px solid #fff">'+loc.ico+'</div>',
-        iconSize: [38, 38],
-        iconAnchor: [19, 19]
-      })
-    }).addTo(map);
-    
-    mkr.bindTooltip(loc.ttl, { direction: 'top', offset: [0, -20] });
-    mkr.on('click', function(){ showLoc(loc.id); });
+function init(){
+  document.getElementById('mapLoad').style.display='none';
+  map=L.map('map',{center:[43.55,39.77],zoom:11,zoomControl:true});
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18}).addTo(map);
+  var cols={g:'#8b5cf6',w:'#0bc5ea',b:'#f59e0b',p:'#10b981',s:'#ef4444'};
+  LOCS.forEach(function(l){
+    var c=cols[l.ct]||'#8b5cf6';
+    L.marker([l.la,l.lo],{
+      icon:L.divIcon({className:'',html:'<div style="width:38px;height:38px;border-radius:50%;background:'+c+';color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:0 2px 10px rgba(0,0,0,.35);border:2px solid #fff">'+l.ico+'</div>',iconSize:[38,38],iconAnchor:[19,19]})
+    }).addTo(map).bindTooltip(l.t,{direction:'top',offset:[0,-20]}).on('click',function(){show(l.id);});
   });
 }
 
-function showLoc(id) {
-  var loc = LOCS.find(function(l){ return l.id === id; });
-  if (!loc) return;
-  var p = document.getElementById('locPanel');
-  document.getElementById('locImg').src = loc.img;
-  document.getElementById('locIco').textContent = loc.ico;
-  document.getElementById('locTtl').textContent = loc.ttl;
-  document.getElementById('locDsc').textContent = loc.dsc;
-  document.getElementById('locDist').textContent = loc.d;
-  document.getElementById('locTime').textContent = loc.t;
-  document.getElementById('locBtn').href = loc.rt;
+function show(id){
+  var l=LOCS.find(function(x){return x.id===id});if(!l)return;
+  var p=document.getElementById('locPanel');
+  document.getElementById('locImg').src=l.im;
+  document.getElementById('locIco').textContent=l.ico;
+  document.getElementById('locTtl').textContent=l.t;
+  document.getElementById('locDsc').textContent=l.d;
+  document.getElementById('locDist').textContent=l.di;
+  document.getElementById('locTime').textContent=l.ti;
+  document.getElementById('locBtn').href=l.rt;
   p.classList.add('show');
-  map.flyTo([loc.lat, loc.lon], 14, {duration: 0.5});
-  setTimeout(function(){ p.scrollIntoView({behavior:'smooth',block:'center'}); }, 250);
+  map.flyTo([l.la,l.lo],14,{duration:0.5});
+  setTimeout(function(){p.scrollIntoView({behavior:'smooth',block:'center'})},300);
 }
 
-// Выбор скутера
-document.addEventListener('click', function(e){
-  var c = e.target.closest('.chip');
-  if (c && c.parentElement.id === 'scooters') {
-    document.querySelectorAll('#scooters .chip').forEach(function(x){ x.classList.remove('on'); });
-    c.classList.add('on');
-    calcTotal();
+document.addEventListener('click',function(e){
+  var c=e.target.closest('.chip');
+  if(c&&c.parentElement.id==='scooters'){
+    document.querySelectorAll('#scooters .chip').forEach(function(x){x.classList.remove('on')});
+    c.classList.add('on');calc();
   }
-  var c2 = e.target.closest('.chip2');
-  if (c2) c2.classList.toggle('on');
+  var c2=e.target.closest('.chip2');
+  if(c2)c2.classList.toggle('on');
 });
-
-document.addEventListener('change', function(e){
-  if (e.target.id === 'dFrom' || e.target.id === 'dTo') calcTotal();
-});
-
-function calcTotal() {
-  var sel = document.querySelector('#scooters .chip.on');
-  if (!sel) return;
-  var ppd = parseInt(sel.getAttribute('data-p')) || 1500;
-  var f = document.getElementById('dFrom').value;
-  var t = document.getElementById('dTo').value;
-  var days = 1;
-  if (f && t) {
-    var d1 = new Date(f), d2 = new Date(t);
-    var diff = Math.ceil((d2-d1)/(1000*60*60*24));
-    if (diff > 0) days = diff;
-  }
-  document.getElementById('total').textContent = (ppd*days).toLocaleString('ru-RU') + ' ₽';
+document.addEventListener('change',function(e){if(e.target.id==='dF'||e.target.id==='dT')calc();});
+function calc(){
+  var s=document.querySelector('#scooters .chip.on');if(!s)return;
+  var p=parseInt(s.getAttribute('data-p'))||1500;
+  var f=document.getElementById('dF').value,t=document.getElementById('dT').value,d=1;
+  if(f&&t){var d1=new Date(f),d2=new Date(t),df=Math.ceil((d2-d1)/(86400000));if(df>0)d=df;}
+  document.getElementById('total').textContent=(p*d).toLocaleString('ru-RU')+' ₽';
 }
-
-(function(){
-  var today = new Date().toISOString().split('T')[0];
-  document.getElementById('dFrom').setAttribute('min', today);
-  document.getElementById('dTo').setAttribute('min', today);
-  document.getElementById('dFrom').value = today;
-})();
-
-initMap();
+(function(){var t=new Date().toISOString().split('T')[0];document.getElementById('dF').setAttribute('min',t);document.getElementById('dT').setAttribute('min',t);document.getElementById('dF').value=t;})();
+init();
 </script>
 </body>
 </html>
