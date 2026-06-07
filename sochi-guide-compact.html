@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Inter,sans-serif;background:#fff;color:#111;padding:4px}
+#map{width:100%;height:380px;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:12px}
+.ml{display:flex;align-items:center;justify-content:center;height:380px;background:#eef1f5;border-radius:16px;color:#888;font-size:.9rem}
+.pan{display:none;background:#fff;border-radius:16px;margin:0 0 12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08)}
+.pan.s{display:block}
+.pan .pi{padding:14px 18px 18px}
+.pan .h{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.pan .ic{font-size:1.6rem}
+.pan .tt{font-size:1.1rem;font-weight:700}
+.pan .d{font-size:.85rem;color:#555;line-height:1.4;margin:4px 0 8px}
+.pan .s{display:flex;gap:14px;font-size:.8rem;color:#888;margin-bottom:10px}
+.pan .s strong{color:#333}
+.pan .r{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;background:#111;color:#fff;border-radius:10px;font-weight:600;font-size:.8rem;text-decoration:none}
+.pan .r:hover{background:#333}
+.st{font-size:1.1rem;font-weight:700;text-align:center;margin-bottom:12px}
+.sg{display:grid;gap:8px}
+.c{border-radius:12px;padding:12px 16px;border:1px solid #f0f0f0}
+.ch{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.cn{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0}
+.cl{font-size:.82rem;font-weight:600}
+.cp{font-size:.78rem;color:#888;margin-left:30px}
+.fx{display:flex;gap:6px;flex-wrap:wrap;margin-left:30px}
+.fx .sp{display:flex;flex-direction:column;align-items:center;padding:6px 10px;border:1.5px solid #eee;border-radius:8px;cursor:pointer;min-width:80px;background:#fff}
+.fx .sp.on{border-color:#0bc5ea;background:#f0faff}
+.fx .sp .e{font-size:1.2rem}
+.fx .sp .n{font-size:.72rem;font-weight:600}
+.fx .sp .p{font-size:.68rem;color:#888}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-left:30px}
+.g2 input{padding:7px 10px;border:1.5px solid #ddd;border-radius:8px;font-size:.78rem;font-family:Inter}
+.cx{display:flex;align-items:center;gap:3px;padding:5px 10px;border:1.5px solid #eee;border-radius:16px;font-size:.75rem;cursor:pointer;background:#fff}
+.cx.on{background:#f0faff;border-color:#0bc5ea}
+.gi{margin-left:30px}
+.gi input{padding:7px 10px;border:1.5px solid #ddd;border-radius:8px;font-size:.78rem;font-family:Inter;width:100%}
+.tt{text-align:center;font-size:.9rem;font-weight:700;margin-top:8px}
+.tt span{color:#8b5cf6}
+.bb{display:block;width:100%;padding:12px;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff;border:none;border-radius:12px;font-size:.9rem;font-weight:700;cursor:pointer;font-family:Inter;margin-top:10px}
+.bb:hover{opacity:.92}
+@media(max-width:600px){#map{height:260px}.ml{height:260px}.g2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="map"><div class="ml">🗺️ Загружаем карту...</div></div>
+<div class="pan" id="pan">
+  <div class="pi">
+    <div class="h"><div class="ic" id="pi">🏔️</div><div class="tt" id="pt"></div></div>
+    <div class="d" id="pd"></div>
+    <div class="s"><span>📏 <strong id="pds"></strong> от центра</span><span>⏱️ <strong id="pts"></strong> на скутере</span></div>
+    <a class="r" id="pr" href="#" target="_blank">🚗 Построить маршрут</a>
+  </div>
+</div>
+<div class="st">Забронировать скутер</div>
+<div class="sg">
+<div class="c"><div class="ch"><div class="cn">1</div><div class="cl">Выберите скутер</div></div>
+<div class="fx" id="sc">
+<div class="sp on" data-p="1500"><div class="e">🛵</div><div class="n">TANK 150</div><div class="p">1 500 ₽/сут</div></div>
+<div class="sp" data-p="1800"><div class="e">🛵</div><div class="n">TANK 180</div><div class="p">1 800 ₽/сут</div></div>
+<div class="sp" data-p="1500"><div class="e">🛵</div><div class="n">Jilang Tank</div><div class="p">1 500 ₽/сут</div></div>
+<div class="sp" data-p="2000"><div class="e">🛵</div><div class="n">Leopard 180</div><div class="p">2 000 ₽/сут</div></div>
+</div></div>
+<div class="c"><div class="ch"><div class="cn">2</div><div class="cl">Выберите даты</div></div>
+<div class="g2"><input type="date" id="dF"><input type="date" id="dT"></div></div>
+<div class="c"><div class="ch"><div class="cn">3</div><div class="cl">Дополнительно</div></div>
+<div class="fx"><div class="cx on">🪖 Шлем</div><div class="cx on">📦 Кофр</div><div class="cx">🚚 Доставка</div><div class="cx">📍 Встреча</div></div></div>
+<div class="c"><div class="ch"><div class="cn">4</div><div class="cl">Контакты</div></div>
+<div class="g2 gi"><input placeholder="Ваше имя"><input placeholder="+7 (___) ___ __ __"></div>
+<div class="tt">Итого: <span id="tot">1 500 ₽</span></div>
+</div></div>
+<button class="bb">🚀 Забронировать</button>
+<script>
+var PL=[
+{i:'🏔️',t:'Красная Поляна',la:43.6796,lo:40.2070,c:'g',d:'Горный курорт. Серпантин и виды идеальны для TANK 180',di:'40 км',ti:'50 мин',rt:'https://yandex.ru/maps/?rtext=~43.6796,40.2070'},
+{i:'🎿',t:'Роза Хутор',la:43.6581,lo:40.3075,c:'g',d:'Лучший курорт России!',di:'45 км',ti:'55 мин',rt:'https://yandex.ru/maps/?rtext=~43.6581,40.3075'},
+{i:'🗼',t:'Гора Ахун',la:43.5552,lo:39.8420,c:'g',d:'Смотровая башня на 663 м',di:'8 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.5552,39.8420'},
+{i:'⛰️',t:'Орлиные скалы',la:43.5646,lo:39.8318,c:'g',d:'Обрыв над морем. Вид — сказка!',di:'9 км',ti:'18 мин',rt:'https://yandex.ru/maps/?rtext=~43.5646,39.8318'},
+{i:'🏞️',t:'Агурские водопады',la:43.5488,lo:39.8486,c:'w',d:'Каскад водопадов в ущелье',di:'10 км',ti:'20 мин',rt:'https://yandex.ru/maps/?rtext=~43.5488,39.8486'},
+{i:'💧',t:'33 водопада',la:43.6379,lo:39.8254,c:'w',d:'Джазовые водопады в лесу',di:'25 км',ti:'35 мин',rt:'https://yandex.ru/maps/?rtext=~43.6379,39.8254'},
+{i:'🏖️',t:'Пляж в Адлере',la:43.4297,lo:39.9428,c:'b',d:'Закаты — космос!',di:'5 км',ti:'10 мин',rt:'https://yandex.ru/maps/?rtext=~43.4297,39.9428'},
+{i:'🌊',t:'Набережная',la:43.5807,lo:39.7207,c:'b',d:'Главный променад города',di:'2 км',ti:'5 мин',rt:'https://yandex.ru/maps/?rtext=~43.5807,39.7207'},
+{i:'🌃',t:'Олимпийский парк',la:43.4025,lo:39.9564,c:'p',d:'Ночная подсветка, фонтаны',di:'7 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.4025,39.9564'},
+{i:'🌴',t:'Дендрарий',la:43.5767,lo:39.7419,c:'p',d:'Редкие растения со всего мира',di:'3 км',ti:'7 мин',rt:'https://yandex.ru/maps/?rtext=~43.5767,39.7419'},
+{i:'✈️',t:'Смотровая самолёты',la:43.4481,lo:39.9397,c:'s',d:'Самолёты прямо над головой!',di:'8 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.4481,39.9397'},
+{i:'⛵',t:'Морской порт',la:43.5832,lo:39.7190,c:'s',d:'Яхты, чайки, закаты',di:'2 км',ti:'5 мин',rt:'https://yandex.ru/maps/?rtext=~43.5832,39.7190'}
+];
+var mm;var cc={g:'#8b5cf6',w:'#0bc5ea',b:'#f59e0b',p:'#10b981',s:'#ef4444'};
+function gm(){var ml=document.querySelector('.ml');if(ml)ml.style.display='none';mm=L.map('map',{center:[43.55,39.77],zoom:11,zoomControl:true});L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18}).addTo(mm);PL.forEach(function(l){var co=cc[l.c]||'#8b5cf6';L.marker([l.la,l.lo],{icon:L.divIcon({className:'',html:'<div style=\"width:34px;height:34px;border-radius:50%;background:'+co+';color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 2px 10px rgba(0,0,0,.35);border:2px solid #fff\">'+l.i+'</div>',iconSize:[34,34],iconAnchor:[17,17]})}).addTo(mm).bindTooltip(l.t,{direction:'top',offset:[0,-16]}).on('click',(function(loc){return function(){gs(loc);};})(l));});}
+function gs(l){document.getElementById('pi').textContent=l.i;document.getElementById('pt').textContent=l.t;document.getElementById('pd').textContent=l.d;document.getElementById('pds').textContent=l.di;document.getElementById('pts').textContent=l.ti;document.getElementById('pr').href=l.rt;document.getElementById('pan').classList.add('s');mm.flyTo([l.la,l.lo],14,{duration:0.4});}
+document.addEventListener('click',function(e){
+  var c=e.target.closest('.sp');
+  if(c&&c.parentElement.id==='sc'){document.querySelectorAll('#sc .sp').forEach(function(x){x.classList.remove('on')});c.classList.add('on');ct();}
+  var c2=e.target.closest('.cx');if(c2)c2.classList.toggle('on');
+});
+document.addEventListener('change',function(e){if(e.target.id==='dF'||e.target.id==='dT')ct();});
+function ct(){var s=document.querySelector('#sc .sp.on');if(!s)return;var p=parseInt(s.getAttribute('data-p'))||1500;var f=document.getElementById('dF').value,t=document.getElementById('dT').value,d=1;if(f&&t){var d1=new Date(f),d2=new Date(t),df=Math.ceil((d2-d1)/(86400000));if(df>0)d=df;}document.getElementById('tot').textContent=(p*d).toLocaleString('ru-RU')+' ₽';}
+(function(){var t=new Date().toISOString().split('T')[0];document.getElementById('dF').setAttribute('min',t);document.getElementById('dT').setAttribute('min',t);document.getElementById('dF').value=t;})();
+setTimeout(function(){if(typeof L!=='undefined')gm();else setTimeout(arguments.callee,500);},1500);
+document.querySelector('.bb').onclick=function(){alert('✅ Бронирование отправлено! Мы перезвоним в течение 15 минут ☎️');};
+</script>
+</body>
+</html>
