@@ -22,7 +22,7 @@ body{font-family:Inter,sans-serif;background:#f8f9fa;color:#111}
 @media(max-width:600px){#map{height:320px}.load{height:320px}}
 .panel{display:none;background:#fff;border-radius:16px;margin:16px 0;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08)}
 .panel.show{display:block}
-.panel .loc-photo{width:100%;height:200px;display:flex;align-items:center;justify-content:center;font-size:4rem}
+.panel .loc-photo{width:100%;height:200px;display:flex;align-items:center;justify-content:center;font-size:4rem;object-fit:cover}
 .panel .pi{padding:16px 20px 20px}
 .panel .hdr{display:flex;align-items:center;gap:10px;margin-bottom:4px}
 .panel .ico{font-size:1.8rem}
@@ -132,7 +132,7 @@ var LOCS = [
   {id:'p9',ico:'🌊',t:'Набережная Сочи',la:43.5807,lo:39.7207,ct:'b',d:'Главный променад города. Кататься вдоль моря — кайф',di:'2 км',ti:'5 мин',rt:'https://yandex.ru/maps/?rtext=~43.5807,39.7207',c1:'#f59e0b',c2:'#f97316'},
   {id:'p10',ico:'🌃',t:'Олимпийский парк',la:43.4025,lo:39.9564,ct:'p',d:'Ночная подсветка, поющие фонтаны. Обязательно к посещению!',di:'7 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.4025,39.9564',c1:'#10b981',c2:'#34d399'},
   {id:'p11',ico:'🌴',t:'Дендрарий',la:43.5767,lo:39.7419,ct:'p',d:'Парк с редкими растениями со всего мира. Красиво круглый год',di:'3 км',ti:'7 мин',rt:'https://yandex.ru/maps/?rtext=~43.5767,39.7419',c1:'#10b981',c2:'#34d399'},
-  {id:'p12',ico:'🌳',t:'Парк Ривьера',la:43.5706,lo:39.7323,ct:'p',d:'Старейший парк Сочи. Аттракционы, аллеи, пруды',di:'2 км',ti:'5 мин',rt:'https://yandex.ru/maps/?rtext=~43.5706,39.7323',c1:'#10b981',c2:'#34d399'},
+  {id:'p12',ico:'🌳',t:'Парк Ривьера',la:43.5706,lo:39.7323,ct:'p',d:'Старейший парк Сочи. Аттракционы, аллеи, пруды',di:'2 км',ti:'5 мин',rt:'https://yandex.ru/maps/?rtext=~43.5706,39.7323',im:'assets/loc-riviera.jpg'},
   {id:'p13',ico:'🌸',t:'Южные Культуры',la:43.4189,lo:39.9642,ct:'p',d:'Парк с прудами, мостиками, редкими растениями. Жемчужина Адлера!',di:'6 км',ti:'12 мин',rt:'https://yandex.ru/maps/?rtext=~43.4189,39.9642',c1:'#10b981',c2:'#34d399'},
   {id:'p14',ico:'🎢',t:'Сочи Парк',la:43.3975,lo:39.9663,ct:'p',d:'Диснейленд по-русски! Американские горки и аттракционы',di:'8 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.3975,39.9663',c1:'#10b981',c2:'#34d399'},
   {id:'p15',ico:'✈️',t:'Смотровая (самолёты)',la:43.4481,lo:39.9397,ct:'s',d:'Самолёты заходят прямо над головой! Легендарное место для фото',di:'8 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.4481,39.9397',c1:'#ef4444',c2:'#f87171'},
@@ -159,8 +159,9 @@ function init(){
 function show(id){
   var l=LOCS.find(function(x){return x.id===id});if(!l)return;
   var p=document.getElementById('locPanel');
-  document.getElementById('locPhoto').style.background='linear-gradient(135deg,'+l.c1+','+l.c2+')';
-  document.getElementById('locPhoto').textContent=l.ico;
+  var ph=document.getElementById('locPhoto');
+  if(l.im){ph.style.background='';ph.style.display='flex';var img=new Image();img.onload=function(){ph.style.backgroundImage='url('+l.im+')';ph.style.backgroundSize='cover';ph.style.backgroundPosition='center';ph.textContent='';};img.src=l.im;}
+  else{ph.style.background='linear-gradient(135deg,'+l.c1+','+l.c2+')';ph.style.backgroundImage=ph.style.background;ph.textContent=l.ico;}
   document.getElementById('locIco').textContent=l.ico;
   document.getElementById('locTtl').textContent=l.t;
   document.getElementById('locDsc').textContent=l.d;
