@@ -2093,6 +2093,33 @@ document.getElementById('tot').textContent=(p*d).toLocaleString('ru-RU')+' ₽';
 }
 (function(){var t=new Date().toISOString().split('T')[0];document.getElementById('dF').setAttribute('min',t);document.getElementById('dT').setAttribute('min',t);document.getElementById('dF').value=t;})();
 document.getElementById('bookBtn').onclick=function(){alert('✅ Бронирование отправлено! Мы перезвоним в течение 15 минут ☎️');};
+
+// Перемещаем блок под каталог скутеров (после React-рендера)
+setTimeout(function(){
+  var b=document.getElementById('guideBlock');
+  if(!b)return;
+  // Ищем заголовок каталога (текст "Каталог" или "Скутер")
+  var els=document.querySelectorAll('h2,h3,strong');
+  var cat=null;
+  for(var i=0;i<els.length;i++){
+    var t=els[i].textContent.trim();
+    if(t.indexOf('Скутер')>=0||t.indexOf('скутер')>=0||t.indexOf('Каталог')>=0||t.indexOf('TANK')>=0||t.indexOf('Модели')>=0){
+      cat=els[i];break;
+    }
+  }
+  if(cat){
+    // Ищем контейнер, в котором находится каталог
+    var cont=cat.closest('section,div')||cat.parentElement;
+    if(cont&&cont.parentElement){
+      cont.parentElement.insertBefore(b,cont.nextSibling);
+      b.style.display='';
+    }
+  }
+  // Если не нашли — показываем где есть
+  if(!cat||b.style.display==='none'){
+    b.style.display='';
+  }
+},3000);
 </script>
 </body>
 </html>
