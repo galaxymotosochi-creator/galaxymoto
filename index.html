@@ -1949,130 +1949,44 @@ if(visitorName){document.getElementById("chatNameForm").classList.remove("chat-n
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-.guide-section{max-width:820px;margin:0 auto;padding:0 16px 40px;font-family:Inter,sans-serif}
-.guide-section #gm{width:100%;height:400px;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08);z-index:1;margin:0 0 16px}
-.guide-section .loc-p{display:none;background:#fff;border-radius:16px;margin:0 0 16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08)}
-.guide-section .loc-p.show{display:block}
-.guide-section .loc-p .pi{padding:16px 20px 20px}
-.guide-section .loc-p .h{display:flex;align-items:center;gap:10px;margin-bottom:4px}
-.guide-section .loc-p .ic{font-size:1.8rem}
-.guide-section .loc-p .tt{font-size:1.2rem;font-weight:700}
-.guide-section .loc-p .d{font-size:.9rem;color:#555;line-height:1.5;margin:6px 0 10px}
-.guide-section .loc-p .s{display:flex;gap:16px;flex-wrap:wrap;font-size:.82rem;color:#888;margin-bottom:12px}
-.guide-section .loc-p .s strong{color:#333}
-.guide-section .loc-p .r{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;background:#111;color:#fff;border-radius:10px;font-weight:600;font-size:.85rem;text-decoration:none;font-family:Inter}
-.guide-section .loc-p .r:hover{background:#333}
-.guide-section .st{font-size:1.2rem;font-weight:700;margin-bottom:14px;text-align:center}
-.guide-section .st span{background:linear-gradient(135deg,#0bc5ea,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.guide-section .sg{display:grid;gap:10px;margin-bottom:16px}
-.guide-section .c{border-radius:14px;padding:14px 18px;border:1px solid #f0f0f0}
-.guide-section .ch{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.guide-section .cn{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;flex-shrink:0}
-.guide-section .cl{font-size:.88rem;font-weight:600}
-.guide-section .fx{display:flex;gap:8px;flex-wrap:wrap}
-.guide-section .cp{display:flex;flex-direction:column;align-items:center;padding:8px 12px;border:1.5px solid #eee;border-radius:10px;cursor:pointer;min-width:90px;background:#fff}
-.guide-section .cp.on{border-color:#0bc5ea;background:#f0faff}
-.guide-section .cp .e{font-size:1.3rem}
-.guide-section .cp .n{font-size:.78rem;font-weight:600}
-.guide-section .cp .p{font-size:.72rem;color:#888}
-.guide-section .g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.guide-section .g2 input{padding:8px 12px;border:1.5px solid #ddd;border-radius:10px;font-size:.82rem;font-family:Inter}
-.guide-section .cx{display:flex;align-items:center;gap:4px;padding:6px 12px;border:1.5px solid #eee;border-radius:20px;font-size:.8rem;cursor:pointer;background:#fff}
-.guide-section .cx.on{background:#f0faff;border-color:#0bc5ea}
-.guide-section .gi input{padding:8px 12px;border:1.5px solid #ddd;border-radius:10px;font-size:.82rem;font-family:Inter;width:100%}
-.guide-section .tt{text-align:center;font-size:1rem;font-weight:700;margin-top:10px}
-.guide-section .tt span{color:#8b5cf6}
-.guide-section .bb{display:block;width:100%;padding:14px;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:700;cursor:pointer;font-family:Inter}
-.guide-section .bb:hover{opacity:.92}
-@media(max-width:600px){.guide-section #gm{height:280px}.guide-section .g2{grid-template-columns:1fr}}
+<style>
+.guide-block{max-width:820px;margin:0 auto;padding:0 16px 40px;font-family:Inter,sans-serif}
+.guide-block .gb-inner{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 2px 20px rgba(0,0,0,.06);border:1px solid #f0f0f0;padding:28px 24px 24px}
+.guide-block h2{font-size:1.3rem;font-weight:700;text-align:center;margin:0 0 4px}
+.guide-block h2 span{background:linear-gradient(135deg,#0bc5ea,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.guide-block .sub{font-size:.88rem;color:#888;text-align:center;margin:0 0 20px}
+.guide-block .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.guide-block .card{border-radius:12px;padding:16px;text-align:center;color:#fff}
+.guide-block .card .e{font-size:1.8rem;margin-bottom:4px}
+.guide-block .card .n{font-size:.78rem;font-weight:600}
+.guide-block .card .d{font-size:.7rem;opacity:.7}
+.guide-block .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px}
+.guide-block .steps .s{text-align:center}
+.guide-block .steps .c{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;margin:0 auto 4px}
+.guide-block .steps .l{font-size:.72rem;color:#555}
+.guide-block .btn{display:block;text-align:center;padding:14px;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff;border-radius:12px;font-size:.95rem;font-weight:700;text-decoration:none}
+.guide-block .btn:hover{opacity:.92}
+@media(max-width:600px){.guide-block .grid{grid-template-columns:1fr 1fr}.guide-block .steps{grid-template-columns:repeat(4,1fr)}}
 </style>
 
-<div class="guide-section">
-  <div style="text-align:center;margin-bottom:14px">
-    <h2 style="font-size:1.4rem;font-weight:700;margin:0 0 4px">🛵 Сочи <span style="background:linear-gradient(135deg,#0bc5ea,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent">на скутере</span></h2>
-    <p style="font-size:.88rem;color:#888;margin:0">Исследуйте лучшие места за рулём наших скутеров!</p>
+<div class="guide-block">
+  <div class="gb-inner">
+    <h2>🛵 Сочи <span>на скутере</span></h2>
+    <p class="sub">Исследуйте лучшие места за рулём наших скутеров!</p>
+    <div class="grid">
+      <div class="card" style="background:linear-gradient(135deg,#7c3aed,#a78bfa)"><div class="e">🏔️</div><div class="n">Красная Поляна</div><div class="d">50 мин от центра</div></div>
+      <div class="card" style="background:linear-gradient(135deg,#0bc5ea,#06b6d4)"><div class="e">🏞️</div><div class="n">Агурские водопады</div><div class="d">20 мин от центра</div></div>
+      <div class="card" style="background:linear-gradient(135deg,#f59e0b,#f97316)"><div class="e">🏖️</div><div class="n">Пляж в Адлере</div><div class="d">10 мин от центра</div></div>
+      <div class="card" style="background:linear-gradient(135deg,#ef4444,#f87171)"><div class="e">🗼</div><div class="n">Гора Ахун</div><div class="d">15 мин от центра</div></div>
+    </div>
+    <div class="steps">
+      <div class="s"><div class="c">1</div><div class="l">Выбрать скутер</div></div>
+      <div class="s"><div class="c">2</div><div class="l">Выбрать даты</div></div>
+      <div class="s"><div class="c">3</div><div class="l">Дополнительно</div></div>
+      <div class="s"><div class="c">4</div><div class="l">Контакты</div></div>
+    </div>
+    <a class="btn" href="sochi-guide.html">🗺️ Открыть путеводитель с картой &rarr;</a>
   </div>
-  
-  <div id="gm"><div style="display:flex;align-items:center;justify-content:center;height:400px;background:#eef1f5;color:#888" id="gml">🗺️ Загружаем карту...</div></div>
-
-  <div class="loc-p" id="gp">
-    <div class="pi">
-      <div class="h"><div class="ic" id="gi">🏔️</div><div class="tt" id="gt"></div></div>
-      <div class="d" id="gd"></div>
-      <div class="s"><span>📏 <strong id="gds"></strong> от центра</span><span>⏱️ <strong id="gts"></strong> на скутере</span></div>
-      <a class="r" id="gr" href="#" target="_blank">🚗 Построить маршрут</a>
-    </div>
-  </div>
-
-  <div class="st">Забронировать <span>скутер</span></div>
-  
-  <div class="sg">
-    <div class="c">
-      <div class="ch"><div class="cn">1</div><div class="cl">Выберите скутер</div></div>
-      <div class="fx" id="gs">
-        <div class="cp on" data-p="1500"><div class="e">🛵</div><div class="n">TANK 150</div><div class="p">1 500 ₽/сут</div></div>
-        <div class="cp" data-p="1800"><div class="e">🛵</div><div class="n">TANK 180</div><div class="p">1 800 ₽/сут</div></div>
-        <div class="cp" data-p="1500"><div class="e">🛵</div><div class="n">Jilang Tank</div><div class="p">1 500 ₽/сут</div></div>
-        <div class="cp" data-p="2000"><div class="e">🛵</div><div class="n">Leopard 180</div><div class="p">2 000 ₽/сут</div></div>
-      </div>
-    </div>
-    <div class="c">
-      <div class="ch"><div class="cn">2</div><div class="cl">Выберите даты</div></div>
-      <div class="g2"><input type="date" id="gF"><input type="date" id="gT"></div>
-    </div>
-    <div class="c">
-      <div class="ch"><div class="cn">3</div><div class="cl">Дополнительно</div></div>
-      <div class="fx"><div class="cx on">🪖 Шлем</div><div class="cx on">📦 Кофр</div><div class="cx">🚚 Доставка</div><div class="cx">📍 Встреча у отеля</div></div>
-    </div>
-    <div class="c">
-      <div class="ch"><div class="cn">4</div><div class="cl">Контакты</div></div>
-      <div class="g2 gi"><input placeholder="Ваше имя"><input placeholder="+7 (___) ___ __ __"></div>
-      <div class="tt">Итого: <span id="gTotal">1 500 ₽</span></div>
-    </div>
-  </div>
-  <button class="bb" onclick="alert('✅ Бронирование отправлено! Мы перезвоним в течение 15 минут ☎️')">🚀 Забронировать</button>
 </div>
-
-<script>
-var GL = [
-  {id:'g1',i:'🏔️',t:'Красная Поляна',la:43.6796,lo:40.2070,ct:'g',d:'Горный курорт. Серпантин и виды — идеально для TANK 180',di:'40 км',ti:'50 мин',rt:'https://yandex.ru/maps/?rtext=~43.6796,40.2070'},
-,la:43.6581,lo:40.3075,ct:'g',d:'Лучший курорт России!',di:'45 км',ti:'55 мин',rt:'https://yandex.ru/maps/?rtext=~43.6581,40.3075'},
-  {id:'g3',i:'🗼',t:'Гора Ахун',la:43.5552,lo:39.8420,ct:'g',d:'Смотровая башня на 663 м',di:'8 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.5552,39.8420'},
-  {id:'g4',i:'⛰️',t:'Орлиные скалы',la:43.5646,lo:39.8318,ct:'g',d:'Обрыв над морем. Вид — сказка!',di:'9 км',ti:'18 мин',rt:'https://yandex.ru/maps/?rtext=~43.5646,39.8318'},
-  {id:'g5',i:'🏞️',t:'Агурские водопады',la:43.5488,lo:39.8486,ct:'w',d:'Каскад водопадов в ущелье',di:'10 км',ti:'20 мин',rt:'https://yandex.ru/maps/?rtext=~43.5488,39.8486'},
-  {id:'g6',i:'💧',t:'33 водопада',la:43.6379,lo:39.8254,ct:'w',d:'Джазовые водопады в лесу',di:'25 км',ti:'35 мин',rt:'https://yandex.ru/maps/?rtext=~43.6379,39.8254'},
-  {id:'g7',i:'🏖️',t:'Пляж в Адлере',la:43.4297,lo:39.9428,ct:'b',d:'Закаты — космос!',di:'5 км',ti:'10 мин',rt:'https://yandex.ru/maps/?rtext=~43.4297,39.9428'},
-  {id:'g8',i:'🌊',t:'Набережная',la:43.5807,lo:39.7207,ct:'b',d:'Главный променад города',di:'2 км',ti:'5 мин',rt:'https://yandex.ru/maps/?rtext=~43.5807,39.7207'},
-  {id:'g9',i:'🌃',t:'Олимпийский парк',la:43.4025,lo:39.9564,ct:'p',d:'Ночная подсветка, фонтаны',di:'7 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.4025,39.9564'},
-  {id:'g10',i:'🌴',t:'Дендрарий',la:43.5767,lo:39.7419,ct:'p',d:'Редкие растения со всего мира',di:'3 км',ti:'7 мин',rt:'https://yandex.ru/maps/?rtext=~43.5767,39.7419'},
-  {id:'g11',i:'✈️',t:'Смотровая (самолёты)',la:43.4481,lo:39.9397,ct:'s',d:'Самолёты над головой!',di:'8 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.4481,39.9397'},
-  {id:'g12',i:'⛵',t:'Морской порт',la:43.5832,lo:39.7190,ct:'s',d:'Яхты, чайки, закаты',di:'2 км',ti:'5 мин',rt:'https://yandex.ru/maps/?rtext=~43.5832,39.7190'}
-];
-
-var gm;
-
-
-document.addEventListener('click',function(e){
-  var c=e.target.closest('.cp');
-  if(c&&c.parentElement.id==='gs'){
-    document.querySelectorAll('#gs .cp').forEach(function(x){x.classList.remove('on')});
-    c.classList.add('on');gc();
-  }
-  var c2=e.target.closest('.cx');
-  if(c2)c2.classList.toggle('on');
-});
-document.addEventListener('change',function(e){if(e.target.id==='gF'||e.target.id==='gT')gc();});
-function gc(){
-  var s=document.querySelector('#gs .cp.on');if(!s)return;
-  var p=parseInt(s.getAttribute('data-p'))||1500;
-  var f=document.getElementById('gF').value,t=document.getElementById('gT').value,d=1;
-  if(f&&t){var d1=new Date(f),d2=new Date(t),df=Math.ceil((d2-d1)/(86400000));if(df>0)d=df;}
-  document.getElementById('gTotal').textContent=(p*d).toLocaleString('ru-RU')+' ₽';
-}
-(function(){var t=new Date().toISOString().split('T')[0];document.getElementById('gF').setAttribute('min',t);document.getElementById('gT').setAttribute('min',t);document.getElementById('gF').value=t;})();
-function tryInit(){try{if(typeof L==='undefined'){setTimeout(tryInit,500);return}var el=document.getElementById('gml');if(el)el.style.display='none';if(document.getElementById('gm')){gm=L.map('gm',{center:[43.55,39.77],zoom:11,zoomControl:true});L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18}).addTo(gm);var cc={g:'#8b5cf6',w:'#0bc5ea',b:'#f59e0b',p:'#10b981',s:'#ef4444'};GL.forEach(function(l){var c=cc[l.ct]||'#8b5cf6';L.marker([l.la,l.lo],{icon:L.divIcon({className:'',html:'<div style="width:36px;height:36px;border-radius:50%;background:'+c+';color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 2px 10px rgba(0,0,0,.35);border:2px solid #fff">'+l.i+'</div>',iconSize:[36,36],iconAnchor:[18,18]})}).addTo(gm).bindTooltip(l.t,{direction:'top',offset:[0,-18]}).on('click',(function(id){return function(){gs(id);};})(l.id));});}}catch(e){console.log('GM error:',e.message);setTimeout(tryInit,1500);}}
-function gs(id){try{var l=GL.find(function(x){return x.id===id});if(!l)return;document.getElementById('gi').textContent=l.i;document.getElementById('gt').textContent=l.t;document.getElementById('gd').textContent=l.d;document.getElementById('gds').textContent=l.di;document.getElementById('gts').textContent=l.ti;document.getElementById('gr').href=l.rt;document.getElementById('gp').classList.add('show');gm.flyTo([l.la,l.lo],14,{duration:0.4});setTimeout(function(){document.getElementById('gp').scrollIntoView({behavior:'smooth',block:'center'})},300);}catch(e){}}
-setTimeout(tryInit,2000);
-</script>
 </body>
 </html>
