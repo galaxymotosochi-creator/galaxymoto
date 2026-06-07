@@ -95,11 +95,7 @@
           <div class="mp-icon">🗺️</div>
           <h3>Карта появится здесь</h3>
           <p>После ввода API-ключа Яндекса выбирайте локации для поездки</p>
-          <input type="text" id="ymapKey" placeholder="Вставьте API-ключ Яндекса" />
-          <button onclick="loadYMap()">Загрузить карту</button>
-          <p class="hint">
-            Ключ: <a href="https://developer.tech.yandex.ru/" target="_blank">developer.tech.yandex.ru</a>
-          </p>
+          <p style="margin:0;padding:16px;font-size:.9rem;color:#333">⏳ Загружаем карту...</p>
         </div>
       </div>
     </div>
@@ -198,7 +194,7 @@ var LOCATIONS = [
 ];
 
 function loadYMap() {
-  var key = document.getElementById('ymapKey').value.trim();
+  var key = document.getElementById('ymapKey').value.trim() || '531db1f9-fef5-4400-a491-d04ec01a3178';
   if (!key) { alert('Вставьте API-ключ Яндекса'); return; }
   var s = document.createElement('script');
   s.src = 'https://api-maps.yandex.ru/2.1/?apikey=' + encodeURIComponent(key) + '&lang=ru_RU';
@@ -268,6 +264,9 @@ document.addEventListener('change',function(e){
   document.getElementById('rentDateTo').setAttribute('min',today);
   document.getElementById('rentDateFrom').value = today;
 })();
+
+// Автозагрузка карты при загрузке страницы
+setTimeout(loadYMap, 500);
 </script>
 </body>
 </html>
