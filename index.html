@@ -1949,10 +1949,6 @@ if(visitorName){document.getElementById("chatNameForm").classList.remove("chat-n
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-<style>
-<style>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<style>
 .guide-onpage{max-width:860px;margin:0 auto;padding:0 16px 40px;font-family:Inter,sans-serif}
 .guide-onpage h2{font-size:1.4rem;font-weight:700;text-align:center;margin:0 0 4px}
 .guide-onpage h2 span{background:linear-gradient(135deg,#0bc5ea,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
@@ -2040,10 +2036,8 @@ if(visitorName){document.getElementById("chatNameForm").classList.remove("chat-n
   <button class="bb" id="bookBtn">🚀 Забронировать</button>
 </div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 var PL = [
-{i:'🏔️',t:'Красная Поляна',la:43.6796,lo:40.2070,c:'g',d:'Горный курорт. Серпантин — идеально для TANK 180',di:'40 км',ti:'50 мин',rt:'https://yandex.ru/maps/?rtext=~43.6796,40.2070'},
 {i:'🎿',t:'Роза Хутор',la:43.6581,lo:40.3075,c:'g',d:'Лучший курорт России!',di:'45 км',ti:'55 мин',rt:'https://yandex.ru/maps/?rtext=~43.6581,40.3075'},
 {i:'🗼',t:'Гора Ахун',la:43.5552,lo:39.8420,c:'g',d:'Смотровая башня на 663 м',di:'8 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.5552,39.8420'},
 {i:'⛰️',t:'Орлиные скалы',la:43.5646,lo:39.8318,c:'g',d:'Обрыв над морем — сказочный вид!',di:'9 км',ti:'18 мин',rt:'https://yandex.ru/maps/?rtext=~43.5646,39.8318'},
@@ -2094,32 +2088,6 @@ document.getElementById('tot').textContent=(p*d).toLocaleString('ru-RU')+' ₽';
 (function(){var t=new Date().toISOString().split('T')[0];document.getElementById('dF').setAttribute('min',t);document.getElementById('dT').setAttribute('min',t);document.getElementById('dF').value=t;})();
 document.getElementById('bookBtn').onclick=function(){alert('✅ Бронирование отправлено! Мы перезвоним в течение 15 минут ☎️');};
 
-// Перемещаем блок под каталог скутеров (после React-рендера)
-setTimeout(function(){
-  var b=document.getElementById('guideBlock');
-  if(!b)return;
-  // Ищем заголовок каталога (текст "Каталог" или "Скутер")
-  var els=document.querySelectorAll('h2,h3,strong');
-  var cat=null;
-  for(var i=0;i<els.length;i++){
-    var t=els[i].textContent.trim();
-    if(t.indexOf('Скутер')>=0||t.indexOf('скутер')>=0||t.indexOf('Каталог')>=0||t.indexOf('TANK')>=0||t.indexOf('Модели')>=0){
-      cat=els[i];break;
-    }
-  }
-  if(cat){
-    // Ищем контейнер, в котором находится каталог
-    var cont=cat.closest('section,div')||cat.parentElement;
-    if(cont&&cont.parentElement){
-      cont.parentElement.insertBefore(b,cont.nextSibling);
-      b.style.display='';
-    }
-  }
-  // Если не нашли — показываем где есть
-  if(!cat||b.style.display==='none'){
-    b.style.display='';
-  }
-},3000);
 </script>
 </body>
 </html>
