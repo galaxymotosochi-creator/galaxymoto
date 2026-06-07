@@ -2087,7 +2087,20 @@ document.getElementById('tot').textContent=(p*d).toLocaleString('ru-RU')+' ₽';
 }
 (function(){var t=new Date().toISOString().split('T')[0];document.getElementById('dF').setAttribute('min',t);document.getElementById('dT').setAttribute('min',t);document.getElementById('dF').value=t;})();
 document.getElementById('bookBtn').onclick=function(){alert('✅ Бронирование отправлено! Мы перезвоним в течение 15 минут ☎️');};
-
+// Вставка блока ПОД каталог скутеров
+setTimeout(function(){
+  var b=document.querySelector('.guide-onpage');
+  if(!b)return;
+  var sections=document.querySelectorAll('.section__title');
+  var cat=null;
+  sections.forEach(function(s){if(s.textContent.trim()==='Каталог техники')cat=s});
+  if(cat){
+    var cont=cat.closest('section')||cat.parentElement;
+    while(cont&&cont.parentElement&&!cont.parentElement.matches('#root,body,html'))cont=cont.parentElement;
+    cont=cont||cat.parentElement;
+    cont.parentElement.insertBefore(b,cont.nextSibling);
+  }
+},2000);
 </script>
 </body>
 </html>
