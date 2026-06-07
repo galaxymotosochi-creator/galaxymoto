@@ -1991,7 +1991,7 @@ if(visitorName){document.getElementById("chatNameForm").classList.remove("chat-n
 </style>
 
 <div class="guide-onpage">
-  <h2>🛵 Сочи <span>на скутере</span></h2>
+  <h2>Сочи <span>на скутере</span></h2>
   <p class="sub">Исследуйте лучшие места за рулём наших скутеров!</p>
   
   <div id="mapW" class="map-wrap">
@@ -2095,6 +2095,12 @@ setTimeout(function(){
   if(cat){var sec=cat;while(sec.parentElement&&!sec.matches('section,body'))sec=sec.parentElement;sec.parentElement.insertBefore(b,sec.nextSibling);}
   else b.parentElement.insertBefore(b,document.querySelector('.reviews-trigger-wrap'));
 },3000);
+// Прокрутка к путеводителю при клике «Взять в аренду»
+setTimeout(function(){
+  var btn=document.querySelector('.hero__btn--outline');
+  var guide=document.querySelector('.guide-onpage');
+  if(btn&&guide)btn.addEventListener('click',function(e){e.preventDefault();guide.scrollIntoView({behavior:'smooth',block:'start'});});
+},3500);
 </script>
 </body>
 </html>
