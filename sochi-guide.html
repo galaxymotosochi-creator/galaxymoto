@@ -1,272 +1,224 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>Сочи на скутере — путеводитель</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Сочи на скутере</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-  *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'Inter',sans-serif;background:#f8f9fa;color:#111}
-  .guide-header{background:linear-gradient(135deg,#0f0f1a,#1a1a2e 50%,#16213e);color:#fff;padding:40px 20px 30px;text-align:center}
-  .guide-header h1{font-size:1.8rem;font-weight:800}
-  .guide-header h1 span{background:linear-gradient(135deg,#0bc5ea,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-  .guide-header p{font-size:.95rem;color:rgba(255,255,255,.6)}
-  .guide-header .emoji-big{font-size:2.5rem;display:block;margin-bottom:8px}
-  .container{max-width:800px;margin:0 auto;padding:0 16px}
-  
-  .map-section{padding:20px 0}
-  .map-wrapper{border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08);background:#e8ecf0}
-  #map{width:100%;height:420px;background:#e8ecf0}
-  .map-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;height:420px;color:#666;padding:30px 20px;text-align:center}
-  .map-placeholder .mp-icon{font-size:3rem;margin-bottom:12px}
-  .map-placeholder h3{font-size:1.1rem;font-weight:600;margin-bottom:8px;color:#333}
-  .map-placeholder p{font-size:.85rem;color:#999;line-height:1.5}
-  .map-placeholder input{width:300px;max-width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:10px;font-size:.85rem;font-family:'Inter',sans-serif;outline:none;margin-top:12px}
-  .map-placeholder input:focus{border-color:#0bc5ea}
-  .map-placeholder button{margin-top:8px;padding:10px 24px;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff;border:none;border-radius:10px;font-weight:600;font-size:.85rem;cursor:pointer;font-family:'Inter',sans-serif}
-  .map-placeholder button:hover{opacity:.9}
-  .map-placeholder .hint{font-size:.78rem;color:#bbb;margin-top:12px}
-  .map-placeholder .hint a{color:#0bc5ea}
-  
-  .location-panel{display:none;background:#fff;border-radius:16px;margin:16px auto;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08)}
-  .location-panel.active{display:block}
-  .loc-inner{padding:20px}
-  .loc-header{display:flex;align-items:center;gap:12px;margin-bottom:8px}
-  .loc-icon{font-size:2rem}
-  .loc-title{font-size:1.25rem;font-weight:700}
-  .loc-desc{font-size:.9rem;color:#555;line-height:1.5;margin-bottom:8px}
-  .loc-stats{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px;font-size:.82rem;color:#888}
-  .loc-stats strong{color:#333}
-  .loc-route-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;background:#111;color:#fff;border:none;border-radius:10px;font-weight:600;font-size:.85rem;cursor:pointer;text-decoration:none;font-family:'Inter',sans-serif}
-  .loc-route-btn:hover{background:#333}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Inter,sans-serif;background:#f8f9fa;color:#111}
+.header{background:linear-gradient(135deg,#0f0f1a,#1a1a2e 50%,#16213e);color:#fff;padding:36px 20px 28px;text-align:center}
+.header h1{font-size:1.8rem;font-weight:800}
+.header h1 span{background:linear-gradient(135deg,#0bc5ea,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header p{font-size:.95rem;color:rgba(255,255,255,.6);margin-top:4px}
+.header .big{font-size:2.4rem;display:block;margin-bottom:6px}
+.wrap{max-width:820px;margin:0 auto;padding:0 16px}
+#map{width:100%;height:420px;border-radius:16px;margin:20px 0 0;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08)}
+.loading{display:flex;align-items:center;justify-content:center;height:420px;background:#eef1f5;border-radius:16px;margin:20px 0 0;font-size:1rem;color:#888}
+@media(max-width:600px){#map{height:300px}.loading{height:300px}}
+.panel{display:none;background:#fff;border-radius:16px;margin:16px 0;padding:20px;box-shadow:0 4px 24px rgba(0,0,0,.08)}
+.panel.show{display:block}
+.panel .hdr{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.panel .ico{font-size:2rem}
+.panel .ttl{font-size:1.2rem;font-weight:700}
+.panel .dsc{font-size:.9rem;color:#555;line-height:1.5;margin-bottom:8px}
+.panel .st{display:flex;gap:16px;flex-wrap:wrap;font-size:.82rem;color:#888;margin-bottom:12px}
+.panel .st strong{color:#333}
+.panel a{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;background:#111;color:#fff;border-radius:10px;font-weight:600;font-size:.85rem;text-decoration:none}
+.panel a:hover{background:#333}
 
-  .steps-section{padding:24px 0 32px}
-  .steps-title{font-size:1.3rem;font-weight:700;margin-bottom:18px;text-align:center}
-  .steps-grid{display:grid;gap:12px}
-  .step-card{background:#fff;border-radius:14px;padding:16px 18px;box-shadow:0 2px 12px rgba(0,0,0,.05);border:1px solid #f0f0f0}
-  .step-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
-  .step-num{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}
-  .step-label{font-size:.9rem;font-weight:600}
-  .step-scooters{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-  .scooter-chip{display:flex;flex-direction:column;align-items:center;padding:10px 14px;border:1.5px solid #eee;border-radius:10px;cursor:pointer;transition:all .15s;min-width:100px;background:#fff}
-  .scooter-chip:hover{border-color:#0bc5ea}
-  .scooter-chip.selected{border-color:#0bc5ea;background:#f0faff}
-  .scooter-chip-name{font-size:.82rem;font-weight:600}
-  .scooter-chip-price{font-size:.78rem;color:#888;margin-top:2px}
-  .scooter-chip-emoji{font-size:1.5rem;margin-bottom:4px}
-  .step-dates{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
-  .step-dates input{padding:10px 12px;border:1.5px solid #ddd;border-radius:10px;font-size:.85rem;font-family:'Inter',sans-serif}
-  .step-extras{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-  .extra-chip{display:flex;align-items:center;gap:4px;padding:8px 14px;border:1.5px solid #eee;border-radius:20px;font-size:.82rem;cursor:pointer;transition:all .15s;background:#fff}
-  .extra-chip:hover{border-color:#0bc5ea}
-  .extra-chip.selected{background:#f0faff;border-color:#0bc5ea}
-  .step-contacts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
-  .step-contacts input{padding:10px 12px;border:1.5px solid #ddd;border-radius:10px;font-size:.85rem;font-family:'Inter',sans-serif}
-  .btn-book{display:block;width:100%;padding:16px;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff;border:none;border-radius:14px;font-size:1.05rem;font-weight:700;cursor:pointer;margin-top:16px;font-family:'Inter',sans-serif}
-  .btn-book:hover{opacity:.92}
-  .price-total{text-align:center;font-size:1.1rem;font-weight:700;margin-top:12px}
-  .price-total span{color:#8b5cf6}
-  .guide-footer{text-align:center;padding:20px;font-size:.8rem;color:#999}
-  @media(max-width:600px){
-    .guide-header h1{font-size:1.4rem}
-    #map{height:300px}
-    .map-placeholder{height:300px}
-    .step-dates,.step-contacts{grid-template-columns:1fr}
-  }
+.steps-section{padding:24px 0 32px}
+.steps-title{font-size:1.3rem;font-weight:700;margin-bottom:18px;text-align:center}
+.step-card{background:#fff;border-radius:14px;padding:16px 18px;box-shadow:0 2px 12px rgba(0,0,0,.05);border:1px solid #f0f0f0;margin-bottom:12px}
+.step-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.step-num{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0}
+.step-label{font-size:.9rem;font-weight:600}
+.flex{display:flex;gap:8px;flex-wrap:wrap}
+.chip{display:flex;flex-direction:column;align-items:center;padding:10px 14px;border:1.5px solid #eee;border-radius:10px;cursor:pointer;min-width:100px;background:#fff}
+.chip:hover{border-color:#0bc5ea}
+.chip.on{border-color:#0bc5ea;background:#f0faff}
+.chip .e{font-size:1.4rem}
+.chip .n{font-size:.82rem;font-weight:600;margin-top:2px}
+.chip .p{font-size:.78rem;color:#888}
+.gr2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.gr2 input{padding:10px 12px;border:1.5px solid #ddd;border-radius:10px;font-size:.85rem;font-family:Inter,sans-serif}
+.chip2{display:flex;align-items:center;gap:4px;padding:8px 14px;border:1.5px solid #eee;border-radius:20px;font-size:.82rem;cursor:pointer;background:#fff}
+.chip2:hover{border-color:#0bc5ea}
+.chip2.on{background:#f0faff;border-color:#0bc5ea}
+.gr2i input{padding:10px 12px;border:1.5px solid #ddd;border-radius:10px;font-size:.85rem;font-family:Inter,sans-serif;width:100%}
+.total{text-align:center;font-size:1.05rem;font-weight:700;margin-top:10px;color:#111}
+.total span{color:#8b5cf6}
+.btn{display:block;width:100%;padding:16px;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff;border:none;border-radius:14px;font-size:1.05rem;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;margin-top:18px}
+.btn:hover{opacity:.92}
+.footer{text-align:center;padding:20px;font-size:.8rem;color:#999}
   </style>
 </head>
 <body>
 
-<div class="guide-header">
-  <span class="emoji-big">🛵</span>
+<div class="header">
+  <span class="big">🛵</span>
   <h1>Сочи <span>на скутере</span></h1>
   <p>Исследуйте лучшие места города за рулём TANK</p>
 </div>
 
-<div class="container">
+<div class="wrap">
+  <div class="loading" id="mapLoading">🗺️ Загружаем карту...</div>
+  <div id="map"></div>
 
-  <div class="map-section">
-    <div class="map-wrapper">
-      <div id="map">
-        <div class="map-placeholder">
-          <div class="mp-icon">🗺️</div>
-          <h3>Карта появится здесь</h3>
-          <p>После ввода API-ключа Яндекса выбирайте локации для поездки</p>
-          <p style="margin:0;padding:16px;font-size:.9rem;color:#333">⏳ Загружаем карту...</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="location-panel" id="locationPanel">
-    <div class="loc-inner">
-      <div class="loc-header">
-        <div class="loc-icon" id="locIcon">🏖️</div>
-        <div class="loc-title" id="locTitle">Пляж в Адлере</div>
-      </div>
-      <div class="loc-desc" id="locDesc">Вечерняя покатушка вдоль моря 🔥</div>
-      <div class="loc-stats">
-        <span>📏 <strong id="locDist">5 км</strong> от центра</span>
-        <span>⏱️ <strong id="locTime">10 мин</strong> на скутере</span>
-      </div>
-      <a class="loc-route-btn" id="locRouteBtn" href="#" target="_blank">🚗 Построить маршрут</a>
-    </div>
+  <div class="panel" id="locPanel">
+    <div class="hdr"><div class="ico" id="locIco">🏖️</div><div class="ttl" id="locTtl"></div></div>
+    <div class="dsc" id="locDsc"></div>
+    <div class="st"><span>📏 <strong id="locDist"></strong> от центра</span><span>⏱️ <strong id="locTime"></strong> на скутере</span></div>
+    <a id="locBtn" href="#" target="_blank">🚗 Построить маршрут</a>
   </div>
 
   <div class="steps-section">
     <div class="steps-title">Забронировать скутер</div>
-    <div class="steps-grid">
 
-      <div class="step-card">
-        <div class="step-head"><div class="step-num">1</div><div class="step-label">Выберите скутер</div></div>
-        <div class="step-scooters" id="stepScooters">
-          <div class="scooter-chip selected" data-price="1500">
-            <div class="scooter-chip-emoji">🛵</div>
-            <div class="scooter-chip-name">TANK 150</div>
-            <div class="scooter-chip-price">1 500 ₽/сут</div>
-          </div>
-          <div class="scooter-chip" data-price="1800">
-            <div class="scooter-chip-emoji">🛵</div>
-            <div class="scooter-chip-name">TANK 180</div>
-            <div class="scooter-chip-price">1 800 ₽/сут</div>
-          </div>
-          <div class="scooter-chip" data-price="1500">
-            <div class="scooter-chip-emoji">🛵</div>
-            <div class="scooter-chip-name">Jilang Tank</div>
-            <div class="scooter-chip-price">1 500 ₽/сут</div>
-          </div>
-          <div class="scooter-chip" data-price="2000">
-            <div class="scooter-chip-emoji">🛵</div>
-            <div class="scooter-chip-name">Leopard 180</div>
-            <div class="scooter-chip-price">2 000 ₽/сут</div>
-          </div>
-        </div>
+    <div class="step-card">
+      <div class="step-head"><div class="step-num">1</div><div class="step-label">Выберите скутер</div></div>
+      <div class="flex" id="scooters">
+        <div class="chip on" data-p="1500"><div class="e">🛵</div><div class="n">TANK 150</div><div class="p">1 500 ₽/сут</div></div>
+        <div class="chip" data-p="1800"><div class="e">🛵</div><div class="n">TANK 180</div><div class="p">1 800 ₽/сут</div></div>
+        <div class="chip" data-p="1500"><div class="e">🛵</div><div class="n">Jilang Tank</div><div class="p">1 500 ₽/сут</div></div>
+        <div class="chip" data-p="2000"><div class="e">🛵</div><div class="n">Leopard 180</div><div class="p">2 000 ₽/сут</div></div>
       </div>
-
-      <div class="step-card">
-        <div class="step-head"><div class="step-num">2</div><div class="step-label">Выберите даты</div></div>
-        <div class="step-dates">
-          <input type="date" id="rentDateFrom" />
-          <input type="date" id="rentDateTo" />
-        </div>
-      </div>
-
-      <div class="step-card">
-        <div class="step-head"><div class="step-num">3</div><div class="step-label">Дополнительно</div></div>
-        <div class="step-extras">
-          <div class="extra-chip selected">🪖 Шлем</div>
-          <div class="extra-chip selected">📦 Кофр</div>
-          <div class="extra-chip">🚚 Доставка</div>
-          <div class="extra-chip">📍 Встреча у отеля</div>
-        </div>
-      </div>
-
-      <div class="step-card">
-        <div class="step-head"><div class="step-num">4</div><div class="step-label">Контакты</div></div>
-        <div class="step-contacts">
-          <input type="text" placeholder="Ваше имя" />
-          <input type="tel" placeholder="+7 (___) ___ __ __" />
-        </div>
-        <div class="price-total">Итого: <span id="totalAmount">1 500 ₽</span></div>
-      </div>
-
-      <button class="btn-book" onclick="alert('✅ Бронирование отправлено! Мы перезвоним в течение 15 минут ☎️')">🚀 Забронировать</button>
     </div>
-  </div>
 
+    <div class="step-card">
+      <div class="step-head"><div class="step-num">2</div><div class="step-label">Выберите даты</div></div>
+      <div class="gr2"><input type="date" id="dFrom"><input type="date" id="dTo"></div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-head"><div class="step-num">3</div><div class="step-label">Дополнительно</div></div>
+      <div class="flex">
+        <div class="chip2 on">🪖 Шлем</div>
+        <div class="chip2 on">📦 Кофр</div>
+        <div class="chip2">🚚 Доставка</div>
+        <div class="chip2">📍 Встреча у отеля</div>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-head"><div class="step-num">4</div><div class="step-label">Контакты</div></div>
+      <div class="gr2 gr2i"><input placeholder="Ваше имя"><input placeholder="+7 (___) ___ __ __"></div>
+      <div class="total">Итого: <span id="total">1 500 ₽</span></div>
+    </div>
+
+    <button class="btn" onclick="alert('✅ Бронирование отправлено! Мы перезвоним в течение 15 минут ☎️')">🚀 Забронировать</button>
+  </div>
 </div>
 
-<div class="guide-footer">GALAXY MOTO · Сочи · +7 (900) 001-80-23</div>
+<div class="footer">GALAXY MOTO · Сочи · +7 (900) 001-80-23</div>
 
 <script>
-var LOCATIONS = [
-  {id:'beach',icon:'🏖️',title:'Пляж в Адлере',lat:43.4297,lon:39.9428,desc:'Вечерняя покатушка вдоль моря. Закаты — космос 🔥',dist:'5 км',time:'10 мин',route:'https://yandex.ru/maps/?rtext=~43.4297,39.9428'},
-  {id:'polyana',icon:'🏔️',title:'Красная Поляна',lat:43.6796,lon:40.2070,desc:'Серпантин в горы 🌲 TANK 180 справится идеально',dist:'40 км',time:'50 мин',route:'https://yandex.ru/maps/?rtext=~43.6796,40.2070'},
-  {id:'park',icon:'🌃',title:'Олимпийский парк',lat:43.4025,lon:39.9564,desc:'Ночная подсветка, шикарные аллеи',dist:'7 км',time:'15 мин',route:'https://yandex.ru/maps/?rtext=~43.4025,39.9564'},
-  {id:'naberezhnaya',icon:'🌊',title:'Набережная Сочи',lat:43.5807,lon:39.7207,desc:'Главный променад города',dist:'2 км',time:'5 мин',route:'https://yandex.ru/maps/?rtext=~43.5807,39.7207'},
-  {id:'arboretum',icon:'🌴',title:'Дендрарий',lat:43.5767,lon:39.7419,desc:'Редкие растения, красиво круглый год',dist:'3 км',time:'7 мин',route:'https://yandex.ru/maps/?rtext=~43.5767,39.7419'},
-  {id:'port',icon:'⛵',title:'Морской порт',lat: 43.5832,lon:39.7190,desc:'Яхты, чайки, закаты. Романтика 🔥',dist:'2 км',time:'5 мин',route:'https://yandex.ru/maps/?rtext=~43.5832,39.7190'},
-  {id:'airport',icon:'✈️',title:'Аэропорт Адлер',lat:43.4437,lon:39.9478,desc:'Встречайте гостей на скутере!',dist:'10 км',time:'15 мин',route:'https://yandex.ru/maps/?rtext=~43.4437,39.9478'},
-  {id:'sochipark',icon:'🎢',title:'Сочи Парк',lat:43.3975,lon:39.9663,desc:'Семейный отдых на скутере!',dist:'8 км',time:'15 мин',route:'https://yandex.ru/maps/?rtext=~43.3975,39.9663'}
+const API_KEY = '531db1f9-fef5-4400-a491-d04ec01a3178';
+
+const LOCS = [
+  {id:'beach',ico:'🏖️',ttl:'Пляж в Адлере',lat:43.4297,lon:39.9428,dsc:'Вечерняя покатушка вдоль моря. Закаты — космос 🔥',d:'5 км',t:'10 мин',rt:'https://yandex.ru/maps/?rtext=~43.4297,39.9428'},
+  {id:'polyana',ico:'🏔️',ttl:'Красная Поляна',lat:43.6796,lon:40.2070,dsc:'Серпантин в горы 🌲 TANK 180 справится идеально',d:'40 км',t:'50 мин',rt:'https://yandex.ru/maps/?rtext=~43.6796,40.2070'},
+  {id:'park',ico:'🌃',ttl:'Олимпийский парк',lat:43.4025,lon:39.9564,dsc:'Ночная подсветка, шикарные аллеи',d:'7 км',t:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.4025,39.9564'},
+  {id:'nab',ico:'🌊',ttl:'Набережная Сочи',lat:43.5807,lon:39.7207,dsc:'Главный променад города',d:'2 км',t:'5 мин',rt:'https://yandex.ru/maps/?rtext=~43.5807,39.7207'},
+  {id:'dend',ico:'🌴',ttl:'Дендрарий',lat:43.5767,lon:39.7419,dsc:'Редкие растения, красиво круглый год',d:'3 км',t:'7 мин',rt:'https://yandex.ru/maps/?rtext=~43.5767,39.7419'},
+  {id:'port',ico:'⛵',ttl:'Морской порт',lat:43.5832,lon:39.7190,dsc:'Яхты, чайки, закаты. Романтика 🔥',d:'2 км',t:'5 мин',rt:'https://yandex.ru/maps/?rtext=~43.5832,39.7190'},
+  {id:'air',ico:'✈️',ttl:'Аэропорт Адлер',lat:43.4437,lon:39.9478,dsc:'Встречайте гостей на скутере!',d:'10 км',t:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.4437,39.9478'},
+  {id:'spark',ico:'🎢',ttl:'Сочи Парк',lat:43.3975,lon:39.9663,dsc:'Семейный отдых на скутере!',d:'8 км',t:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.3975,39.9663'}
 ];
 
-function loadYMap() {
-  var key = document.getElementById('ymapKey').value.trim() || '531db1f9-fef5-4400-a491-d04ec01a3178';
-  if (!key) { alert('Вставьте API-ключ Яндекса'); return; }
+var map;
+
+function loadMap() {
   var s = document.createElement('script');
-  s.src = 'https://api-maps.yandex.ru/2.1/?apikey=' + encodeURIComponent(key) + '&lang=ru_RU';
-  s.onload = function() { ymaps.ready(initMap); };
+  s.src = 'https://api-maps.yandex.ru/2.1/?apikey=' + API_KEY + '&lang=ru_RU';
+  s.onload = function(){ ymaps.ready(initMap); };
+  s.onerror = function(){ document.getElementById('mapLoading').textContent = '❌ Ошибка загрузки карты. Проверьте API-ключ.'; };
   document.head.appendChild(s);
 }
 
-var myMap;
 function initMap() {
   var el = document.getElementById('map');
   el.innerHTML = '';
-  myMap = new ymaps.Map('map', {center:[43.5855,39.7281],zoom:11,controls:['zoomControl','geolocationControl']});
-  LOCATIONS.forEach(function(loc) {
-    var pm = new ymaps.Placemark([loc.lat,loc.lon],{hintContent:loc.title,balloonContent:'<b>'+loc.icon+' '+loc.title+'</b><br/>'+loc.desc},{preset:'islands#icon',iconColor:'#8b5cf6'});
-    pm.events.add('click',function(){showLocation(loc.id);});
-    myMap.geoObjects.add(pm);
+  document.getElementById('mapLoading').style.display = 'none';
+  
+  map = new ymaps.Map('map', {
+    center: [43.5855, 39.7281],
+    zoom: 11,
+    controls: ['zoomControl', 'geolocationControl']
+  });
+  
+  LOCS.forEach(function(loc) {
+    var pm = new ymaps.Placemark([loc.lat, loc.lon], {
+      hintContent: loc.ttl,
+      balloonContent: loc.ico + ' ' + loc.ttl
+    }, {
+      preset: 'islands#circleDotIcon',
+      iconColor: '#8b5cf6'
+    });
+    pm.events.add('click', function(){ showLoc(loc.id); });
+    map.geoObjects.add(pm);
   });
 }
 
-function showLocation(id) {
-  var loc = LOCATIONS.find(function(l){return l.id===id});
+function showLoc(id) {
+  var loc = LOCS.find(function(l){ return l.id === id; });
   if (!loc) return;
-  document.getElementById('locIcon').textContent = loc.icon;
-  document.getElementById('locTitle').textContent = loc.title;
-  document.getElementById('locDesc').textContent = loc.desc;
-  document.getElementById('locDist').textContent = loc.dist;
-  document.getElementById('locTime').textContent = loc.time;
-  document.getElementById('locRouteBtn').href = loc.route;
-  document.getElementById('locationPanel').classList.add('active');
-  if (myMap) myMap.setCenter([loc.lat,loc.lon],14,{duration:300});
-  setTimeout(function(){document.getElementById('locationPanel').scrollIntoView({behavior:'smooth',block:'center'})},100);
+  var p = document.getElementById('locPanel');
+  document.getElementById('locIco').textContent = loc.ico;
+  document.getElementById('locTtl').textContent = loc.ttl;
+  document.getElementById('locDsc').textContent = loc.dsc;
+  document.getElementById('locDist').textContent = loc.d;
+  document.getElementById('locTime').textContent = loc.t;
+  document.getElementById('locBtn').href = loc.rt;
+  p.classList.add('show');
+  if (map) map.setCenter([loc.lat, loc.lon], 14, {duration: 300});
+  setTimeout(function(){ p.scrollIntoView({behavior:'smooth',block:'center'}); }, 150);
 }
 
-document.addEventListener('click',function(e){
-  var chip = e.target.closest('.scooter-chip');
-  if (chip) {
-    document.querySelectorAll('.scooter-chip').forEach(function(c){c.classList.remove('selected')});
-    chip.classList.add('selected');
+// Клики по чипсам
+document.addEventListener('click', function(e){
+  var c = e.target.closest('.chip');
+  if (c && c.parentElement.id === 'scooters') {
+    document.querySelectorAll('#scooters .chip').forEach(function(x){ x.classList.remove('on'); });
+    c.classList.add('on');
     calcTotal();
   }
-  var extra = e.target.closest('.extra-chip');
-  if (extra) extra.classList.toggle('selected');
+  var c2 = e.target.closest('.chip2');
+  if (c2) c2.classList.toggle('on');
+});
+
+document.addEventListener('change', function(e){
+  if (e.target.id === 'dFrom' || e.target.id === 'dTo') calcTotal();
 });
 
 function calcTotal() {
-  var sel = document.querySelector('.scooter-chip.selected');
+  var sel = document.querySelector('#scooters .chip.on');
   if (!sel) return;
-  var ppd = parseInt(sel.getAttribute('data-price'))||1500;
-  var from = document.getElementById('rentDateFrom').value;
-  var to = document.getElementById('rentDateTo').value;
+  var ppd = parseInt(sel.getAttribute('data-p')) || 1500;
+  var f = document.getElementById('dFrom').value;
+  var t = document.getElementById('dTo').value;
   var days = 1;
-  if (from && to) {
-    var d1 = new Date(from), d2 = new Date(to);
+  if (f && t) {
+    var d1 = new Date(f), d2 = new Date(t);
     var diff = Math.ceil((d2-d1)/(1000*60*60*24));
     if (diff > 0) days = diff;
   }
-  document.getElementById('totalAmount').textContent = (ppd*days).toLocaleString('ru-RU') + ' ₽';
+  document.getElementById('total').textContent = (ppd*days).toLocaleString('ru-RU') + ' ₽';
 }
 
-document.addEventListener('change',function(e){
-  if (e.target.id==='rentDateFrom'||e.target.id==='rentDateTo') calcTotal();
-});
-
+// Установка сегодняшней даты
 (function(){
   var today = new Date().toISOString().split('T')[0];
-  document.getElementById('rentDateFrom').setAttribute('min',today);
-  document.getElementById('rentDateTo').setAttribute('min',today);
-  document.getElementById('rentDateFrom').value = today;
+  document.getElementById('dFrom').setAttribute('min', today);
+  document.getElementById('dTo').setAttribute('min', today);
+  document.getElementById('dFrom').value = today;
 })();
 
-// Автозагрузка карты при загрузке страницы
-setTimeout(loadYMap, 500);
+// Загрузка карты
+loadMap();
 </script>
 </body>
 </html>
