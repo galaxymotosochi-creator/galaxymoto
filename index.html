@@ -2092,7 +2092,8 @@ function gc(){
   document.getElementById('gTotal').textContent=(p*d).toLocaleString('ru-RU')+' ₽';
 }
 (function(){var t=new Date().toISOString().split('T')[0];document.getElementById('gF').setAttribute('min',t);document.getElementById('gT').setAttribute('min',t);document.getElementById('gF').value=t;})();
-gi();
+function tryInit(){if(typeof L!=='undefined'){gi()}else{setTimeout(tryInit,500)}}
+setTimeout(tryInit,1000);
 </script>
 </body>
 </html>
