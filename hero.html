@@ -322,11 +322,11 @@ document.addEventListener("touchend",function(e){var d=touchX-e.changedTouches[0
   <div class="rent-card">
     <div class="rent-card-header"><div class="rent-card-num">1</div><div class="rent-card-label">Выберите скутер</div></div>
     <div class="rent-sel" id="rentSel">
-      <div class="rent-item on" data-p="350"><div class="n">Yamaha Gear</div><div class="p">от 350 ₽/сут</div></div>
-      <div class="rent-item" data-p="600"><div class="n">Maxi / Galaxy</div><div class="p">от 600 ₽/сут</div></div>
-      <div class="rent-item" data-p="700"><div class="n">Tank</div><div class="p">от 700 ₽/сут</div></div>
-      <div class="rent-item" data-p="1000"><div class="n">ADV</div><div class="p">от 1 000 ₽/сут</div></div>
-      <div class="rent-item" data-p="1300"><div class="n">N-Max</div><div class="p">от 1 300 ₽/сут</div></div>
+      <div class="rent-item on" data-p="350" data-img="images/tank-next.jpg"><div class="n">Yamaha Gear</div><div class="p">от 350 ₽/сут</div></div>
+      <div class="rent-item" data-p="600" data-img="images/maxi-galaxy.jpg"><div class="n">Maxi / Galaxy</div><div class="p">от 600 ₽/сут</div></div>
+      <div class="rent-item" data-p="700" data-img="images/tank-x.jpg"><div class="n">Tank</div><div class="p">от 700 ₽/сут</div></div>
+      <div class="rent-item" data-p="1000" data-img="images/adv-bam-x-1.jpg"><div class="n">ADV</div><div class="p">от 1 000 ₽/сут</div></div>
+      <div class="rent-item" data-p="1300" data-img="images/n-max-bam-x-1.jpg"><div class="n">N-Max</div><div class="p">от 1 300 ₽/сут</div></div>
     </div>
   </div>
   
@@ -376,5 +376,46 @@ function calcRent(){
 })();
 document.getElementById('rentBookBtn').onclick=function(){alert('✅ Бронирование отправлено! Мы перезвоним в течение 15 минут ☎️')};
 </script>
+
+<!-- ===== Модалка фото ===== -->
+<style>
+.photo-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:99999;align-items:center;justify-content:center;padding:20px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.photo-modal.s{display:flex}
+.photo-modal-content{max-width:380px;width:100%;border-radius:20px;overflow:hidden;background:#fff;position:relative}
+.photo-modal-content img{width:100%;display:block}
+.photo-modal-close{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;border:none;background:rgba(0,0,0,.3);color:#fff;font-size:18px;cursor:pointer;z-index:2;display:flex;align-items:center;justify-content:center}
+</style>
+<div class="photo-modal" id="photoModal">
+  <div class="photo-modal-content">
+    <button class="photo-modal-close" onclick="closePhoto()">✕</button>
+    <img id="photoImg" src="" alt="">
+  </div>
+</div>
+<script>
+function openPhoto(img){
+  document.getElementById('photoImg').src=img;
+  document.getElementById('photoModal').classList.add('s');
+}
+function closePhoto(){
+  document.getElementById('photoModal').classList.remove('s');
+}
+document.getElementById('photoModal').addEventListener('click',function(e){
+  if(e.target===this)this.classList.remove('s');
+});
+// Add photo icon to each rent item
+document.querySelectorAll('.rent-item').forEach(function(item){
+  var icon=document.createElement('div');
+  icon.className='rent-photo-icon';
+  icon.textContent='📷';
+  icon.style.cssText='font-size:12px;margin-bottom:2px;cursor:pointer;opacity:.6';
+  icon.onclick=function(e){
+    e.stopPropagation();
+    var img=item.getAttribute('data-img');
+    if(img)openPhoto(img);
+  };
+  item.insertBefore(icon,item.firstChild);
+});
+</script>
+
 </body>
 </html>
