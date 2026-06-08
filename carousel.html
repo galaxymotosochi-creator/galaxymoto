@@ -100,7 +100,7 @@ function render(){
     });
     h += '</div>';
     h += '<div class="card-foot">';
-    h += '<span class="card-price">' + parseInt(s.price).toLocaleString("ru-RU") + ' ₽</span>';
+    h += '<span class="card-price">' + Number(s.price).toLocaleString("ru-RU") + ' ₽</span>';
     h += '<button class="card-btn">Тест-драйв</button>';
     h += '</div></div></div></div>';
   });
