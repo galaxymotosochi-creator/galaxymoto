@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>GALAXY MOTO</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Inter,sans-serif}
+.hero{
+  position:relative;
+  min-height:100dvh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  color:#fff;
+  overflow:hidden;
+  background:#0f0f1a;
+}
+.hero-bg{
+  position:absolute;
+  inset:0;
+  z-index:0;
+}
+.hero-bg img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.hero-overlay{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  background:linear-gradient(to bottom,rgba(0,0,0,.45) 0%,rgba(0,0,0,.55) 100%);
+}
+.hero-content{
+  position:relative;
+  z-index:2;
+  max-width:520px;
+  width:100%;
+  padding:0 20px;
+}
+.hero-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:rgba(255,255,255,.12);
+  backdrop-filter:blur(12px);
+  border-radius:100px;
+  padding:6px 16px 6px 6px;
+  font-size:12px;
+  font-weight:500;
+  margin-bottom:20px;
+  color:#fff;
+}
+.hero-badge-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#22c55e;
+  display:inline-block;
+}
+.hero h1{
+  font-size:32px;
+  font-weight:800;
+  line-height:1.15;
+  margin-bottom:16px;
+  text-shadow:0 2px 8px rgba(0,0,0,.5);
+  white-space:pre-line;
+}
+@media(min-width:768px){
+  .hero h1{font-size:42px}
+}
+.hero-sub{
+  font-size:15px;
+  color:rgba(255,255,255,.85);
+  margin-bottom:32px;
+  line-height:1.5;
+  font-weight:400;
+}
+.hero-actions{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  align-items:center;
+  width:100%;
+  max-width:320px;
+  margin:0 auto;
+}
+@media(min-width:640px){
+  .hero-actions{flex-direction:row;justify-content:center;max-width:100%}
+}
+.hero-btn{
+  width:100%;
+  padding:14px 24px;
+  border-radius:999px;
+  font-size:14px;
+  font-weight:600;
+  font-family:Inter;
+  cursor:pointer;
+  transition:all .25s;
+  border:none;
+}
+.hero-btn--primary{
+  background:#fff;
+  color:#111;
+}
+.hero-btn--primary:hover{background:#f0f0f0}
+.hero-btn--outline{
+  background:transparent;
+  color:#fff;
+  border:1.5px solid rgba(255,255,255,.5);
+}
+.hero-btn--outline:hover{
+  background:rgba(255,255,255,.08);
+  border-color:#fff;
+}
+.hero-btn--gradient{
+  background:linear-gradient(135deg,#0bc5ea,#8b5cf6);
+  color:#fff;
+  box-shadow:0 4px 20px rgba(11,197,234,.3),0 2px 8px rgba(139,92,246,.25);
+}
+.hero-btn--gradient:hover{
+  transform:translateY(-2px);
+  box-shadow:0 6px 28px rgba(11,197,234,.4),0 4px 14px rgba(139,92,246,.35);
+}
+.hero-scroll{
+  position:absolute;
+  bottom:24px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:2;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  color:#fff;
+  opacity:.7;
+}
+.hero-scroll-text{
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:.1em;
+}
+@media(max-width:1023px){.hero-scroll{display:none}}
+@keyframes bounce{0%,20%,50%,80%,to{transform:translateY(0)}40%{transform:translateY(-8px)}60%{transform:translateY(-4px)}}
+.hero-scroll-arrow svg{animation:bounce 2s infinite}
+/* trigger */
+.reviews-trigger{
+  position:fixed;
+  bottom:80px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:90;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  border:1.5px solid rgba(255,255,255,.25);
+  border-radius:16px;
+  padding:10px 18px;
+  background:rgba(255,255,255,.08);
+  backdrop-filter:blur(12px);
+  cursor:pointer;
+  transition:all .2s;
+}
+.reviews-trigger:hover{background:rgba(255,255,255,.14)}
+.reviews-trigger-star{
+  width:46px;height:46px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#0bc5ea,#8b5cf6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+  flex-shrink:0;
+}
+.reviews-trigger-info{}
+.reviews-trigger-label{
+  font-size:10px;
+  color:rgba(255,255,255,.5);
+  text-transform:uppercase;
+  letter-spacing:.5px;
+}
+.reviews-trigger-rating{
+  font-size:13px;
+  font-weight:600;
+  color:#fff;
+}
+@media(max-width:480px){.reviews-trigger{transform:translateX(-50%) scale(.85);bottom:72px}}
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-overlay"></div>
+  <div class="hero-bg">
+    <img src="https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=1200&h=800&fit=crop" alt="">
+  </div>
+  <div class="hero-content">
+    <div class="hero-badge"><span class="hero-badge-dot"></span>Сочи · Работаем ежедневно</div>
+    <h1>GALAXY MOTO<br>Полный цикл твоего движения</h1>
+    <p class="hero-sub">Покупка, аренда, честный сервис и<br>оригинальные запчасти для мототехники.<br>Берем все заботы на себя</p>
+    <div class="hero-actions">
+      <button class="hero-btn hero-btn--primary">Выбрать технику</button>
+      <button class="hero-btn hero-btn--outline">Взять в аренду</button>
+      <button class="hero-btn hero-btn--gradient">Записаться на сервис</button>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span class="hero-scroll-text">Листайте вниз</span>
+    <div class="hero-scroll-arrow">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M19 12l-7 7-7-7"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<div class="reviews-trigger">
+  <div class="reviews-trigger-star">⭐</div>
+  <div class="reviews-trigger-info">
+    <div class="reviews-trigger-label">Яндекс.Карты</div>
+    <div class="reviews-trigger-rating">Рейтинг 5.0 · читайте отзывы</div>
+  </div>
+</div>
+
+</body>
+</html>
