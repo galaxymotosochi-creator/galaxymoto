@@ -1987,6 +1987,8 @@ if(visitorName){document.getElementById("chatNameForm").classList.remove("chat-n
 .guide-onpage .tt span{color:#8b5cf6}
 .guide-onpage .bb{display:block;width:100%;padding:12px;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff;border:none;border-radius:12px;font-size:.9rem;font-weight:700;cursor:pointer;font-family:Inter;margin-top:10px}
 .guide-onpage .bb:hover{opacity:.92}
+.guide-onpage{display:none}
+.guide-onpage.guide-visible{display:block}
 @media(max-width:600px){.guide-onpage .g2,.guide-onpage .gi{grid-template-columns:1fr}}
 </style>
 
@@ -2093,7 +2095,9 @@ setTimeout(function(){
   var heads=document.querySelectorAll('.section__title');var cat=null;
   heads.forEach(function(h){if(h.textContent.trim().indexOf('Каталог')>=0)cat=h;});
   if(cat){var sec=cat;while(sec.parentElement&&!sec.matches('section,body'))sec=sec.parentElement;sec.parentElement.insertBefore(b,sec.nextSibling);}
+  b.classList.add('guide-visible');
   else b.parentElement.insertBefore(b,document.querySelector('.reviews-trigger-wrap'));
+  b.classList.add('guide-visible');
 },3000);
 // Выравнивание отступов между всеми разделами до 38px
 setTimeout(function(){
