@@ -1949,7 +1949,7 @@ if(visitorName){document.getElementById("chatNameForm").classList.remove("chat-n
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-.guide-onpage{max-width:860px;margin:80px auto 40px;padding:0 16px 40px;font-family:Inter,sans-serif}
+.guide-onpage{max-width:860px;margin:18px auto 18px;padding:0 16px 40px;font-family:Inter,sans-serif}
 .guide-onpage h2{font-size:18.4px!important;font-weight:700!important;color:#111;text-transform:uppercase!important;text-align:center;margin:0 0 4px;font-family:Inter,sans-serif;letter-spacing:normal!important}
 .guide-onpage h2 span{background:linear-gradient(135deg,#0bc5ea,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .guide-onpage .sub{font-size:.88rem;color:#888;text-align:center;margin:0 0 16px}
@@ -2095,6 +2095,25 @@ setTimeout(function(){
   if(cat){var sec=cat;while(sec.parentElement&&!sec.matches('section,body'))sec=sec.parentElement;sec.parentElement.insertBefore(b,sec.nextSibling);}
   else b.parentElement.insertBefore(b,document.querySelector('.reviews-trigger-wrap'));
 },3000);
+// Выравнивание отступов между всеми разделами до 38px
+setTimeout(function(){
+  var titles=document.querySelectorAll('.section__title');
+  // Запись на сервис → добавить margin-bottom
+  titles.forEach(function(t){
+    var txt=t.textContent.trim();
+    if(txt==='Запись на сервис'){
+      var cont=t.closest('section')||t.parentElement;
+      if(cont)cont.style.marginBottom='38px';
+    }
+  });
+  // FAQ → добавить margin-top
+  titles.forEach(function(t){
+    if(t.textContent.trim()==='FAQ'){
+      var cont=t.closest('section')||t.parentElement;
+      if(cont)cont.style.marginTop='38px';
+    }
+  });
+},3500);
 // Прокрутка к путеводителю при клике «Взять в аренду»
 setTimeout(function(){
   var btn=document.querySelector('.hero__btn--outline');
