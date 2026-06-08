@@ -126,6 +126,20 @@ function go(n){
   render();
 }
 
+// Swipe support
+var touchStartX = 0;
+var touchEndX = 0;
+document.addEventListener("touchstart", function(e) {
+  touchStartX = e.changedTouches[0].screenX;
+}, {passive: true});
+document.addEventListener("touchend", function(e) {
+  touchEndX = e.changedTouches[0].screenX;
+  var diff = touchStartX - touchEndX;
+  if(Math.abs(diff) > 40) {
+    slide(diff > 0 ? 1 : -1);
+  }
+}, {passive: true});
+
 render();
 </script>
 </body>
