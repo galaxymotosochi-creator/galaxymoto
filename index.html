@@ -52,11 +52,9 @@ document.addEventListener('click', function(e) {
       }
     
 
+/* Hide burger menu */
+.header__menu-btn,.header__mobile-nav{display:none!important}
 
-
-/* Hide React catalog - replaced by carousel */
-.section--light,section[id="catalog"]{display:none!important}
-#catalog{display:none!important}
 </style>
 <!-- Модалка тест-драйва -->
 <div class="serv-overlay" id="tdOverlay" style="display:none">
@@ -1988,8 +1986,6 @@ if(visitorName){document.getElementById("chatNameForm").classList.remove("chat-n
 @media(max-width:600px){.guide-onpage .g2,.guide-onpage .gi{grid-template-columns:1fr}}
 </style>
 
-
-
 <div class="guide-onpage">
   <h2>Сочи <span>на скутере</span></h2>
   <p class="sub">Исследуйте лучшие места за рулём наших скутеров!</p>
@@ -2090,24 +2086,7 @@ setTimeout(function(){
   var b=document.querySelector('.guide-onpage');if(!b)return;
   var heads=document.querySelectorAll('.section__title');var cat=null;
   heads.forEach(function(h){if(h.textContent.trim().indexOf('Каталог')>=0)cat=h;});
-  if(cat){var sec=cat;while(sec.parentElement&&!sec.matches('section,body'))sec=sec.parentElement;
-    // Insert carousel before guide-onpage
-    var cw=document.getElementById('crWrap');
-    if(!cw){
-      var css=document.createElement('style');
-      css.textContent='.cr-wrap{max-width:480px;margin:0 auto;padding:0 10px 20px;overflow:hidden}.cr{display:flex;align-items:center;transition:transform .4s cubic-bezier(.34,1.56,.64,1);padding:10px 0}.ci{flex:0 0 72%;transition:all .4s;text-align:center;padding:0 3%}.card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08);text-align:left}.card-img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:#e8e8e8}.card-body{padding:16px}.card-title{font-size:16px;font-weight:700;margin-bottom:8px}.card-specs{display:flex;flex-direction:column;gap:4px}.card-spec{font-size:13px;display:flex;gap:4px}.card-spec-l{color:#888}.card-spec-v{color:#111}.card-foot{display:flex;align-items:center;justify-content:space-between;padding-top:8px;margin-top:4px;border-top:1px solid #f0f0f0}.card-price{font-size:16px;font-weight:700;color:#111}.card-btn{font-size:10px;font-weight:600;color:#fff;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);border:none;border-radius:8px;padding:4px 14px;cursor:pointer;text-transform:uppercase;letter-spacing:.5px}.cr-arrow{padding:10px 22px;border:1.5px solid #ddd;border-radius:12px;background:#fff;font-size:18px;cursor:pointer}.cr-arrow:hover{background:#f8f8f8}.cr-dots{display:flex;justify-content:center;gap:6px;margin-top:12px}.cr-dot{width:8px;height:8px;border-radius:50%;background:#ddd;cursor:pointer;border:none;transition:all .2s}.cr-dot.act{background:#0bc5ea;transform:scale(1.3)}';
-      document.head.appendChild(css);
-      cw=document.createElement('div');cw.className='cr-wrap';cw.id='crWrap';
-      cw.innerHTML='<div style="text-align:center;margin-bottom:8px"><h2 style="font-size:18px!important;font-weight:700!important">Каталог техники</h2></div><div class="cr" id="cr"></div><div style="display:flex;justify-content:center;gap:12px;margin:10px 0"><button class="cr-arrow" onclick="crSlide(-1)">←</button><button class="cr-arrow" onclick="crSlide(1)">→</button></div><div class="cr-dots" id="crDots"></div>';
-      document.body.appendChild(cw);
-      // Add scooter data and functions
-      var sc=document.createElement('script');
-      sc.textContent='var crS=[{n:"TANK X",p:"129 900",i:"images/tank-x.jpg",s:["Состояние: новый","Пластик: новый","Пробег: 0 км","Мощность: 175/49сс","Тип подачи: карбюратор","Охлаждение: воздушное","Макс. скорость: 100 км/ч","Колёса: 13/13"]},{n:"N-MAX BAM-X",p:"169 900",i:"images/n-max-bam-x-1.jpg",s:["Состояние: б/у","Пластик: без трещин","Пробег: 2700 км","Мощность: 175/49сс","Тип подачи: инжектор","Охлаждение: водяное","Макс. скорость: 100 км/ч","Колёса: 13/13"]},{n:"MAXI / GALAXY",p:"65 900",i:"images/maxi-galaxy.jpg",s:["Состояние: б/у","Пластик: притёртости","Пробег: 13800 км","Мощность: 150/49сс","Охлаждение: воздушное","Колёса: 12/12"]},{n:"HONDA SUNDERO",p:"249 900",i:"images/honda-sundero-1.jpg",s:["Состояние: новая","Пробег: 0 км","Мощность: 150/49сс","Тип подачи: инжектор","Колёса: 10/10"]},{n:"TANK KUNHAO",p:"84 900",i:"images/tank-kunhao-1.jpg",s:["Состояние: б/у","Пластик: притёртости","Пробег: 1700 км","Мощность: 150/49сс","Охлаждение: воздушное","Колёса: 12/12"]},{n:"ADV BAM-X",p:"149 900",i:"images/adv-bam-x-1.jpg",s:["Состояние: новый","Пробег: 0 км","Мощность: 175/49сс","Охлаждение: воздушное","Колёса: 14/14"]},{n:"GUSITE AGV-R",p:"194 900",i:"images/gusite-agv-r-1.jpg",s:["Состояние: новый","Пробег: 0 км","Мощность: 200/49сс","Тип подачи: инжектор","Макс. скорость: 110 км/ч","Колёса: 13/14"]}];var crPos=0;function crRender(){var c=document.getElementById("cr");if(!c)return;var h="";crS.forEach(function(s,i){var d=i-crPos;var a=Math.abs(d);var sc=a===0?1:.82;var op=a===0?1:.5;h+="<div class=\"ci\" style=\"transform:scale("+sc+");opacity:"+op+'\"><div class=\"card\"><img class=\"card-img\" src=\"'+s.i+'\" alt=\"'+s.n+'\"><div class=\"card-body\"><div class=\"card-title\">'+s.n+'</div><div class=\"card-specs\">';s.s.forEach(function(sp){var p=sp.split(": ");if(p.length>1)h+="<div class=\"card-spec\"><span class=\"card-spec-l\">"+p[0]+": <\/span><span class=\"card-spec-v\">"+p[1]+"<\/span><\/div>"});h+="<\/div><div class=\"card-foot\"><span class=\"card-price\">"+s.p+" ₽<\/span><button class=\"card-btn\">Тест-драйв<\/button><\/div><\/div><\/div><\/div>"});c.innerHTML=h;c.style.transform="translateX("+(-crPos*72)+"%)";var d="";crS.forEach(function(s,i){d+="<button class=\"cr-dot\"+(i===crPos?" act":"")+"\" onclick=\"crGo("+i+")\"><\/button>"});document.getElementById("crDots").innerHTML=d}function crSlide(d){crPos+=d;if(crPos<0)crPos=crS.length-1;if(crPos>=crS.length)crPos=0;crRender()}function crGo(n){crPos=n;crRender()}var crTX=0;document.addEventListener("touchstart",function(e){crTX=e.changedTouches[0].screenX;},{passive:true});document.addEventListener("touchend",function(e){var d=crTX-e.changedTouches[0].screenX;if(Math.abs(d)>40)crSlide(d>0?1:-1);},{passive:true});setTimeout(crRender,500);';
-      document.body.appendChild(sc);
-    }
-    sec.parentElement.insertBefore(cw,sec.nextSibling);
-    sec.parentElement.insertBefore(b,sec.nextSibling);
-  }else{b.parentElement.insertBefore(b,document.querySelector('.reviews-trigger-wrap'));}
+  if(cat){var sec=cat;while(sec.parentElement&&!sec.matches('section,body'))sec=sec.parentElement;sec.parentElement.insertBefore(b,sec.nextSibling);}else b.parentElement.insertBefore(b,document.querySelector('.reviews-trigger-wrap'));
   b.classList.add('guide-visible');
 },3000);
 // Выравнивание отступов между всеми разделами до 38px
