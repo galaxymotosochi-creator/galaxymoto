@@ -3,175 +3,130 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1">
-<title>Карусель — 5 вариантов</title>
+<title>Карусель каталога</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Inter,sans-serif;background:#f5f5f5;padding:40px 0 80px;color:#111;text-align:center}
-h1{font-size:18px;font-weight:700}
-.sub{font-size:13px;color:#888;margin:4px 0 20px}
-.sw{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap;justify-content:center}
-.sw button{padding:8px 16px;border:1.5px solid #ddd;border-radius:10px;background:#fff;font-family:Inter;font-size:11px;font-weight:500;cursor:pointer;color:#666;transition:all .2s}
-.sw button.act{border-color:#0bc5ea;background:#f0faff;color:#111;font-weight:600}
-.pv{max-width:450px;margin:0 auto 24px;padding:0 10px}
-.dot{width:8px;height:8px;border-radius:50%;background:#ddd;cursor:pointer;transition:all .2s;border:none}
+body{font-family:Inter,sans-serif;background:#f5f5f5;padding:40px 0 80px;text-align:center;color:#111}
+h1{font-size:18px;font-weight:700}.sub{font-size:13px;color:#888;margin:4px 0 20px}
+.pv{max-width:480px;margin:0 auto;padding:0 10px;overflow:hidden}
+.cr{display:flex;align-items:center;transition:transform .4s cubic-bezier(.34,1.56,.64,1);padding:10px 0}
+.ci{flex:0 0 72%;transition:all .4s;text-align:center;padding:0 3%}
+.card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08);text-align:left;transition:all .3s}
+.card-img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:#e8e8e8}
+.card-body{padding:16px}
+.card-title{font-size:16px;font-weight:700;margin-bottom:8px}
+.card-specs{display:flex;flex-direction:column;gap:4px;margin-bottom:4px}
+.card-spec{font-size:13px;display:flex;gap:4px}
+.card-spec-l{color:#888}.card-spec-v{color:#111}
+.card-foot{display:flex;align-items:center;justify-content:space-between;padding-top:8px;margin-top:4px}
+.card-price{font-size:18px;font-weight:700;color:#111}
+.card-btn{font-size:10px;font-weight:600;color:#fff;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);border:none;border-radius:8px;padding:4px 14px;cursor:pointer;text-transform:uppercase;letter-spacing:.5px}
+.arrow{padding:10px 22px;border:1.5px solid #ddd;border-radius:12px;background:#fff;font-size:18px;cursor:pointer;transition:all .2s}
+.arrow:hover{background:#f8f8f8}
+.dots{display:flex;justify-content:center;gap:6px;margin-top:12px}
+.dot{width:8px;height:8px;border-radius:50%;background:#ddd;cursor:pointer;border:none;transition:all .2s}
 .dot.act{background:#0bc5ea;transform:scale(1.3)}
-.btn-a{padding:8px 20px;border:1.5px solid #ddd;border-radius:10px;background:#fff;font-family:Inter;font-size:16px;cursor:pointer;transition:all .2s}
-.btn-a:hover{background:#f8f8f8}
-.btn-b{padding:10px 24px;border-radius:12px;border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:Inter}
 </style>
 </head>
 <body>
-<h1>5 вариантов карусели</h1>
-<p class="sub">Нажимайте стрелки или свайпайте</p>
-<div class="sw">
-<button class="act" onclick="sv(1)">1 Classic</button>
-<button onclick="sv(2)">2 Tinder</button>
-<button onclick="sv(3)">3 Coverflow</button>
-<button onclick="sv(4)">4 Cards</button>
-<button onclick="sv(5)">5 Minimal</button>
+<h1>Карусель каталога</h1>
+<p class="sub">Листайте стрелками или нажимайте на точки</p>
+
+<div class="pv">
+  <div class="cr" id="cr"></div>
+  <div style="display:flex;justify-content:center;gap:12px;margin-top:14px">
+    <button class="arrow" onclick="slide(-1)">&#x2190;</button>
+    <button class="arrow" onclick="slide(1)">&#x2192;</button>
+  </div>
+  <div class="dots" id="dots"></div>
 </div>
-<div class="pv" id="pv"></div>
+
 <script>
-var s=[{n:"TANK 150",p:"1 500",c:"#1a1a2e",i:"🛵"},{n:"TANK 180",p:"1 800",c:"#16213e",i:"🏍️"},{n:"Jilang Tank",p:"1 500",c:"#0f3460",i:"🛵"},{n:"Leopard 180",p:"2 000",c:"#533483",i:"🏍️"},{n:"E-Scooter X",p:"1 200",c:"#2d4059",i:"🛴"}];
-var cur=1,pos=0,ti=0,cfi=0,csi=0,mi=0;
-function sv(n){cur=n;document.querySelectorAll(".sw button").forEach(function(b,i){b.classList.toggle("act",i===n-1)});pos=0;ti=0;cfi=0;csi=0;mi=0;r()}
-function r(){var p=document.getElementById("pv");if(cur===1)R1(p);else if(cur===2)R2(p);else if(cur===3)R3(p);else if(cur===4)R4(p);else R5(p)}
-function dots(n,act,fn){var h='';for(var i=0;i<n;i++)h+='<button class="dot'+(i===act?' act':'')+'" onclick="'+fn+'('+i+')"></button>';return h}
-// V1 Classic
-function R1(pv){
-  var h='<div style="position:relative;overflow:hidden"><div id="cr" style="display:flex;align-items:center;transition:transform .4s cubic-bezier(.34,1.56,.64,1);padding:10px 0">';
-  s.forEach(function(x,i){
-    var d=i-pos;var a=Math.abs(d);var sc=a===0?1:.82;var op=a===0?1:.5;
-    h+='<div class="c1i" style="flex:0 0 70%;transition:all .4s;transform:scale('+sc+');opacity:'+op+';text-align:center">';
-    h+='<div style="background:'+x.c+';border-radius:20px;padding:40px 16px 24px;color:#fff;box-shadow:0 8px 32px rgba(0,0,0,.15)">';
-    h+='<div style="font-size:48px;margin-bottom:8px">'+x.i+'</div>';
-    h+='<div style="font-weight:700;font-size:16px">'+x.n+'</div>';
-    h+='<div style="font-size:13px;color:rgba(255,255,255,.6);margin-top:4px">от '+x.p+' ₽/сут</div></div></div>';
-  });
-  h+='</div></div><div style="display:flex;justify-content:center;gap:10px;margin-top:12px">';
-  h+='<button class="btn-a" onclick="c1(-1)">&#x2190;</button><button class="btn-a" onclick="c1(1)">&#x2192;</button></div>';
-  h+='<div style="display:flex;justify-content:center;gap:6px;margin-top:10px" id="d1"></div>';
-  pv.innerHTML=h;u1();
-}
-function u1(){
-  var items=document.querySelectorAll(".c1i");
-  items.forEach(function(el,i){
-    var d=i-pos;var a=Math.abs(d);el.style.transform="scale("+(a===0?1:.82)+")";el.style.opacity=a===0?1:.5;
-  });
-  document.getElementById("cr").style.transform="translateX("+(-pos*70)+"%)";
-  document.getElementById("d1").innerHTML=dots(s.length,pos,"c1g");
-}
-function c1(d){pos+=d;if(pos<0)pos=s.length-1;if(pos>=s.length)pos=0;u1()}
-function c1g(n){pos=n;u1()}
-// V2 Tinder
-function R2(pv){
-  ti=0;
-  var h='<div style="position:relative;height:340px;display:flex;align-items:center;justify-content:center">';
-  for(var i=s.length-1;i>=0;i--){
-    var x=s[i];var z=10-i;var rot=i===0?"rotate(0deg)":"rotate("+((i%2===0?3:-3))+"deg)";
-    h+='<div class="t2i" style="position:absolute;width:280px;transition:all .4s;z-index:'+z+';transform:'+rot+';cursor:pointer" data-i="'+i+'" onclick="t2c('+i+')">';
-    h+='<div style="background:'+x.c+';border-radius:20px;padding:40px 20px 24px;color:#fff;box-shadow:0 8px 32px rgba(0,0,0,.15)">';
-    h+='<div style="font-size:48px;margin-bottom:8px">'+x.i+'</div>';
-    h+='<div style="font-weight:700;font-size:16px">'+x.n+'</div>';
-    h+='<div style="font-size:13px;color:rgba(255,255,255,.6);margin-top:4px">от '+x.p+' ₽/сут</div></div></div>';
+var scooters = [
+  {
+    name: "TANK 150",
+    price: "2 600 000",
+    img: "https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=400&h=300&fit=crop",
+    specs: ["Двигатель: 150 см³", "Мощность: 12 л.с.", "Разгон: 0-50 за 5 сек"]
+  },
+  {
+    name: "TANK 180",
+    price: "3 200 000",
+    img: "https://images.unsplash.com/photo-1558981359-219d6364c9c8?w=400&h=300&fit=crop",
+    specs: ["Двигатель: 180 см³", "Мощность: 15 л.с.", "Разгон: 0-50 за 4 сек"]
+  },
+  {
+    name: "Jilang Tank",
+    price: "2 800 000",
+    img: "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=400&h=300&fit=crop",
+    specs: ["Двигатель: 150 см³", "Мощность: 13 л.с.", "Электростартер"]
+  },
+  {
+    name: "Leopard 180",
+    price: "3 500 000",
+    img: "https://images.unsplash.com/photo-1591637333184-19fd84b85b76?w=400&h=300&fit=crop",
+    specs: ["Двигатель: 180 см³", "Мощность: 16 л.с.", "ABS, дисковые тормоза"]
+  },
+  {
+    name: "E-Scooter",
+    price: "1 800 000",
+    img: "https://images.unsplash.com/photo-1605600659873-88b5a0a1d8d0?w=400&h=300&fit=crop",
+    specs: ["Электродвигатель: 3 кВт", "Запас хода: 80 км", "Макс. скорость: 60 км/ч"]
   }
-  h+='</div><div style="display:flex;justify-content:center;gap:10px;margin-top:12px">';
-  h+='<button class="btn-a" onclick="t2p()">&#x2190; Нет</button>';
-  h+='<button onclick="t2n()" style="padding:8px 20px;border:none;border-radius:10px;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff;font-family:Inter;font-size:16px;font-weight:600;cursor:pointer">Да &#x2192;</button></div>';
-  pv.innerHTML=h;u2();
-}
-function u2(){
-  var items=document.querySelectorAll(".t2i");
-  items.forEach(function(el,i){
-    var idx=parseInt(el.getAttribute("data-i"));
-    var newIdx=idx-ti;
-    if(newIdx<0)newIdx+=s.length;
-    var z=10-newIdx;
-    var rot=newIdx===0?"rotate(0deg)":"rotate("+((newIdx%2===0?3:-3))+"deg)";
-    el.style.zIndex=z;el.style.transform=rot;
-    el.style.opacity=newIdx>2?"0":"1";
-    el.style.scale=newIdx===0?"1":(newIdx===1?".9":".8");
+];
+
+var pos = 0;
+
+function render(){
+  var cr = document.getElementById("cr");
+  var h = "";
+  scooters.forEach(function(s, i){
+    var d = i - pos;
+    var abs = Math.abs(d);
+    var scale = abs === 0 ? 1 : 0.82;
+    var opacity = abs === 0 ? 1 : 0.5;
+    var z = abs === 0 ? 2 : (d < 0 ? 1 : 0);
+    
+    h += '<div class="ci" style="transform:scale(' + scale + ');opacity:' + opacity + ';z-index:' + z + ';position:relative">';
+    h += '<div class="card">';
+    h += '<img class="card-img" src="' + s.img + '" alt="' + s.name + '">';
+    h += '<div class="card-body">';
+    h += '<div class="card-title">' + s.name + '</div>';
+    h += '<div class="card-specs">';
+    s.specs.forEach(function(sp){
+      var parts = sp.split(": ");
+      h += '<div class="card-spec"><span class="card-spec-l">' + (parts[0] || "") + ': </span><span class="card-spec-v">' + (parts[1] || sp) + '</span></div>';
+    });
+    h += '</div>';
+    h += '<div class="card-foot">';
+    h += '<span class="card-price">' + parseInt(s.price).toLocaleString("ru-RU") + ' ₽</span>';
+    h += '<button class="card-btn">Тест-драйв</button>';
+    h += '</div></div></div></div>';
   });
-}
-function t2p(){ti++;if(ti>=s.length)ti=0;u2()}
-function t2n(){ti++;if(ti>=s.length)ti=0;u2()}
-function t2c(n){
-  var steps=(n-ti+s.length)%s.length;
-  ti=(ti+steps)%s.length;u2();
-}
-// V3 Coverflow
-function R3(pv){
-  var h='<div style="position:relative;overflow:hidden;padding:20px 0"><div id="cfr" style="display:flex;align-items:center;justify-content:center;transition:all .4s cubic-bezier(.34,1.56,.64,1)">';
-  s.forEach(function(x,i){
-    var d=i-cfi;var a=Math.abs(d);var sc=a===0?1:.7;var op=a===0?1:.4;
-    h+='<div class="cfi" style="flex:0 0 55%;transition:all .4s;transform:scale('+sc+');opacity:'+op+';text-align:center">';
-    h+='<div style="background:'+x.c+';border-radius:20px;padding:36px 12px 20px;color:#fff;box-shadow:0 8px 32px rgba(0,0,0,.15)">';
-    h+='<div style="font-size:44px;margin-bottom:6px">'+x.i+'</div>';
-    h+='<div style="font-weight:700;font-size:14px">'+x.n+'</div>';
-    h+='<div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px">'+x.p+' ₽/сут</div></div></div>';
+  cr.innerHTML = h;
+  cr.style.transform = "translateX(" + (-pos * 72) + "%)";
+  
+  var d = "";
+  scooters.forEach(function(s, i){
+    d += '<button class="dot' + (i === pos ? " act" : "") + '" onclick="go(' + i + ')"></button>';
   });
-  h+='</div></div><div style="display:flex;justify-content:center;gap:10px"><button class="btn-a" onclick="c3(-1)">&#x2190;</button><button class="btn-a" onclick="c3(1)">&#x2192;</button></div>';
-  pv.innerHTML=h;u3();
+  document.getElementById("dots").innerHTML = d;
 }
-function u3(){
-  var items=document.querySelectorAll(".cfi");
-  items.forEach(function(el,i){
-    var d=i-cfi;var a=Math.abs(d);
-    el.style.transform="scale("+(a===0?1:.7)+")translateZ("+(a===0?"0":"-60px")+")";
-    el.style.opacity=a===0?1:.4;
-  });
+
+function slide(dir){
+  pos += dir;
+  if(pos < 0) pos = scooters.length - 1;
+  if(pos >= scooters.length) pos = 0;
+  render();
 }
-function c3(d){cfi+=d;if(cfi<0)cfi=s.length-1;if(cfi>=s.length)cfi=0;u3()}
-// V4 Card Stack
-function R4(pv){
-  var h='<div style="position:relative;height:350px;display:flex;align-items:center;justify-content:center">';
-  for(var i=s.length-1;i>=0;i--){
-    var x=s[i];var off=Math.max(0,i-csi)*5;var z=10-i;
-    h+='<div class="c4i" data-i="'+i+'" style="position:absolute;width:280px;transition:all .4s;z-index:'+z+';top:'+off+'px;cursor:pointer" onclick="c4c('+i+')">';
-    h+='<div style="background:'+x.c+';border-radius:20px;padding:36px 20px 20px;color:#fff;box-shadow:0 4px 20px rgba(0,0,0,.12)">';
-    h+='<div style="font-size:44px;margin-bottom:6px">'+x.i+'</div>';
-    h+='<div style="font-weight:700;font-size:14px">'+x.n+'</div>';
-    h+='<div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:2px">'+x.p+' ₽/сут</div></div></div>';
-  }
-  h+='</div><div style="display:flex;justify-content:center;gap:10px;margin-top:12px">';
-  h+='<button class="btn-a" onclick="c4p()">&#x2190;</button><button class="btn-a" onclick="c4n()">&#x2192;</button></div>';
-  pv.innerHTML=h;u4();
+
+function go(n){
+  pos = n;
+  render();
 }
-function u4(){
-  var items=document.querySelectorAll(".c4i");
-  items.forEach(function(el){
-    var i=parseInt(el.getAttribute("data-i"));var off=Math.max(0,i-csi)*5;el.style.top=off+"px";
-    el.style.opacity=Math.max(.3,1-(i-csi)*.2);
-  });
-}
-function c4p(){csi++;if(csi>=s.length)csi=0;u4()}
-function c4n(){csi++;if(csi>=s.length)csi=0;u4()}
-function c4c(n){var steps=(n-csi+s.length)%s.length;csi=(csi+steps)%s.length;u4()}
-// V5 Minimal
-function R5(pv){
-  var h='<div style="position:relative;overflow:hidden"><div id="mr" style="display:flex;transition:transform .4s ease">';
-  s.forEach(function(x,i){
-    h+='<div style="flex:0 0 100%;text-align:center;padding:0 8%">';
-    h+='<div style="background:linear-gradient(135deg,#0bc5ea,#8b5cf6);border-radius:24px;padding:48px 20px 32px;color:#fff">';
-    h+='<div style="font-size:56px;margin-bottom:10px">'+x.i+'</div>';
-    h+='<div style="font-weight:800;font-size:22px">'+x.n+'</div>';
-    h+='<div style="font-size:18px;font-weight:600;margin-top:8px;color:rgba(255,255,255,.8)">'+x.p+' ₽/сут</div>';
-    h+='<div style="margin-top:16px;display:flex;justify-content:center;gap:8px">';
-    h+='<button class="btn-b" style="background:rgba(255,255,255,.2);color:#fff">Подробнее</button>';
-    h+='<button class="btn-b" style="background:#fff;color:#111">В аренду</button></div></div></div>';
-  });
-  h+='</div></div><div style="display:flex;justify-content:center;gap:6px;margin-top:16px" id="d5"></div>';
-  h+='<div style="display:flex;justify-content:center;gap:10px;margin-top:10px"><button class="btn-a" onclick="c5(-1)">&#x2190;</button><button class="btn-a" onclick="c5(1)">&#x2192;</button></div>';
-  pv.innerHTML=h;u5();
-}
-function u5(){
-  document.getElementById("mr").style.transform="translateX("+(-mi*100)+"%)";
-  document.getElementById("d5").innerHTML=dots(s.length,mi,"c5g");
-}
-function c5(d){mi+=d;if(mi<0)mi=s.length-1;if(mi>=s.length)mi=0;u5()}
-function c5g(n){mi=n;u5()}
-r();
+
+render();
 </script>
 </body>
 </html>
