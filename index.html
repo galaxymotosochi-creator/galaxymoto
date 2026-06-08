@@ -2081,25 +2081,6 @@ document.getElementById('tot').textContent=(p*d).toLocaleString('ru-RU')+' ₽';
 document.getElementById('bookBtn').onclick=function(){alert('✅ Бронирование отправлено! Мы перезвоним в течение 15 минут ☎️');};
 // Вставка карусели под подзаголовок каталога
 // Карусель каталога - вставка под подзаголовок
-var crTimer=setInterval(function(){
-  var subtitle=null;
-  var all=document.querySelectorAll('.section__header div, .section__subtitle');
-  all.forEach(function(el){
-    var t=el.textContent.trim();
-    if(t.indexOf('Выбирай технику')>=0||t.indexOf('характер')>=0)subtitle=el;
-  });
-  if(!subtitle)return;
-  clearInterval(crTimer);
-  if(document.getElementById('crWrap'))return;
-  var w=document.getElementById('crStatic');if(!w)return;
-  w.style.display='block';
-  subtitle.parentElement.insertBefore(w,subtitle.nextSibling);
-  setTimeout(function(){
-    crR();
-    var grid=document.querySelector('.catalog-page__grid');
-    if(grid)grid.style.display='none';
-  },100);
-},500);
 
 // Вставка блока ПОД каталог скутеров
 setTimeout(function(){
@@ -2165,7 +2146,7 @@ document.addEventListener('click',function(e){
 .cd-d{width:8px;height:8px;border-radius:50%;background:#ddd;cursor:pointer;border:none;transition:all .2s}
 .cd-d.on{background:#0bc5ea;transform:scale(1.3)}
 </style>
-<div id="crStatic" style="display:none">
+<div id="crStatic">
 <div class="cr-c" id="crWrap">
 <div class="cr" id="crR"></div>
 <div style="display:flex;justify-content:center;gap:12px;margin:10px 0">
