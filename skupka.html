@@ -15,42 +15,55 @@ body{font-family:Inter,sans-serif;background:linear-gradient(135deg,#0f0f1a,#1a1
 .step-indicator{font-size:12px;color:rgba(255,255,255,.4);font-weight:500}
 .bar{width:100%;height:4px;background:rgba(255,255,255,.08);border-radius:4px;margin-bottom:24px;position:relative;z-index:1;overflow:hidden}
 .bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#0bc5ea,#8b5cf6);transition:width .6s cubic-bezier(.34,1.56,.64,1);width:33%}
+
 .step{display:none;position:relative;z-index:1}
 .step.active{display:block;animation:fadeIn .4s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 .step-title{font-size:20px;font-weight:700;margin-bottom:4px}
 .step-desc{font-size:13px;color:rgba(255,255,255,.5);margin-bottom:20px;line-height:1.5}
+
+/* 6 фото без подписей */
 .photo-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:20px}
-.photo-slot{aspect-ratio:1;border:2px dashed rgba(255,255,255,.15);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .25s;background:rgba(255,255,255,.03);position:relative}
+.photo-slot{aspect-ratio:1;border:2px dashed rgba(255,255,255,.15);border-radius:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .25s;background:rgba(255,255,255,.03);position:relative;font-size:32px;color:rgba(255,255,255,.15)}
 .photo-slot:hover{border-color:rgba(11,197,234,.4);background:rgba(11,197,234,.06)}
-.photo-slot.filled{border-style:solid;border-color:rgba(11,197,234,.3);background:rgba(11,197,234,.08)}
-.photo-slot .plus{font-size:28px;color:rgba(255,255,255,.2);line-height:1}
-.photo-slot .lbl{font-size:9px;color:rgba(255,255,255,.25);margin-top:4px}
-.photo-slot .chk{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;background:#0bc5ea;color:#fff;font-size:12px;display:none;align-items:center;justify-content:center}
+.photo-slot.filled{border-style:solid;border-color:rgba(11,197,234,.3);background:rgba(11,197,234,.08);color:#0bc5ea}
+.photo-slot .chk{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;background:#10b981;color:#fff;font-size:12px;display:none;align-items:center;justify-content:center}
 .photo-slot.filled .chk{display:flex}
-.param-group{margin-bottom:16px}
+
+/* Осмотр — 8 систем, 4 уровня */
+.param-group{margin-bottom:14px}
 .param-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:13px;font-weight:500}
-.param-label .val{color:rgba(255,255,255,.4);font-size:12px}
-.param-bar{display:flex;gap:4px;height:8px}
+.param-label .val{font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;transition:all .2s}
+.param-label .val.l1{color:#10b981;background:rgba(16,185,129,.12)}
+.param-label .val.l2{color:#facc15;background:rgba(250,204,21,.12)}
+.param-label .val.l3{color:#f97316;background:rgba(249,115,22,.12)}
+.param-label .val.l4{color:#ef4444;background:rgba(239,68,68,.12)}
+.param-bar{display:flex;gap:4px;height:10px}
 .param-seg{flex:1;border-radius:4px;background:rgba(255,255,255,.08);cursor:pointer;transition:all .2s}
-.param-seg.g{background:#10b981}.param-seg.y{background:#f59e0b}.param-seg.r{background:#ef4444}
-.param-seg.active{transform:scaleY(2);border-radius:4px}
+.param-seg.s1{background:#10b981}.param-seg.s2{background:#facc15}.param-seg.s3{background:#f97316}.param-seg.s4{background:#ef4444}
+.param-seg.active{transform:scaleY(1.8);border-radius:4px;box-shadow:0 0 12px rgba(255,255,255,.1)}
+
+/* Пробег */
 .mileage-row{display:flex;gap:10px;margin-bottom:20px;align-items:center}
 .mileage-row input{flex:1;padding:12px 14px;border-radius:12px;border:1.5px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);color:#fff;font-size:15px;font-family:Inter;outline:none;transition:border-color .2s}
 .mileage-row input:focus{border-color:#0bc5ea}
 .mileage-row input::placeholder{color:rgba(255,255,255,.2)}
 .mileage-row .u{font-size:13px;color:rgba(255,255,255,.3);font-weight:500}
+
+/* Контакты */
 .contact-field{margin-bottom:12px}
 .contact-field input,.contact-field textarea{width:100%;padding:12px 14px;border-radius:12px;border:1.5px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);color:#fff;font-size:14px;font-family:Inter;outline:none;transition:border-color .2s}
 .contact-field input:focus,.contact-field textarea:focus{border-color:#8b5cf6}
 .contact-field input::placeholder,.contact-field textarea::placeholder{color:rgba(255,255,255,.25)}
 .contact-field textarea{resize:vertical;min-height:70px;line-height:1.5}
-.btn-next{width:100%;padding:14px;border:none;border-radius:14px;font-size:15px;font-weight:700;font-family:Inter;cursor:pointer;transition:all .3s;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff;position:relative;z-index:1;margin-top:6px}
+
+.btn-next{width:100%;padding:14px;border:none;border-radius:14px;font-size:15px;font-weight:700;font-family:Inter;cursor:pointer;transition:all .3s;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff;z-index:1;margin-top:6px}
 .btn-next:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(11,197,234,.3)}
 .btn-next:disabled{opacity:.3;cursor:not-allowed;transform:none}
+
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);z-index:1000;align-items:center;justify-content:center;padding:20px}
 .modal-overlay.show{display:flex;animation:fadeIn .3s ease}
-.modal{background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:32px 24px 24px;max-width:380px;width:100%;text-align:center;position:relative}
+.modal{background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:32px 24px 24px;max-width:380px;width:100%;text-align:center}
 .modal-icon{font-size:48px;margin-bottom:12px;animation:bounceIn .5s cubic-bezier(.34,1.56,.64,1)}
 .modal h2{font-size:20px;font-weight:700;margin-bottom:6px}
 .modal p{font-size:13px;color:rgba(255,255,255,.5);line-height:1.6;margin-bottom:20px}
@@ -62,27 +75,24 @@ body{font-family:Inter,sans-serif;background:linear-gradient(135deg,#0f0f1a,#1a1
 </head>
 <body>
 
-<div class="game" id="game">
+<div class="game">
   <div class="header">
     <h1>🏁 Оценка скутера</h1>
     <span class="step-indicator" id="stepNum">1 / 3</span>
   </div>
-  <div class="bar"><div class="bar-fill" id="barFill"></div></div>
+  <div class="bar"><div class="bar-fill" id="barFill" style="width:33%"></div></div>
 
-  <!-- Шаг 1 — Фото -->
+  <!-- Шаг 1 — 6 фото без подписей -->
   <div class="step active" id="step1">
     <div class="step-title">📸 Фото</div>
-    <div class="step-desc">Загрузите 3 фото: общий вид, повреждения, VIN</div>
+    <div class="step-desc">Загрузите минимум 3 фото скутера</div>
     <div class="photo-grid">
-      <div class="photo-slot" onclick="fillPhoto(0)">
-        <span class="plus">+</span><span class="lbl">Общий вид</span><span class="chk">✓</span>
-      </div>
-      <div class="photo-slot" onclick="fillPhoto(1)">
-        <span class="plus">+</span><span class="lbl">Повреждения</span><span class="chk">✓</span>
-      </div>
-      <div class="photo-slot" onclick="fillPhoto(2)">
-        <span class="plus">+</span><span class="lbl">VIN / номер</span><span class="chk">✓</span>
-      </div>
+      <div class="photo-slot" onclick="fillPhoto(0)">+<span class="chk">✓</span></div>
+      <div class="photo-slot" onclick="fillPhoto(1)">+<span class="chk">✓</span></div>
+      <div class="photo-slot" onclick="fillPhoto(2)">+<span class="chk">✓</span></div>
+      <div class="photo-slot" onclick="fillPhoto(3)">+<span class="chk">✓</span></div>
+      <div class="photo-slot" onclick="fillPhoto(4)">+<span class="chk">✓</span></div>
+      <div class="photo-slot" onclick="fillPhoto(5)">+<span class="chk">✓</span></div>
     </div>
     <button class="btn-next" onclick="nextStep(1)" disabled id="btn1">Продолжить →</button>
   </div>
@@ -90,31 +100,12 @@ body{font-family:Inter,sans-serif;background:linear-gradient(135deg,#0f0f1a,#1a1
   <!-- Шаг 2 — Осмотр -->
   <div class="step" id="step2">
     <div class="step-title">🔍 Осмотр</div>
-    <div class="step-desc">Пробег и состояние каждой системы</div>
+    <div class="step-desc">Пробег и состояние систем</div>
     <div class="mileage-row">
-      <input type="number" id="mileage" placeholder="Пробег" min="0">
+      <input type="number" id="mileage" placeholder="Пробег">
       <span class="u">км</span>
     </div>
-    <div class="param-group">
-      <div class="param-label"><span>🔧 Двигатель</span><span class="val" id="l-engine">Норма</span></div>
-      <div class="param-bar" data-key="engine"><div class="param-seg g active" onclick="setP('engine',1,this)"></div><div class="param-seg y" onclick="setP('engine',2,this)"></div><div class="param-seg r" onclick="setP('engine',3,this)"></div></div>
-    </div>
-    <div class="param-group">
-      <div class="param-label"><span>🛞 Ходовая</span><span class="val" id="l-suspension">Норма</span></div>
-      <div class="param-bar" data-key="suspension"><div class="param-seg g active" onclick="setP('suspension',1,this)"></div><div class="param-seg y" onclick="setP('suspension',2,this)"></div><div class="param-seg r" onclick="setP('suspension',3,this)"></div></div>
-    </div>
-    <div class="param-group">
-      <div class="param-label"><span>🎨 Кузов / Рама</span><span class="val" id="l-body">Норма</span></div>
-      <div class="param-bar" data-key="body"><div class="param-seg g active" onclick="setP('body',1,this)"></div><div class="param-seg y" onclick="setP('body',2,this)"></div><div class="param-seg r" onclick="setP('body',3,this)"></div></div>
-    </div>
-    <div class="param-group">
-      <div class="param-label"><span>⚡ Электроника</span><span class="val" id="l-electro">Норма</span></div>
-      <div class="param-bar" data-key="electro"><div class="param-seg g active" onclick="setP('electro',1,this)"></div><div class="param-seg y" onclick="setP('electro',2,this)"></div><div class="param-seg r" onclick="setP('electro',3,this)"></div></div>
-    </div>
-    <div class="param-group">
-      <div class="param-label"><span>🛑 Тормоза</span><span class="val" id="l-brakes">Норма</span></div>
-      <div class="param-bar" data-key="brakes"><div class="param-seg g active" onclick="setP('brakes',1,this)"></div><div class="param-seg y" onclick="setP('brakes',2,this)"></div><div class="param-seg r" onclick="setP('brakes',3,this)"></div></div>
-    </div>
+    <div id="paramsContainer"></div>
     <button class="btn-next" onclick="nextStep(2)" id="btn2">Продолжить →</button>
   </div>
 
@@ -124,7 +115,7 @@ body{font-family:Inter,sans-serif;background:linear-gradient(135deg,#0f0f1a,#1a1
     <div class="step-desc">Оставьте данные для предварительной оценки</div>
     <div class="contact-field"><input type="text" id="name" placeholder="Ваше имя"></div>
     <div class="contact-field"><input type="tel" id="phone" placeholder="+7 (___) ___ __ __"></div>
-    <div class="contact-field"><textarea id="comment" placeholder="Что сломано, особенности"></textarea></div>
+    <div class="contact-field"><textarea id="comment" placeholder="Комментарий (что сломано, особенности)"></textarea></div>
     <button class="btn-next" onclick="sendForm()" disabled id="btn3">📨 Отправить заявку</button>
   </div>
 </div>
@@ -141,8 +132,33 @@ body{font-family:Inter,sans-serif;background:linear-gradient(135deg,#0f0f1a,#1a1
 </div>
 
 <script>
-var state={photos:[false,false,false],params:{engine:1,suspension:1,body:1,electro:1,brakes:1}};
-var labels={1:'Норма',2:'Дефекты',3:'Сломано'};
+var systems=[
+  {id:'engine',icon:'🏍️',name:'Двигатель'},
+  {id:'suspension',icon:'🔧',name:'Подвеска'},
+  {id:'plastic',icon:'🎨',name:'Пластик / обвес'},
+  {id:'transmission',icon:'⛓️',name:'Трансмиссия'},
+  {id:'wheels',icon:'🛞',name:'Колёса / резина'},
+  {id:'brakes',icon:'🛑',name:'Тормоза'},
+  {id:'electro',icon:'⚡',name:'Электроника'},
+  {id:'frame',icon:'🔩',name:'Рама'}
+];
+var levels=['','Отлично','Хорошо','Удовлетворительно','Требует замены'];
+var state={photos:[],params:{}};
+for(var i=0;i<6;i++)state.photos[i]=false;
+systems.forEach(function(s){state.params[s.id]=1});
+
+// Рендер параметров
+var html='';
+systems.forEach(function(s){
+  html+='<div class="param-group">'+
+    '<div class="param-label"><span>'+s.icon+' '+s.name+'</span><span class="val l1" id="l-'+s.id+'">Отлично</span></div>'+
+    '<div class="param-bar" data-key="'+s.id+'">';
+  for(var j=1;j<=4;j++){
+    html+='<div class="param-seg s'+j+(j===1?' active':'')+'" onclick="setP(\''+s.id+'\','+j+',this)"></div>';
+  }
+  html+='</div></div>';
+});
+document.getElementById('paramsContainer').innerHTML=html;
 
 function fillPhoto(i){
   state.photos[i]=!state.photos[i];
@@ -157,37 +173,29 @@ function setP(key,val,el){
   var parent=el.parentElement;
   parent.querySelectorAll('.param-seg').forEach(function(s){s.classList.remove('active')});
   el.classList.add('active');
-  document.getElementById('l-'+key).textContent=labels[val];
+  var lbl=document.getElementById('l-'+key);
+  lbl.textContent=levels[val];
+  lbl.className='val l'+val;
 }
 
 function nextStep(n){
   document.getElementById('step'+n).classList.remove('active');
   document.getElementById('step'+(n+1)).classList.add('active');
-  var pct=Math.round((n+1)/3*100);
-  document.getElementById('barFill').style.width=pct+'%';
+  var w=Math.round((n+1)/3*100);
+  document.getElementById('barFill').style.width=w+'%';
   document.getElementById('stepNum').textContent=(n+1)+' / 3';
-  if(n===2){
-    document.getElementById('btn3').disabled=!document.getElementById('name').value||!document.getElementById('phone').value;
-  }
 }
 
-function checkStep3(){
+function step3Check(){
   var name=document.getElementById('name').value.trim();
   var phone=document.getElementById('phone').value.trim();
   document.getElementById('btn3').disabled=!name||!phone;
 }
-document.getElementById('name').addEventListener('input',checkStep3);
-document.getElementById('phone').addEventListener('input',checkStep3);
+document.getElementById('name').addEventListener('input',step3Check);
+document.getElementById('phone').addEventListener('input',step3Check);
 
-function sendForm(){
-  document.getElementById('modalOverlay').classList.add('show');
-  // Здесь будет отправка в Telegram и Firebase
-}
-
-function closeModal(){
-  document.getElementById('modalOverlay').classList.remove('show');
-  location.reload();
-}
+function sendForm(){document.getElementById('modalOverlay').classList.add('show')}
+function closeModal(){document.getElementById('modalOverlay').classList.remove('show');location.reload()}
 </script>
 </body>
 </html>
