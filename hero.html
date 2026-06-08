@@ -391,31 +391,8 @@ document.getElementById('rentBookBtn').onclick=function(){alert('✅ Брони�
     <img id="photoImg" src="" alt="">
   </div>
 </div>
-<script>
-function openPhoto(img){
-  document.getElementById('photoImg').src=img;
-  document.getElementById('photoModal').classList.add('s');
-}
-function closePhoto(){
-  document.getElementById('photoModal').classList.remove('s');
-}
-document.getElementById('photoModal').addEventListener('click',function(e){
-  if(e.target===this)this.classList.remove('s');
-});
-// Add photo icon to each rent item
-document.querySelectorAll('.rent-item').forEach(function(item){
-  var icon=document.createElement('div');
-  icon.className='rent-photo-icon';
-  icon.textContent='📷';
-  icon.style.cssText='font-size:18px;margin-bottom:4px;cursor:pointer';
-  icon.onclick=function(e){
-    e.stopPropagation();
-    var img=item.getAttribute('data-img');
-    if(img)openPhoto(img);
-  };
-  item.insertBefore(icon,item.firstChild);
-});
-</script>
+
+
 
 
 <!-- ===== ЗАПИСЬ НА СЕРВИС ===== -->
@@ -552,5 +529,17 @@ function svSubmit(){
 srender();
 </script>
 
+
+<script>
+function openPhoto(img){document.getElementById('photoImg').src=img;document.getElementById('photoModal').classList.add('s')}
+function closePhoto(){document.getElementById('photoModal').classList.remove('s')}
+document.getElementById('photoModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('s')});
+document.querySelectorAll('.rent-item').forEach(function(item){
+  var icon=document.createElement('div');icon.textContent='📷';
+  icon.style.cssText='font-size:18px;margin-bottom:4px;cursor:pointer';
+  icon.onclick=function(e){e.stopPropagation();var img=item.getAttribute('data-img');if(img)openPhoto(img)};
+  item.insertBefore(icon,item.firstChild);
+});
+</script>
 </body>
 </html>
