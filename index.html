@@ -2118,5 +2118,89 @@ setTimeout(function(){
   if(btn&&guide)btn.addEventListener('click',function(e){e.preventDefault();var top=guide.getBoundingClientRect().top+window.scrollY-20;window.scrollTo({top:top,behavior:'smooth'});});
 },3500);
 </script>
+
+<!-- ===== Нижняя навигация (мобильная) ===== -->
+<style>
+@media(max-width:768px){
+  .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e8e8e8;display:flex;padding:6px 0 calc(6px + env(safe-area-inset-bottom,0px));z-index:99999;box-shadow:0 -2px 12px rgba(0,0,0,.06)}
+  .bottom-nav .bn-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 0;cursor:pointer;border:none;background:none;font-family:Inter,sans-serif;transition:all .15s;-webkit-tap-highlight-color:transparent}
+  .bottom-nav .bn-item .bn-icon{font-size:20px;line-height:1;filter:grayscale(1) opacity(.4);transition:all .2s}
+  .bottom-nav .bn-item .bn-label{font-size:10px;font-weight:500;color:#aaa;letter-spacing:.02em;transition:all .2s}
+  .bottom-nav .bn-item.active .bn-icon{filter:none}
+  .bottom-nav .bn-item.active .bn-label{color:#1983dd;font-weight:600}
+  body{padding-bottom:56px}
+}
+@media(min-width:769px){
+  .bottom-nav{display:none}
+}
+</style>
+
+<nav class="bottom-nav" id="bottomNav">
+  <div class="bn-item active" data-target="catalog" onclick="scrollToSection('catalog',this)">
+    <span class="bn-icon">🛵</span>
+    <span class="bn-label">Каталог</span>
+  </div>
+  <div class="bn-item" data-target="skupka" onclick="scrollToSection('skupka',this)">
+    <span class="bn-icon">💰</span>
+    <span class="bn-label">Скупка</span>
+  </div>
+  <div class="bn-item" data-target="rent" onclick="scrollToSection('rent',this)">
+    <span class="bn-icon">🛴</span>
+    <span class="bn-label">Аренда</span>
+  </div>
+  <div class="bn-item" data-target="service" onclick="scrollToSection('service',this)">
+    <span class="bn-icon">🔧</span>
+    <span class="bn-label">Сервис</span>
+  </div>
+  <div class="bn-item" data-target="contacts" onclick="scrollToSection('contacts',this)">
+    <span class="bn-icon">📞</span>
+    <span class="bn-label">Контакты</span>
+  </div>
+</nav>
+
+<script>
+function scrollToSection(target,el){
+  var items=document.querySelectorAll('.bn-item');
+  items.forEach(function(i){i.classList.remove('active')});
+  el.classList.add('active');
+  var top=0;
+  if(target==='catalog'){
+    var h=document.querySelector('.section__title');
+    if(h&&h.textContent.trim().indexOf('Каталог')>=0){var s=h.closest('section')||h.parentElement;top=s.getBoundingClientRect().top+window.scrollY-16}
+    else top=0;
+  }else if(target==='skupka'){
+    top=document.body.scrollHeight;
+  }else if(target==='rent'){
+    var g=document.querySelector('.guide-onpage');
+    if(g)top=g.getBoundingClientRect().top+window.scrollY-16;else top=0;
+  }else if(target==='service'){
+    var st=document.querySelectorAll('.section__title');
+    st.forEach(function(t){if(t.textContent.trim()==='Запись на сервис'){var s=t.closest('section')||t.parentElement;top=s.getBoundingClientRect().top+window.scrollY-16}});
+    if(!top)top=document.body.scrollHeight;
+  }else if(target==='contacts'){
+    top=document.body.scrollHeight;
+  }
+  window.scrollTo({top:top,behavior:'smooth'});
+}
+// Highlight active on scroll
+window.addEventListener('scroll',function(){
+  var scrollY=window.scrollY+100;
+  var sections=[
+    {id:'catalog',el:document.querySelector('.section__title')},
+    {id:'rent',el:document.querySelector('.guide-onpage')},
+    {id:'service',el:document.querySelector('#servOverlay')}
+  ];
+  var active='catalog';
+  var items=document.querySelectorAll('.bn-item');
+  sections.forEach(function(s){
+    if(s.el&&s.el.offsetTop<=scrollY)active=s.id;
+  });
+  if(scrollY+window.innerHeight>=document.body.scrollHeight-100)active='contacts';
+  items.forEach(function(i){
+    i.classList.toggle('active',i.getAttribute('data-target')===active);
+  });
+});
+</script>
+
 </body>
 </html>
