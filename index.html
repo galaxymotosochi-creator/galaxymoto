@@ -2105,11 +2105,17 @@ setTimeout(function(){
   });
 },3500);
 // Прокрутка к путеводителю при клике «Взять в аренду»
-setTimeout(function(){
-  var btn=document.querySelector('.hero__btn--outline');
-  var guide=document.querySelector('.guide-onpage');
-  if(btn&&guide)btn.addEventListener('click',function(e){e.preventDefault();var top=guide.getBoundingClientRect().top+window.scrollY-20;window.scrollTo({top:top,behavior:'smooth'});});
-},3500);
+document.addEventListener('click',function(e){
+  var btn=e.target.closest('.hero__btn--outline');
+  if(btn){
+    e.preventDefault();
+    var guide=document.querySelector('.guide-onpage');
+    if(guide){
+      var top=guide.getBoundingClientRect().top+window.scrollY-20;
+      window.scrollTo({top:top,behavior:'smooth'});
+    }
+  }
+});
 </script>
 
 
