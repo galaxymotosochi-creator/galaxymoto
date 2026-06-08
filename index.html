@@ -2094,9 +2094,7 @@ setTimeout(function(){
   var b=document.querySelector('.guide-onpage');if(!b)return;
   var heads=document.querySelectorAll('.section__title');var cat=null;
   heads.forEach(function(h){if(h.textContent.trim().indexOf('Каталог')>=0)cat=h;});
-  if(cat){var sec=cat;while(sec.parentElement&&!sec.matches('section,body'))sec=sec.parentElement;sec.parentElement.insertBefore(b,sec.nextSibling);}
-  b.classList.add('guide-visible');
-  else b.parentElement.insertBefore(b,document.querySelector('.reviews-trigger-wrap'));
+  if(cat){var sec=cat;while(sec.parentElement&&!sec.matches('section,body'))sec=sec.parentElement;sec.parentElement.insertBefore(b,sec.nextSibling);}else b.parentElement.insertBefore(b,document.querySelector('.reviews-trigger-wrap'));
   b.classList.add('guide-visible');
 },3000);
 // Выравнивание отступов между всеми разделами до 38px
