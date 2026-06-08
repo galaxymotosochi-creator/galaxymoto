@@ -2182,24 +2182,7 @@ function scrollToSection(target,el){
   }
   window.scrollTo({top:top,behavior:'smooth'});
 }
-// Highlight active on scroll
-window.addEventListener('scroll',function(){
-  var scrollY=window.scrollY+100;
-  var sections=[
-    {id:'catalog',el:document.querySelector('.section__title')},
-    {id:'rent',el:document.querySelector('.guide-onpage')},
-    {id:'service',el:document.querySelector('#servOverlay')}
-  ];
-  var active='catalog';
-  var items=document.querySelectorAll('.bn-item');
-  sections.forEach(function(s){
-    if(s.el&&s.el.offsetTop<=scrollY)active=s.id;
-  });
-  if(scrollY+window.innerHeight>=document.body.scrollHeight-100)active='contacts';
-  items.forEach(function(i){
-    i.classList.toggle('active',i.getAttribute('data-target')===active);
-  });
-});
+
 </script>
 
 </body>
