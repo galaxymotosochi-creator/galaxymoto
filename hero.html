@@ -132,10 +132,9 @@ body{font-family:Inter,sans-serif;color:#111}
 
 /* ===== КАРУСЕЛЬ ===== */
 .car-wrap{max-width:480px;margin:0 auto;overflow:hidden}
-.car-track{display:flex;gap:4%;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding:10px 0;-ms-overflow-style:none;scrollbar-width:none}
-.car-track::-webkit-scrollbar{display:none}
-.car-card{scroll-snap-align:center;min-width:72%;flex-shrink:0}
-.card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08);text-align:left;border:1px solid #f0f0f0}
+.car-track{display:flex;transition:transform .4s cubic-bezier(.34,1.56,.64,1);padding:10px 0;gap:0}
+.car-card{flex:0 0 72%;transition:all .4s;text-align:center;padding:0 3%}
+.card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08);text-align:left}
 .card-img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:#e8e8e8}
 .card-body{padding:16px}
 .card-title{font-size:16px;font-weight:700;margin-bottom:8px}
@@ -217,12 +216,14 @@ var scooters = [
 ];
 
 // ===== Рендер карусели =====
+var pos=0;
 (function(){
   var track = document.getElementById('carTrack');
   if(!track)return;
   var h = '';
-  scooters.forEach(function(s){
-    h += '<div class="car-card"><div class="card"><img class="card-img" src="' + s.i + '" alt="' + s.n + '"><div class="card-body"><div class="card-title">' + s.n + '</div><div class="card-specs">';
+  scooters.forEach(function(s,i){
+    var d=i-pos;var a=Math.abs(d);var sc=a==0?1:.82;var op=a==0?1:.5;
+    h += '<div class="car-card" style="transform:scale('+sc+');opacity:'+op+'"><div class="card"><img class="card-img" src="' + s.i + '" alt="' + s.n + '"><div class="card-body"><div class="card-title">' + s.n + '</div><div class="card-specs">';
     s.f.forEach(function(sp){
       var p = sp.split(': ');
       if(p.length > 1) h += '<div class="card-spec"><span class="card-spec-l">' + p[0] + ': </span><span class="card-spec-v">' + p[1] + '</span></div>';
@@ -232,14 +233,24 @@ var scooters = [
   track.innerHTML = h;
 })();
 
-// ===== Скролл =====
-function carScroll(dir){
+// ===== Навигация =====
+function up(){
   var track = document.getElementById('carTrack');
   if(!track)return;
-  var card = track.querySelector('.car-card');
-  if(!card)return;
-  var w = card.offsetWidth + 0.04 * track.offsetWidth;
-  track.scrollBy({left: dir * w, behavior:'smooth'});
+  var items = track.querySelectorAll('.car-card');
+  items.forEach(function(el,i){
+    var d = i - pos;
+    var a = Math.abs(d);
+    el.style.transform = 'scale(' + (a==0?1:.82) + ')';
+    el.style.opacity = a==0?1:.5;
+  });
+  track.style.transform = 'translateX(' + (-pos*72) + '%)';
+}
+function carScroll(dir){
+  pos += dir;
+  if(pos<0) pos = scooters.length-1;
+  if(pos>=scooters.length) pos = 0;
+  up();
 }
 </script>
 
