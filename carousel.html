@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1">
-<title>Карусель каталога</title>
+<title>Каталог — GALAXY MOTO</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -12,17 +12,17 @@ h1{font-size:18px;font-weight:700}.sub{font-size:13px;color:#888;margin:4px 0 20
 .pv{max-width:480px;margin:0 auto;padding:0 10px;overflow:hidden}
 .cr{display:flex;align-items:center;transition:transform .4s cubic-bezier(.34,1.56,.64,1);padding:10px 0}
 .ci{flex:0 0 72%;transition:all .4s;text-align:center;padding:0 3%}
-.card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08);text-align:left;transition:all .3s}
+.card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08);text-align:left}
 .card-img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:#e8e8e8}
 .card-body{padding:16px}
 .card-title{font-size:16px;font-weight:700;margin-bottom:8px}
-.card-specs{display:flex;flex-direction:column;gap:4px;margin-bottom:4px}
+.card-specs{display:flex;flex-direction:column;gap:4px}
 .card-spec{font-size:13px;display:flex;gap:4px}
 .card-spec-l{color:#888}.card-spec-v{color:#111}
-.card-foot{display:flex;align-items:center;justify-content:space-between;padding-top:8px;margin-top:4px}
+.card-foot{display:flex;align-items:center;justify-content:space-between;padding-top:8px;margin-top:4px;border-top:1px solid #f0f0f0}
 .card-price{font-size:16px;font-weight:700;color:#111}
 .card-btn{font-size:10px;font-weight:600;color:#fff;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);border:none;border-radius:8px;padding:4px 14px;cursor:pointer;text-transform:uppercase;letter-spacing:.5px}
-.arrow{padding:10px 22px;border:1.5px solid #ddd;border-radius:12px;background:#fff;font-size:18px;cursor:pointer;transition:all .2s}
+.arrow{padding:10px 22px;border:1.5px solid #ddd;border-radius:12px;background:#fff;font-size:18px;cursor:pointer}
 .arrow:hover{background:#f8f8f8}
 .dots{display:flex;justify-content:center;gap:6px;margin-top:12px}
 .dot{width:8px;height:8px;border-radius:50%;background:#ddd;cursor:pointer;border:none;transition:all .2s}
@@ -30,8 +30,8 @@ h1{font-size:18px;font-weight:700}.sub{font-size:13px;color:#888;margin:4px 0 20
 </style>
 </head>
 <body>
-<h1>Карусель каталога</h1>
-<p class="sub">Листайте стрелками или нажимайте на точки</p>
+<h1>Каталог скутеров</h1>
+<p class="sub">GALAXY MOTO · Сочи</p>
 
 <div class="pv">
   <div class="cr" id="cr"></div>
@@ -44,36 +44,13 @@ h1{font-size:18px;font-weight:700}.sub{font-size:13px;color:#888;margin:4px 0 20
 
 <script>
 var scooters = [
-  {
-    name: "Tank Next",
-    price: "72 900",
-    img: "images/tank-next.jpg",
-    specs: ["Состояние: б/у", "Пластик: без трещин", "Технически: отличное", "Пробег: 12000 км", "Мощность: 150/49сс", "Тип подачи топлива: карбюратор", "Система охлаждения: воздушное", "Макс. скорость: 100 км/ч", "Размер колеса: 12/12"]
-  },
-  {
-    name: "TANK 180",
-    price: "3 200 000",
-    img: "https://images.unsplash.com/photo-1558981359-219d6364c9c8?w=400&h=300&fit=crop",
-    specs: ["Двигатель: 180 см³", "Мощность: 15 л.с.", "Разгон: 0-50 за 4 сек"]
-  },
-  {
-    name: "Jilang Tank",
-    price: "2 800 000",
-    img: "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=400&h=300&fit=crop",
-    specs: ["Двигатель: 150 см³", "Мощность: 13 л.с.", "Электростартер"]
-  },
-  {
-    name: "Leopard 180",
-    price: "3 500 000",
-    img: "https://images.unsplash.com/photo-1591637333184-19fd84b85b76?w=400&h=300&fit=crop",
-    specs: ["Двигатель: 180 см³", "Мощность: 16 л.с.", "ABS, дисковые тормоза"]
-  },
-  {
-    name: "E-Scooter",
-    price: "1 800 000",
-    img: "https://images.unsplash.com/photo-1605600659873-88b5a0a1d8d0?w=400&h=300&fit=crop",
-    specs: ["Электродвигатель: 3 кВт", "Запас хода: 80 км", "Макс. скорость: 60 км/ч"]
-  }
+  {n:"TANK X",p:"129 900",i:"images/tank-x.jpg",s:["Цена: 129 900 ₽","Состояние: новый","Пластик: новый","Технически: новый","Пробег: 0 км","Мощность: 175/49сс","Тип подачи: карбюратор","Охлаждение: воздушное","Макс. скорость: 100 км/ч","Колёса: 13/13"]},
+  {n:"N-MAX BAM-X",p:"169 900",i:"images/n-max-bam-x-1.jpg",s:["Цена: 169 900 ₽","Состояние: б/у","Пластик: без трещин","Технически: отлично","Пробег: 2700 км","Мощность: 175/49сс","Тип подачи: инжектор","Охлаждение: водяное","Макс. скорость: 100 км/ч","Колёса: 13/13"]},
+  {n:"MAXI / GALAXY",p:"65 900",i:"images/maxi-galaxy.jpg",s:["Цена: 65 900 ₽","Состояние: б/у","Пластик: притёртости","Технически: отличное","Пробег: 13800 км","Мощность: 150/49сс","Тип подачи: карбюратор","Охлаждение: воздушное","Макс. скорость: 100 км/ч","Колёса: 12/12"]},
+  {n:"HONDA SUNDERO",p:"249 900",i:"images/honda-sundero-1.jpg",s:["Цена: 249 900 ₽","Состояние: новая","Пластик: новый","Технически: новый","Пробег: 0 км","Мощность: 150/49сс","Тип подачи: инжектор","Охлаждение: воздушное","Макс. скорость: 100 км/ч","Колёса: 10/10"]},
+  {n:"TANK KUNHAO",p:"84 900",i:"images/tank-kunhao-1.jpg",s:["Цена: 84 900 ₽","Состояние: б/у","Пластик: притёртости","Технически: отличное","Пробег: 1700 км","Мощность: 150/49сс","Тип подачи: карбюратор","Охлаждение: воздушное","Макс. скорость: 100 км/ч","Колёса: 12/12"]},
+  {n:"ADV BAM-X",p:"149 900",i:"images/adv-bam-x-1.jpg",s:["Цена: 149 900 ₽","Состояние: новый","Пластик: новый","Технически: новый","Пробег: 0 км","Мощность: 175/49сс","Тип подачи: карбюратор","Охлаждение: воздушное","Макс. скорость: 100 км/ч","Колёса: 14/14"]},
+  {n:"GUSITE AGV-R",p:"194 900",i:"images/gusite-agv-r-1.jpg",s:["Цена: 194 900 ₽","Состояние: новый","Пластик: новый","Технически: новый","Пробег: 0 км","Мощность: 200/49сс","Тип подачи: инжектор","Охлаждение: воздушное","Макс. скорость: 110 км/ч","Колёса: 13/14"]}
 ];
 
 var pos = 0;
@@ -86,27 +63,26 @@ function render(){
     var abs = Math.abs(d);
     var scale = abs === 0 ? 1 : 0.82;
     var opacity = abs === 0 ? 1 : 0.5;
-    var z = abs === 0 ? 2 : (d < 0 ? 1 : 0);
-    
-    h += '<div class="ci" style="transform:scale(' + scale + ');opacity:' + opacity + ';z-index:' + z + ';position:relative">';
+    h += '<div class="ci" style="transform:scale(' + scale + ');opacity:' + opacity + '">';
     h += '<div class="card">';
-    h += '<img class="card-img" src="' + s.img + '" alt="' + s.name + '">';
+    h += '<img class="card-img" src="' + s.i + '" alt="' + s.n + '">';
     h += '<div class="card-body">';
-    h += '<div class="card-title">' + s.name + '</div>';
+    h += '<div class="card-title">' + s.n + '</div>';
     h += '<div class="card-specs">';
-    s.specs.forEach(function(sp){
+    s.s.forEach(function(sp){
       var parts = sp.split(": ");
-      h += '<div class="card-spec"><span class="card-spec-l">' + (parts[0] || "") + ': </span><span class="card-spec-v">' + (parts[1] || sp) + '</span></div>';
+      if(parts.length>1 && parts[0]!="Цена"){
+        h += '<div class="card-spec"><span class="card-spec-l">' + parts[0] + ': </span><span class="card-spec-v">' + parts[1] + '</span></div>';
+      }
     });
     h += '</div>';
     h += '<div class="card-foot">';
-    h += '<span class="card-price">' + Number(s.price).toLocaleString("ru-RU") + ' ₽</span>';
+    h += '<span class="card-price">' + s.p + ' ₽</span>';
     h += '<button class="card-btn">Тест-драйв</button>';
     h += '</div></div></div></div>';
   });
   cr.innerHTML = h;
   cr.style.transform = "translateX(" + (-pos * 72) + "%)";
-  
   var d = "";
   scooters.forEach(function(s, i){
     d += '<button class="dot' + (i === pos ? " act" : "") + '" onclick="go(' + i + ')"></button>';
@@ -121,23 +97,14 @@ function slide(dir){
   render();
 }
 
-function go(n){
-  pos = n;
-  render();
-}
+function go(n){pos = n;render();}
 
-// Swipe support
+// Swipe
 var touchStartX = 0;
-var touchEndX = 0;
-document.addEventListener("touchstart", function(e) {
-  touchStartX = e.changedTouches[0].screenX;
-}, {passive: true});
+document.addEventListener("touchstart", function(e) {touchStartX = e.changedTouches[0].screenX;}, {passive: true});
 document.addEventListener("touchend", function(e) {
-  touchEndX = e.changedTouches[0].screenX;
-  var diff = touchStartX - touchEndX;
-  if(Math.abs(diff) > 40) {
-    slide(diff > 0 ? 1 : -1);
-  }
+  var d = touchStartX - e.changedTouches[0].screenX;
+  if(Math.abs(d) > 40) slide(d > 0 ? 1 : -1);
 }, {passive: true});
 
 render();
