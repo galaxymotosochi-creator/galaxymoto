@@ -521,11 +521,11 @@ function spick(d){
   sselTime=null;
   srender();
   document.getElementById('svTimeGrid').innerHTML='<div style="font-size:.82rem;color:#666;margin-bottom:.5rem;grid-column:1/-1">🕐 Выберите время:</div>';
-  for(var h=11;h<=18;h++){
+  for(var hr=11;hr<=18;hr++){
     for(var mn=0;mn<60;mn+=30){
-      var ti=String(h).padStart(2,"0")+":"+String(mn).padStart(2,"0");
+      var ti=String(hr).padStart(2,"0")+":"+String(mn).padStart(2,"0");
       var cls='serv-time-slot';
-      if(h>=14&&h<15)cls+=' disabled';
+      if(hr>=14&&hr<15)cls+=' disabled';
       h+='<div class="'+cls+'" onclick="spickTime(''+ti+'',this)">'+ti+'</div>';
     }
   }
