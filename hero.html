@@ -435,15 +435,15 @@ document.getElementById('rentBookBtn').onclick=function(){alert('✅ Брони�
 
         <div id="servCalendar">
           <div class="serv-cal-header">
-            <button class="serv-cal-nav" onclick="servPrevMonth()">‹</button>
-            <div class="serv-cal-month" id="servCalMonth"></div>
-            <button class="serv-cal-nav" onclick="servNextMonth()">›</button>
+            <button class="serv-cal-nav" onclick="smove(-1);return false()">‹</button>
+            <div class="serv-cal-month" id="svCalMonth"></div>
+            <button class="serv-cal-nav" onclick="smove(1);return false()">›</button>
           </div>
-          <div class="serv-cal-grid" id="servCalGrid"></div>
+          <div class="serv-cal-grid" id="svCalGrid"></div>
         </div>
 
         <div id="servTimeLabel" class="serv-text" style="display:none">🕐 График работы: <strong>11:00 – 19:00</strong></div>
-        <div class="serv-time-grid" id="servTimeGrid"></div>
+        <div class="serv-time-grid" id="svTimeGrid"></div>
 
         <div class="serv-form" id="servForm">
           <div class="serv-form-title">Запись на <span id="servDateDisplay"></span></div>
@@ -492,147 +492,69 @@ document.getElementById('rentBookBtn').onclick=function(){alert('✅ Брони�
     </div>
 
 <script>
-var servMonths = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
-    var servDays = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
-    var servCal = new Date();
-    var servSelectedDate = null;
-    var servSelectedTime = null;
-    var servBookings = []; // загружается из Firestore
-
-    function loadBookings(callback) {
-      if (!window.db) { servBookings = []; if(callback)callback(); return; }
-      window.db.collection('galaxymoto_bookings').get().then(function(snapshot) {
-        servBookings = [];
-        snapshot.forEach(function(doc) { servBookings.push(doc.data()); });
-        if (callback) callback();
-      }).catch(function() { servBookings = []; if(callback)callback(); });
+var smonths=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+var scal=new Date();var sdate=null;var stime=null;var sbk=[];
+function openServ(){
+  document.getElementById('servOverlay').classList.add('active');
+  document.getElementById('svTimeGrid').innerHTML='';
+  document.getElementById('svForm').style.display='none';
+  sdate=null;stime=null;srender();
+}
+function closeServ(){document.getElementById('servOverlay').classList.remove('active')}
+function srender(){
+  var y=scal.getFullYear(),m=scal.getMonth();
+  document.getElementById('svCalMonth').textContent=smonths[m]+' '+y;
+  var first=new Date(y,m,1).getDay()||7;
+  var last=new Date(y,m+1,0).getDate();
+  var today=new Date();today.setHours(0,0,0,0);
+  var h='<div class="serv-cal-grid">';
+  var wd=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+  wd.forEach(function(d){h+='<div class="serv-wd">'+d+'</div>'});
+  for(var i=1;i<first;i++)h+='<div></div>';
+  for(var d=1;d<=last;d++){
+    var dt=new Date(y,m,d);var cls='serv-day';
+    if(dt<today)cls+=' past';
+    else if(dt.getTime()===today.getTime())cls+=' today';
+    if(dt.getDay()===0)cls+=' sunday';
+    if(sdate&&sdate.getTime()===dt.getTime())cls+=' selected';
+    h+='<div class="'+cls+'" onclick="spick('+d+')">'+d+'</div>';
+  }
+  h+='</div>';
+  document.getElementById('svCalGrid').innerHTML=h;
+  document.getElementById('svTimeGrid').classList.remove('active');
+  document.getElementById('svForm').style.display='none';
+}
+function spick(d){
+  sdate=new Date(scal.getFullYear(),scal.getMonth(),d);
+  stime=null;srender();
+  var h='<div class="serv-text">🕐 График работы: <strong>11:00 – 19:00</strong></div><div class="serv-time-grid active" id="svTimeGridInner">';
+  for(var hr=11;hr<=18;hr++){
+    for(var mn=0;mn<60;mn+=30){
+      var ti=String(hr).padStart(2,'0')+':'+String(mn).padStart(2,'0');
+      h+='<div class="serv-time-slot" onclick="spickTime(''+ti+'',this)">'+ti+'</div>';
     }
-
-    function saveBooking(data) {
-      if (!window.db) return;
-      var docId = data.date + '_' + data.time.replace(':','-');
-      window.db.collection('galaxymoto_bookings').doc(docId).set(data).catch(function(e){console.error('Firestore save error:',e)});
-    }
-
-    function isSlotBooked(dateStr, timeStr) {
-      return servBookings.some(function(b){return b.date===dateStr && b.time===timeStr});
-    }
-
-    function openServ() {
-      document.getElementById('servOverlay').classList.add('active');
-      document.getElementById('servTimeGrid').classList.remove('active');
-      document.getElementById('servTimeLabel').style.display='none';
-      document.getElementById('servForm').classList.remove('active');
-      document.getElementById('servSuccess').classList.remove('active');
-      servSelectedDate = null; servSelectedTime = null;
-      loadBookings(function(){ servRender(); });
-    }
-
-    function closeServ() { document.getElementById('servOverlay').classList.remove('active'); }
-
-    function servRender() {
-      var y = servCal.getFullYear(), m = servCal.getMonth();
-      document.getElementById('servCalMonth').textContent = servMonths[m] + ' ' + y;
-      var firstD = new Date(y,m,1).getDay();
-      var daysInM = new Date(y,m+1,0).getDate();
-      var off = firstD === 0 ? 6 : firstD - 1;
-      var t = new Date(), ts = t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0');
-      var html = '';
-      for (var i=0;i<7;i++) html += '<div class="serv-wd">'+servDays[i]+'</div>';
-      for (var i=0;i<off;i++) html += '<div class="serv-day other">&nbsp;</div>';
-      for (var d=1; d<=daysInM; d++) {
-        var ds = y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
-        var cls = 'serv-day';
-        if (ds < ts) cls += ' past';
-        if (ds === ts) cls += ' today';
-        if (new Date(y,m,d).getDay() === 0) cls += ' sunday';
-        if (servSelectedDate === ds) cls += ' selected';
-        html += '<div class="'+cls+'" onclick="servSelectDay('+d+')">'+d+'</div>';
-      }
-      var rem = (7 - (off+daysInM)%7)%7;
-      for (var i=0;i<rem;i++) html += '<div class="serv-day other">&nbsp;</div>';
-      document.getElementById('servCalGrid').innerHTML = html;
-    }
-
-    function servPrevMonth() {
-      servCal.setMonth(servCal.getMonth()-1);
-      servSelectedDate=null;servSelectedTime=null;
-      document.getElementById('servTimeGrid').classList.remove('active');
-      document.getElementById('servTimeLabel').style.display='none';
-      document.getElementById('servForm').classList.remove('active');
-      servRender();
-    }
-    function servNextMonth() {
-      servCal.setMonth(servCal.getMonth()+1);
-      servSelectedDate=null;servSelectedTime=null;
-      document.getElementById('servTimeGrid').classList.remove('active');
-      document.getElementById('servTimeLabel').style.display='none';
-      document.getElementById('servForm').classList.remove('active');
-      servRender();
-    }
-
-    function servSelectDay(day) {
-      var y=servCal.getFullYear(), m=servCal.getMonth();
-      var ds = y+'-'+String(m+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');
-      var t = new Date(); t.setHours(0,0,0,0);
-      if (new Date(y,m,day) < t) return;
-      servSelectedDate = ds; servSelectedTime = null;
-      document.getElementById('servSuccess').classList.remove('active');
-      document.getElementById('servForm').classList.remove('active');
-      servRender();
-      servRenderTimes();
-    }
-
-    function servRenderTimes() {
-      var html = '';
-      for (var h=11; h<19; h++) {
-        var ts = String(h).padStart(2,'0')+':00';
-        var booked = isSlotBooked(servSelectedDate, ts);
-        var cls = 'serv-time-slot';
-        if (booked) cls += ' booked';
-        if (servSelectedTime === ts) cls += ' selected';
-        html += '<div class="'+cls+'" onclick="servPickTime(''+ts+'')">'+ts+'</div>';
-      }
-      document.getElementById('servTimeGrid').innerHTML = html;
-      document.getElementById('servTimeGrid').classList.add('active');
-      document.getElementById('servTimeLabel').style.display='block';
-    }
-
-    function servPickTime(timeStr) {
-      servSelectedTime = timeStr;
-      servRenderTimes();
-      var parts = servSelectedDate.split('-');
-      document.getElementById('servDateDisplay').textContent = parts[2]+'.'+parts[1]+'.'+parts[0]+' в '+timeStr;
-      document.getElementById('servForm').classList.add('active');
-    }
-
-    function servSubmit() {
-      var name = document.getElementById('servName').value.trim();
-      var phone = document.getElementById('servPhone').value.trim();
-      if (!name) { alert('Введите имя'); return; }
-      if (!phone) { alert('Введите телефон'); return; }
-      var data = {
-        date: servSelectedDate,
-        time: servSelectedTime,
-        name: name,
-        phone: phone,
-        model: document.getElementById('servModel').value.trim()||'Не указана',
-        type: document.getElementById('servType').value||'Не указан',
-        notes: document.getElementById('servNotes').value.trim(),
-        created: new Date().toISOString()
-      };
-      saveBooking(data);
-      // Обновляем локальный кэш
-      servBookings.push(data);
-      document.getElementById('servForm').classList.remove('active');
-      var disp=sd.split("-").reverse().join(".")+" "+st;document.getElementById('servDateDisplaySuccess').textContent=disp;document.getElementById('servSuccess').classList.add('active');
-      document.getElementById('servName').value='';
-      document.getElementById('servPhone').value='';
-      document.getElementById('servModel').value='';
-      document.getElementById('servType').value='';
-      document.getElementById('servNotes').value='';
-    }
-    </script>
+  }
+  h+='</div>';
+  document.getElementById('svTimeGrid').innerHTML=h;
+  document.getElementById('svTimeGrid').classList.add('active');
+}
+function spickTime(ti,el){
+  stime=ti;
+  document.querySelectorAll('.serv-time-slot').forEach(function(x){x.classList.remove('selected')});
+  el.classList.add('selected');
+  document.getElementById('svForm').style.display='block';
+  document.getElementById('svDateDisplay').textContent=sdate.toLocaleDateString('ru-RU')+' в '+ti;
+  document.getElementById('svSuccess').style.display='none';
+}
+function smove(d){scal.setMonth(scal.getMonth()+d);srender()}
+function svSubmit(){
+  var n=document.getElementById('svName').value.trim();
+  var p=document.getElementById('svPhone').value.trim();
+  if(!n||!p){alert('Заполните имя и телефон');return}
+  document.getElementById('svDateDisplaySuccess').textContent=sdate.toLocaleDateString('ru-RU')+' в '+stime;
+  document.getElementById('svForm').style.display='none';
+  document.getElementById('svSuccess').style.display='block';
+}
 
     
 
