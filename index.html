@@ -2151,37 +2151,7 @@ document.addEventListener('click',function(e){
 
 <!-- ===== Карусель каталога (статическая) ===== -->
 <style>
-.cr-c{max-width:480px;margin:0 auto;padding:0 10px 20px;overflow:hidden}
-.cr{display:flex;align-items:center;transition:transform .4s cubic-bezier(.34,1.56,.64,1);padding:10px 0}
-.ci{flex:0 0 72%;transition:all .4s;text-align:center;padding:0 3%}
-.card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08);text-align:left}
-.card-img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:#e8e8e8}
-.card-body{padding:16px}
-.ct{font-size:16px;font-weight:700;margin-bottom:8px}
-.cs{display:flex;flex-direction:column;gap:4px}
-.csp{font-size:13px;display:flex;gap:4px}
-.csl{color:#888}.csv{color:#111}
-.cf{display:flex;align-items:center;justify-content:space-between;padding-top:8px;margin-top:4px;border-top:1px solid #f0f0f0}
-.cp{font-size:16px;font-weight:700;color:#111}
-.cb{font-size:10px;font-weight:600;color:#fff;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);border:none;border-radius:8px;padding:4px 14px;cursor:pointer;text-transform:uppercase;letter-spacing:.5px}
-.ca{padding:10px 22px;border:1.5px solid #ddd;border-radius:12px;background:#fff;font-size:18px;cursor:pointer}
-.ca:hover{background:#f8f8f8}
-.cd{display:flex;justify-content:center;gap:6px;margin-top:12px}
-.cd-d{width:8px;height:8px;border-radius:50%;background:#ddd;cursor:pointer;border:none;transition:all .2s}
-.cd-d.on{background:#0bc5ea;transform:scale(1.3)}
-</style>
-<div id="crStatic">
-<div class="cr-c" id="crWrap">
-<div class="cr" id="crR"></div>
-<div style="display:flex;justify-content:center;gap:12px;margin:10px 0">
-<button class="ca" onclick="crs(-1)">←</button>
-<button class="ca" onclick="crs(1)">→</button>
-</div>
-<div class="cd" id="crD"></div>
-</div></div>
-<script>
-var cD=[{n:"TANK X",p:"129 900",i:"images/tank-x.jpg",f:["Состояние: новый","Пластик: новый","Пробег: 0 км","Мощность: 175/49сс","Охлаждение: воздушное","Колёса: 13/13"]},{n:"N-MAX BAM-X",p:"169 900",i:"images/n-max-bam-x-1.jpg",f:["Состояние: б/у","Пластик: без трещин","Пробег: 2700 км","Мощность: 175/49сс","Охлаждение: водяное","Колёса: 13/13"]},{n:"MAXI / GALAXY",p:"65 900",i:"images/maxi-galaxy.jpg",f:["Состояние: б/у","Пластик: притёртости","Пробег: 13800 км","Мощность: 150/49сс","Охлаждение: воздушное","Колёса: 12/12"]},{n:"HONDA SUNDERO",p:"249 900",i:"images/honda-sundero-1.jpg",f:["Состояние: новая","Пробег: 0 км","Мощность: 150/49сс","Колёса: 10/10"]},{n:"TANK KUNHAO",p:"84 900",i:"images/tank-kunhao-1.jpg",f:["Состояние: б/у","Пластик: притёртости","Пробег: 1700 км","Мощность: 150/49сс","Охлаждение: воздушное","Колёса: 12/12"]},{n:"ADV BAM-X",p:"149 900",i:"images/adv-bam-x-1.jpg",f:["Состояние: новый","Пробег: 0 км","Мощность: 175/49сс","Колёса: 14/14"]},{n:"GUSITE AGV-R",p:"194 900",i:"images/gusite-agv-r-1.jpg",f:["Состояние: новый","Пробег: 0 км","Мощность: 200/49сс","Макс.скорость: 110 км/ч","Колёса: 13/14"]}];var cP=0;function crR(){var e=document.getElementById("crR");if(!e)return;var h="";cD.forEach(function(x,i){var d=i-cP;var a=Math.abs(d);var sc=a==0?1:.82;var op=a==0?1:.5;h+="<div class=\"ci\" style=\"transform:scale("+sc+");opacity:"+op+'\"><div class=\"card\"><img class=\"card-img\" src=\"'+x.i+'\"><div class=\"card-body\"><div class=\"ct\">'+x.n+"</div><div class=\"cs\">";x.f.forEach(function(z){var p=z.split(": ");if(p.length>1)h+="<div class=\"csp\"><span class=\"csl\">"+p[0]+":<\/span><span class=\"csv\">"+p[1]+"<\/span><\/div>"});h+="<\/div><div class=\"cf\"><span class=\"cp\">"+x.p+' ₽</span><button class="cb">Тест-драйв</button></div></div></div></div>'});e.innerHTML=h;e.style.transform="translateX("+(-cP*72)+"%)";var d="";cD.forEach(function(x,i){d+="<button class=\"cd-d\"+(i==cP?" on":"")+'\" onclick="crg('+i+')"></button>'});document.getElementById("crD").innerHTML=d}function crs(d){cP+=d;if(cP<0)cP=cD.length-1;if(cP>=cD.length)cP=0;crR()}function crg(n){cP=n;crR()}var cX=0;document.addEventListener("touchstart",function(e){cX=e.changedTouches[0].screenX;},{passive:true});document.addEventListener("touchend",function(e){var d=cX-e.changedTouches[0].screenX;if(Math.abs(d)>40)crs(d>0?1:-1);},{passive:true});
-</script>
+
 <!-- Contacts modal (Neon) -->
 <style>
 .cm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);z-index:99998;align-items:center;justify-content:center;padding:20px}
