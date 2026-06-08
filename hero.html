@@ -397,35 +397,46 @@ document.getElementById('rentBookBtn').onclick=function(){alert('✅ Брони�
 
 <!-- ===== ЗАПИСЬ НА СЕРВИС ===== -->
 <style>
-.serv-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;justify-content:center;align-items:center;padding:1rem}
-      .serv-overlay.active{display:flex}
-      .serv-modal{background:#fff;max-width:520px;width:100%;border-radius:16px;padding:2rem;position:relative;box-shadow:0 10px 40px rgba(0,0,0,.2);max-height:90vh;overflow-y:auto}
-      .serv-close{position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.4rem;cursor:pointer;color:#999;line-height:1}
-      .serv-title{font-size:1.2rem;font-weight:600;margin:0 0 .3rem;color:#111}
-      .serv-sub{font-size:.85rem;color:#888;margin:0 0 1.5rem}
-      .serv-cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
-      .serv-cal-nav{background:none;border:1px solid #ddd;border-radius:8px;width:36px;height:36px;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#333;transition:all .15s}
-      .serv-cal-nav:hover{background:#f0f0f0;border-color:#999}
-      .serv-cal-month{font-weight:600;font-size:1rem;color:#111}
-      .serv-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:1rem}
-      .serv-wd{text-align:center;font-size:.75rem;font-weight:600;color:#999;padding:6px 0;text-transform:uppercase}
-      .serv-day{text-align:center;padding:8px 0;font-size:.85rem;color:#333;border-radius:8px;cursor:pointer;transition:all .15s;border:2px solid transparent}
-      .serv-day:hover{background:#f0f0f0}
-      .serv-day.other{color:#ddd;pointer-events:none}
-      .serv-day.today{font-weight:700;color:#111;background:#f5f5f5}
-      .serv-day.selected{background:#111;color:#fff;font-weight:600}
-      .serv-day.past{color:#ccc;pointer-events:none}
-      .serv-day.sunday{color:#e74c3c}
-      .serv-time-grid{display:none;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem}
-      .serv-time-grid.active{display:grid}
-.serv-modal select{appearance:
+.serv-static{background:#f8f9fa;padding:32px 16px}
+.serv-static-inner{max-width:480px;margin:0 auto;background:#fff;border-radius:16px;padding:1.5rem;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.serv-title{font-size:18.4px;font-weight:700;color:#111;text-align:center;margin-bottom:4px}
+.serv-sub{font-size:14px;color:#888;text-align:center;margin-bottom:16px}
+.serv-cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.serv-cal-nav{background:none;border:1px solid #ddd;border-radius:8px;width:36px;height:36px;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#333;font-family:Inter}
+.serv-cal-nav:hover{background:#f0f0f0}
+.serv-cal-month{font-weight:600;font-size:1rem;color:#111}
+.serv-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:1rem}
+.serv-wd{text-align:center;font-size:.75rem;font-weight:600;color:#999;padding:6px 0}
+.serv-day{text-align:center;padding:8px 0;font-size:.82rem;color:#333;border-radius:8px;cursor:pointer;transition:all .15s;border:2px solid transparent}
+.serv-day:hover{background:#f0f0f0}
+.serv-day.past{color:#ccc;pointer-events:none}
+.serv-day.today{font-weight:700;color:#111;background:#f5f5f5}
+.serv-day.selected{background:#111;color:#fff;font-weight:600}
+.serv-day.sunday{color:#e74c3c}
+.serv-text{font-size:.82rem;color:#666;margin-bottom:.5rem;text-align:center}
+.serv-text strong{color:#333}
+.serv-time-grid{display:none;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem}
+.serv-time-grid.active{display:grid}
+.serv-time-slot{text-align:center;padding:10px 4px;font-size:.82rem;font-weight:500;color:#333;border:1.5px solid #ddd;border-radius:8px;cursor:pointer;transition:all .15s}
+.serv-time-slot:hover{background:#f0f0f0;border-color:#999}
+.serv-time-slot.selected{background:#111;color:#fff;border-color:#111}
+.serv-form{display:none;border-top:1px solid #eee;padding-top:1rem;margin-top:.5rem}
+.serv-form.active{display:block}
+.serv-field{margin-bottom:.85rem}
+.serv-field label{display:block;font-size:.8rem;font-weight:500;color:#555;margin-bottom:.25rem}
+.serv-field input,.serv-field select,.serv-field textarea{width:100%;padding:10px 12px;font-size:.85rem;font-family:Inter;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box}
+.serv-field input:focus,.serv-field select:focus,.serv-field textarea:focus{border-color:#111}
+.serv-field textarea{resize:vertical;min-height:70px}
+.serv-submit{width:100%;padding:12px;font-size:.9rem;font-weight:600;font-family:Inter;background:#111;color:#fff;border:none;border-radius:8px;cursor:pointer;margin-top:.5rem}
+.serv-submit:hover{background:#333}
+.serv-success{display:none;text-align:center;padding:2rem 1rem}
+.serv-success.active{display:block}
+.serv-success-icon{font-size:3rem;margin-bottom:.5rem}
+.serv-success h3{font-size:1.1rem;font-weight:600;color:#111;margin-bottom:4px}
+.serv-success p{font-size:.85rem;color:#888}
 </style>
 
-<section style="padding:32px 0;text-align:center">
-  <h2 style="font-size:18.4px;font-weight:700;color:#111;margin-bottom:4px">Запись на сервис</h2>
-  <p style="font-size:14px;color:#888;margin-bottom:20px">Запишитесь на обслуживание вашего скутера</p>
-  <button onclick="openServ()" style="padding:14px 32px;border:none;border-radius:12px;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:Inter">📅 Записаться на сервис</button>
-</section>
+
 
 <div class="serv-overlay" id="servOverlay">
       <div class="serv-modal">
@@ -547,6 +558,7 @@ function spickTime(ti,el){
   document.getElementById('svSuccess').style.display='none';
 }
 function smove(d){scal.setMonth(scal.getMonth()+d);srender()}
+srender();
 function svSubmit(){
   var n=document.getElementById('svName').value.trim();
   var p=document.getElementById('svPhone').value.trim();
