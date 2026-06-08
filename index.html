@@ -175,7 +175,7 @@ document.addEventListener('click', function(e) {
     <div id="root"></div>
 <!-- ===== Каталог техники ===== -->
 <style>
-.sc{max-width:480px;margin:0 auto;padding:0 10px 20px;overflow:hidden}
+.sc{max-width:480px;margin:0 auto;padding:0 10px 20px;overflow:hidden;opacity:0}
 .sr{display:flex;align-items:center;transition:transform .4s cubic-bezier(.34,1.56,.64,1);padding:10px 0}
 .si{flex:0 0 72%;transition:none;text-align:center;padding:0 3%}
 .sd{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08);text-align:left}
@@ -201,6 +201,7 @@ function up(){var e=document.getElementById("srR");if(!e)return;var items=e.quer
 function srs(d){sP+=d;if(sP<0)sP=8;if(sP>=9)sP=0;up()}
 function srg(n){sP=n;up()}
 var sX=0;document.addEventListener("touchstart",function(e){sX=e.changedTouches[0].screenX;},{passive:true});document.addEventListener("touchend",function(e){var d=sX-e.changedTouches[0].screenX;if(Math.abs(d)>40)srs(d>0?1:-1);},{passive:true});
+setTimeout(function(){var e=document.querySelector(".sc");if(e)e.style.opacity=1},50);
 </script>
 
 <!-- Комплектация V11 -->
