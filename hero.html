@@ -503,47 +503,31 @@ document.getElementById('rentBookBtn').onclick=function(){alert('✅ Брони�
     </div>
 
 <script>
-var smonths=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
-var scal=new Date();var sdate=null;var stime=null;var sbk=[];
-function openServ(){
-  document.getElementById('servOverlay').classList.add('active');
-  document.getElementById('svTimeGrid').innerHTML='';
-  document.getElementById('svForm').style.display='none';
-  sdate=null;stime=null;srender();
-}
-function closeServ(){document.getElementById('servOverlay').classList.remove('active')}
+var scal=new Date();var sdate=null;var stime=null;
+function closeServ(){document.getElementById('servOverlay')&&document.getElementById('servOverlay').classList.remove('active')}
 function srender(){
   var y=scal.getFullYear(),m=scal.getMonth();
-  document.getElementById('svCalMonth').textContent=smonths[m]+' '+y;
-  var first=new Date(y,m,1).getDay()||7;
-  var last=new Date(y,m+1,0).getDate();
+  var month=document.getElementById('svCalMonth');if(!month)return;
+  month.textContent=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'][m]+' '+y;
+  var first=new Date(y,m,1).getDay()||7,last=new Date(y,m+1,0).getDate();
   var today=new Date();today.setHours(0,0,0,0);
-  var h='<div class="serv-cal-grid">';
-  var wd=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+  var h='',wd=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
   wd.forEach(function(d){h+='<div class="serv-wd">'+d+'</div>'});
   for(var i=1;i<first;i++)h+='<div></div>';
   for(var d=1;d<=last;d++){
-    var dt=new Date(y,m,d);var cls='serv-day';
-    if(dt<today)cls+=' past';
-    else if(dt.getTime()===today.getTime())cls+=' today';
-    if(dt.getDay()===0)cls+=' sunday';
-    if(sdate&&sdate.getTime()===dt.getTime())cls+=' selected';
+    var dt=new Date(y,m,d),cls='serv-day'+(dt<today?' past':'')+(dt.getTime()===today.getTime()?' today':'')+(dt.getDay()===0?' sunday':'')+(sdate&&sdate.getTime()===dt.getTime()?' selected':'');
     h+='<div class="'+cls+'" onclick="spick('+d+')">'+d+'</div>';
   }
-  h+='</div>';
   document.getElementById('svCalGrid').innerHTML=h;
-  document.getElementById('svTimeGrid').classList.remove('active');
-  document.getElementById('svForm').style.display='none';
+  document.getElementById('svTimeGrid')&&document.getElementById('svTimeGrid').classList.remove('active');
 }
 function spick(d){
   sdate=new Date(scal.getFullYear(),scal.getMonth(),d);
   stime=null;srender();
-  var h='<div class="serv-text">🕐 График работы: <strong>11:00 – 19:00</strong></div><div class="serv-time-grid active" id="svTimeGridInner">';
-  for(var hr=11;hr<=18;hr++){
-    for(var mn=0;mn<60;mn+=30){
-      var ti=String(hr).padStart(2,'0')+':'+String(mn).padStart(2,'0');
-      h+='<div class="serv-time-slot" onclick="spickTime(''+ti+'',this)">'+ti+'</div>';
-    }
+  var h='<div class="serv-text">🕐 График: <strong>11:00 – 19:00</strong></div><div class="serv-time-grid active" id="svTimeGridInner">';
+  for(var hr=11;hr<=18;hr++)for(var mn=0;mn<60;mn+=30){
+    var ti=String(hr).padStart(2,'0')+':'+String(mn).padStart(2,'0');
+    h+='<div class="serv-time-slot" onclick="spickTime(\''+ti+'\',this)">'+ti+'</div>';
   }
   h+='</div>';
   document.getElementById('svTimeGrid').innerHTML=h;
@@ -555,77 +539,16 @@ function spickTime(ti,el){
   el.classList.add('selected');
   document.getElementById('svForm').style.display='block';
   document.getElementById('svDateDisplay').textContent=sdate.toLocaleDateString('ru-RU')+' в '+ti;
-  document.getElementById('svSuccess').style.display='none';
 }
 function smove(d){scal.setMonth(scal.getMonth()+d);srender()}
-srender();
 function svSubmit(){
-  var n=document.getElementById('svName').value.trim();
-  var p=document.getElementById('svPhone').value.trim();
+  var n=document.getElementById('svName').value.trim(),p=document.getElementById('svPhone').value.trim();
   if(!n||!p){alert('Заполните имя и телефон');return}
   document.getElementById('svDateDisplaySuccess').textContent=sdate.toLocaleDateString('ru-RU')+' в '+stime;
   document.getElementById('svForm').style.display='none';
   document.getElementById('svSuccess').style.display='block';
 }
-
-    
-
-<!-- Галерея-лайтбокс -->
-    <div class="gallery-overlay" id="galleryOverlay" onclick="closeGallery(event)" role="dialog" aria-label="Просмотр фото">
-      <button class="gallery-close" onclick="closeGallery()" aria-label="Закрыть">✕</button>
-      <button class="gallery-nav gallery-nav--prev" id="galleryPrev" onclick="galleryNav(-1)" aria-label="Предыдущее">‹</button>
-      <img id="galleryImg" src="" alt="">
-      <button class="gallery-nav gallery-nav--next" id="galleryNext" onclick="galleryNav(1)" aria-label="Следующее">›</button>
-      <div class="gallery-counter" id="galleryCounter"></div>
-    </div>
-
-    <script>
-      var _galleryImages = [];
-      var _galleryIndex = 0;
-
-      document.body.addEventListener('click', function(e) {
-        var img = e.target.closest('.house-card img, .house-card__image img');
-        if (!img) return;
-        if (img.closest('.gallery-arrow')) return;
-        e.preventDefault();
-        var container = img.parentNode;
-        var imgs = container.querySelectorAll('img');
-        _galleryImages = [];
-        imgs.forEach(function(m) { _galleryImages.push(m.src); });
-        _galleryIndex = Array.prototype.indexOf.call(imgs, img);
-        openGallery();
-      });
-
-      function openGallery() {
-        if (_galleryImages.length === 0) return;
-        showGalleryImage();
-        document.getElementById('galleryOverlay').classList.add('gallery-overlay--open');
-        document.body.style.overflow = 'hidden';
-      }
-
-      function closeGallery(e) {
-        if (e && e.target !== e.currentTarget) return;
-        document.getElementById('galleryOverlay').classList.remove('gallery-overlay--open');
-        document.body.style.overflow = '';
-      }
-
-      function galleryNav(dir) {
-        _galleryIndex = (_galleryIndex + dir + _galleryImages.length) % _galleryImages.length;
-        showGalleryImage();
-      }
-
-      function showGalleryImage() {
-        document.getElementById('galleryImg').src = _galleryImages[_galleryIndex];
-        document.getElementById('galleryCounter').textContent = (_galleryIndex + 1) + ' / ' + _galleryImages.length;
-      }
-
-      document.addEventListener('keydown', function(e) {
-        if (!document.getElementById('galleryOverlay').classList.contains('gallery-overlay--open')) return;
-        if (e.key === 'Escape') { closeGallery(); }
-        if (e.key === 'ArrowLeft') { galleryNav(-1); }
-        if (e.key === 'ArrowRight') { galleryNav(1); }
-      });
-    </script>
+srender();
 
     <!-- Firebase sync -->
   <script>
