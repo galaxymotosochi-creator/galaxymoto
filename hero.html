@@ -258,5 +258,126 @@ document.addEventListener("touchstart",function(e){touchX=e.changedTouches[0].sc
 document.addEventListener("touchend",function(e){var d=touchX-e.changedTouches[0].screenX;if(Math.abs(d)>40)carScroll(d>0?1:-1);},{passive:true});
 </script>
 
+
+<!-- ===== АРЕНДА ===== -->
+<style>
+.section-rent{max-width:480px;margin:0 auto;padding:0 16px 40px}
+.section-rent h2{font-size:18.4px;font-weight:700;color:#111;text-transform:uppercase;text-align:center;margin:0 0 4px}
+.section-rent h2 span{background:linear-gradient(135deg,#0bc5ea,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.section-rent .sub{font-size:14px;color:#888;text-align:center;margin:0 0 16px}
+.rent-map{width:100%;height:400px;border-radius:16px;overflow:hidden;margin-bottom:14px}
+@media(max-width:600px){.rent-map{height:280px}}
+.rent-pan{display:none;background:#fff;border-radius:16px;margin:0 0 14px;padding:16px 20px;box-shadow:0 4px 24px rgba(0,0,0,.08)}
+.rent-pan.s{display:block}
+.rent-pan .h{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.rent-pan .i{font-size:1.6rem}
+.rent-pan .t{font-size:1.1rem;font-weight:700}
+.rent-pan .d{font-size:14px;color:#555;margin:4px 0 8px}
+.rent-pan .st{display:flex;gap:14px;font-size:13px;color:#888;margin-bottom:10px}
+.rent-pan .st strong{color:#333}
+.rent-pan .b{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;background:#111;color:#fff;border-radius:10px;font-weight:600;font-size:13px;text-decoration:none}
+.rent-pan .b:hover{background:#333}
+.rent-book-title{font-size:16px;font-weight:700;text-align:center;margin-bottom:12px}
+.rent-card{border-radius:12px;padding:12px 16px;border:1px solid #f0f0f0;margin-bottom:8px}
+.rent-card-header{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.rent-card-num{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.rent-card-label{font-size:13px;font-weight:600}
+.rent-sel{display:flex;margin-left:30px}
+.rent-sel{display:flex;gap:6px;flex-wrap:wrap}
+.rent-item{display:flex;flex-direction:column;align-items:center;padding:6px 10px;border:1.5px solid #eee;border-radius:8px;cursor:pointer;min-width:78px;background:#fff;font-size:11px}
+.rent-item.on{border-color:#0bc5ea;background:#f0faff}
+.rent-item .e{font-size:1.1rem}
+.rent-item .n{font-size:11px;font-weight:600}
+.rent-item .p{font-size:10px;color:#888}
+.rent-g2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-left:30px}
+.rent-g2 input{padding:7px 10px;border:1.5px solid #ddd;border-radius:8px;font-size:12px;font-family:Inter}
+.rent-gi{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-left:30px}
+.rent-gi input{padding:7px 10px;border:1.5px solid #ddd;border-radius:8px;font-size:12px;font-family:Inter;width:100%}
+.rent-xtra{display:flex;gap:6px;flex-wrap:wrap;margin-left:30px}
+.rent-xtra-item{display:flex;align-items:center;gap:3px;padding:5px 10px;border:1.5px solid #eee;border-radius:16px;font-size:12px;cursor:pointer;background:#fff}
+.rent-xtra-item.on{background:#f0faff;border-color:#0bc5ea}
+.rent-total{text-align:center;font-size:14px;font-weight:700;margin-top:8px}
+.rent-total span{color:#8b5cf6}
+.rent-book-btn{display:block;width:100%;padding:12px;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:Inter;margin-top:10px}
+.rent-book-btn:hover{opacity:.92}
+</style>
+
+<section style="padding:32px 16px;background:#fff">
+<div class="section-rent">
+  <h2>Сочи <span>на скутере</span></h2>
+  <p class="sub">Исследуйте лучшие места за рулём наших скутеров!</p>
+  
+  <div class="rent-map">
+    <iframe src="https://yandex.ru/map-widget/v1/?ll=39.77,43.55&z=11&l=map" width="100%" height="100%" frameborder="0" style="border:none;display:block"></iframe>
+  </div>
+
+  <div class="rent-pan" id="rentPan">
+    <div class="h"><div class="i" id="rentPi">🏔️</div><div class="t" id="rentPt"></div></div>
+    <div class="d" id="rentPd"></div>
+    <a class="b" id="rentPr" href="#" target="_blank">🚗 Построить маршрут</a>
+  </div>
+
+  <div class="rent-book-title">Забронировать скутер</div>
+  
+  <div class="rent-card">
+    <div class="rent-card-header"><div class="rent-card-num">1</div><div class="rent-card-label">Выберите скутер</div></div>
+    <div class="rent-sel" id="rentSel">
+      <div class="rent-item on" data-p="1500"><div class="e">🛵</div><div class="n">TANK 150</div><div class="p">1 500 ₽/сут</div></div>
+      <div class="rent-item" data-p="1800"><div class="e">🛵</div><div class="n">TANK 180</div><div class="p">1 800 ₽/сут</div></div>
+      <div class="rent-item" data-p="1500"><div class="e">🛵</div><div class="n">Jilang Tank</div><div class="p">1 500 ₽/сут</div></div>
+      <div class="rent-item" data-p="2000"><div class="e">🛵</div><div class="n">Leopard 180</div><div class="p">2 000 ₽/сут</div></div>
+    </div>
+  </div>
+  
+  <div class="rent-card">
+    <div class="rent-card-header"><div class="rent-card-num">2</div><div class="rent-card-label">Выберите даты</div></div>
+    <div class="rent-g2"><input type="date" id="rentDF"><input type="date" id="rentDT"></div>
+  </div>
+  
+  <div class="rent-card">
+    <div class="rent-card-header"><div class="rent-card-num">3</div><div class="rent-card-label">Дополнительно</div></div>
+    <div class="rent-xtra"><div class="rent-xtra-item on">🪖 Шлем</div><div class="rent-xtra-item on">📦 Кофр</div><div class="rent-xtra-item">🚚 Доставка</div><div class="rent-xtra-item">📍 Встреча</div></div>
+  </div>
+  
+  <div class="rent-card">
+    <div class="rent-card-header"><div class="rent-card-num">4</div><div class="rent-card-label">Контакты</div></div>
+    <div class="rent-gi"><input placeholder="Ваше имя"><input placeholder="+7 (___) ___ __ __"></div>
+    <div class="rent-total">Итого: <span id="rentTot">1 500 ₽</span></div>
+  </div>
+  
+  <button class="rent-book-btn" id="rentBookBtn">🚀 Забронировать</button>
+</div>
+</section>
+
+<script>
+// Rent - scooter selection
+document.addEventListener('click',function(e){
+  var item=e.target.closest('.rent-item');
+  if(item&&item.parentElement.id==='rentSel'){
+    document.querySelectorAll('#rentSel .rent-item').forEach(function(x){x.classList.remove('on')});
+    item.classList.add('on');calcRent();
+  }
+  var xt=e.target.closest('.rent-xtra-item');
+  if(xt)xt.classList.toggle('on');
+});
+document.addEventListener('change',function(e){if(e.target.id==='rentDF'||e.target.id==='rentDT')calcRent()});
+function calcRent(){
+  var sel=document.querySelector('#rentSel .rent-item.on');
+  if(!sel)return;
+  var p=parseInt(sel.getAttribute('data-p'))||1500;
+  var f=document.getElementById('rentDF').value;
+  var t=document.getElementById('rentDT').value;
+  var d=1;
+  if(f&&t){var d1=new Date(f),d2=new Date(t),df=Math.ceil((d2-d1)/(86400000));if(df>0)d=df;}
+  document.getElementById('rentTot').textContent=p*d+' ₽';
+}
+(function(){
+  var today=new Date().toISOString().split('T')[0];
+  document.getElementById('rentDF').setAttribute('min',today);
+  document.getElementById('rentDT').setAttribute('min',today);
+  document.getElementById('rentDF').value=today;
+})();
+document.getElementById('rentBookBtn').onclick=function(){alert('✅ Бронирование отправлено! Мы перезвоним в течение 15 минут ☎️')};
+</script>
 </body>
 </html>
