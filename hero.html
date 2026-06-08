@@ -166,7 +166,70 @@ body{font-family:Inter,sans-serif;color:#111}
         <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">⭐</div>
         <div>
           <div style="font-size:12px;font-weight:600;color:#fff;line-height:1.2">Яндекс.Карты</div>
-          </div></div>';
+          <div style="font-size:11px;color:rgba(255,255,255,.6);margin-top:2px">Рейтинг 5.0</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-actions">
+      <button class="hero-btn hero-btn--primary">Выбрать технику</button>
+      <button class="hero-btn hero-btn--outline">Взять в аренду</button>
+      <button class="hero-btn hero-btn--gradient">Записаться на сервис</button>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span class="hero-scroll-text">Листайте вниз</span>
+    <div class="hero-scroll-arrow">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M19 12l-7 7-7-7"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ===== КАТАЛОГ ===== -->
+<section class="section">
+  <div class="section__header">
+    <h2 class="section__title">КАТАЛОГ ТЕХНИКИ</h2>
+    <p class="section__sub">Выбирай технику под свой характер и задачи</p>
+  </div>
+
+  <div class="car-wrap">
+    <div class="car-track" id="carTrack"></div>
+    <div class="car-nav">
+      <button class="car-arrow" onclick="carScroll(-1)">←</button>
+      <button class="car-arrow" onclick="carScroll(1)">→</button>
+    </div>
+  </div>
+</section>
+
+<script>
+// ===== Данные скутеров =====
+var scooters = [
+  {n:"Tank Next",p:"72 900",i:"images/tank-next.jpg",f:["Состояние: б/у","Пластик: без трещин","Технически: отличное","Пробег: 12000 км","Мощность: 150/49сс","Тип подачи: карбюратор","Охлаждение: воздушное","Макс. скорость: 100 км/ч","Колёса: 12/12"]},
+  {n:"TANK X",p:"129 900",i:"images/tank-x.jpg",f:["Состояние: новый","Пробег: 0 км","Мощность: 175/49сс","Охлаждение: воздушное","Колёса: 13/13"]},
+  {n:"N-MAX BAM-X",p:"169 900",i:"images/n-max-bam-x-1.jpg",f:["Состояние: б/у","Пробег: 2700 км","Мощность: 175/49сс","Охлаждение: водяное","Колёса: 13/13"]},
+  {n:"MAXI / GALAXY",p:"65 900",i:"images/maxi-galaxy.jpg",f:["Состояние: б/у","Пластик: притёртости","Пробег: 13800 км","Мощность: 150/49сс","Охлаждение: воздушное","Колёса: 12/12"]},
+  {n:"HONDA SUNDERO",p:"249 900",i:"images/honda-sundero-1.jpg",f:["Состояние: новая","Пробег: 0 км","Мощность: 150/49сс","Колёса: 10/10"]},
+  {n:"TANK KUNHAO",p:"84 900",i:"images/tank-kunhao-1.jpg",f:["Состояние: б/у","Пластик: притёртости","Пробег: 1700 км","Мощность: 150/49сс","Охлаждение: воздушное","Колёса: 12/12"]},
+  {n:"TANK KUNHAO",p:"72 900",i:"images/tank-kunhao2-1.jpg",f:["Состояние: б/у","Пластик: без трещин","Технически: после ремонта","Пробег: 17000 км","Мощность: 150/49сс","Охлаждение: воздушное","Колёса: 12/12"]},
+  {n:"ADV BAM-X",p:"149 900",i:"images/adv-bam-x-1.jpg",f:["Состояние: новый","Пробег: 0 км","Мощность: 175/49сс","Колёса: 14/14"]},
+  {n:"GUSITE AGV-R",p:"194 900",i:"images/gusite-agv-r-1.jpg",f:["Состояние: новый","Пробег: 0 км","Мощность: 200/49сс","Макс.скорость: 110 км/ч","Колёса: 13/14"]}
+];
+
+// ===== Рендер карусели =====
+var pos=0;
+(function(){
+  var track = document.getElementById('carTrack');
+  if(!track)return;
+  var h = '';
+  scooters.forEach(function(s,i){
+    var d=i-pos;var a=Math.abs(d);var sc=a==0?1:.82;var op=a==0?1:.5;
+    h += '<div class="car-card" style="transform:scale('+sc+');opacity:'+op+'"><div class="card"><img class="card-img" src="' + s.i + '" alt="' + s.n + '"><div class="card-body"><div class="card-title">' + s.n + '</div><div class="card-specs">';
+    s.f.forEach(function(sp){
+      var p = sp.split(': ');
+      if(p.length > 1) h += '<div class="card-spec"><span class="card-spec-l">' + p[0] + ': </span><span class="card-spec-v">' + p[1] + '</span></div>';
+    });
+    h += '</div><div class="card-foot"><span class="card-price">' + s.p + ' ₽</span><button class="card-btn">Тест-драйв</button></div></div></div></div>';
   });
   track.innerHTML = h;
 })();
