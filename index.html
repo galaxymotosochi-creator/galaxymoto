@@ -2106,14 +2106,13 @@ setTimeout(function(){
       if(cont)cont.style.marginBottom='38px';
     }
   });
-  // FAQ → найти и установить margin-top
-  var faqTitle=null;
-  titles.forEach(function(t){if(t.textContent.trim()==='FAQ')faqTitle=t;});
-  if(faqTitle){
-    var faqCont=faqTitle.closest('section')||faqTitle.parentElement;
-    while(faqCont&&faqCont.parentElement&&!faqCont.matches('section,body,[class*=section]'))faqCont=faqCont.parentElement;
-    if(faqCont)faqCont.style.marginTop='38px';
-  }
+  // FAQ → добавить margin-top
+  titles.forEach(function(t){
+    if(t.textContent.trim()==='FAQ'){
+      var cont=t.closest('section')||t.parentElement;
+      if(cont)cont.style.marginTop='38px';
+    }
+  });
 },3500);
 // Прокрутка к путеводителю при клике «Взять в аренду»
 setTimeout(function(){
