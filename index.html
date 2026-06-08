@@ -2244,8 +2244,8 @@ function up(){var e=document.getElementById("srR");if(!e)return;var items=e.quer
 function srs(d){sP+=d;if(sP<0)sP=8;if(sP>=9)sP=0;up()}
 function srg(n){sP=n;up()}
 var sX=0;document.addEventListener("touchstart",function(e){sX=e.changedTouches[0].screenX;},{passive:true});document.addEventListener("touchend",function(e){var d=sX-e.changedTouches[0].screenX;if(Math.abs(d)>40)srs(d>0?1:-1);},{passive:true});
-// Insert carousel after full page load (React + resources)
-window.addEventListener('load',function(){var h=document.getElementById('root');if(!h)return;var cat=h.querySelector('section[id=catalog]');if(!cat)return;var wrap=document.querySelector('.sc');if(!wrap||wrap.classList.contains('m-ready'))return;var header=cat.querySelector('.section__header');if(header)header.after(wrap);else cat.prepend(wrap);wrap.classList.add('m-ready');var g=cat.querySelector('.catalog-page__grid');if(g)g.style.display='none'});
+// Insert carousel into root - checks every 50ms
+(function check(){var h=document.getElementById('root');if(!h){setTimeout(check,50);return}var cat=h.querySelector('section[id=catalog]');if(!cat){setTimeout(check,50);return}var wrap=document.querySelector('.sc');if(!wrap||wrap.classList.contains('m-ready'))return;var header=cat.querySelector('.section__header');if(header)header.after(wrap);else cat.prepend(wrap);wrap.classList.add('m-ready');var g=cat.querySelector('.catalog-page__grid');if(g)g.style.display='none'})();
 </script>
 
 
