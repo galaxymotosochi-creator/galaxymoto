@@ -248,12 +248,15 @@ function up(){
   });
   track.style.transform = 'translateX(' + (-pos*72) + '%)';
 }
+var touchX=0;
 function carScroll(dir){
   pos += dir;
   if(pos<0) pos = scooters.length-1;
   if(pos>=scooters.length) pos = 0;
   up();
 }
+document.addEventListener("touchstart",function(e){touchX=e.changedTouches[0].screenX;},{passive:true});
+document.addEventListener("touchend",function(e){var d=touchX-e.changedTouches[0].screenX;if(Math.abs(d)>40)carScroll(d>0?1:-1);},{passive:true});
 </script>
 
 </body>
