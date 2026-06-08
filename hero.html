@@ -398,135 +398,49 @@ document.getElementById('rentBookBtn').onclick=function(){alert('✅ Брони�
 <!-- ===== ЗАПИСЬ НА СЕРВИС ===== -->
 <style>
 .serv-sec{max-width:480px;margin:0 auto;padding:20px 16px 32px}
-.serv-sec .st{text-align:center;margin-bottom:20px}
-.serv-sec .st h2{font-size:18.4px;font-weight:700;color:#111;margin-bottom:4px}
-.serv-sec .st p{font-size:14px;color:#888}
-.serv-cal{background:#fff;border-radius:16px;padding:1.5rem;margin-bottom:16px}
-.serv-cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
-.serv-cal-nav{background:none;border:1px solid #ddd;border-radius:8px;width:36px;height:36px;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#333}
-.serv-cal-nav:hover{background:#f0f0f0}
-.serv-cal-month{font-weight:600;font-size:1rem;color:#111}
-.serv-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:1rem}
-.serv-wd{text-align:center;font-size:.75rem;font-weight:600;color:#999;padding:6px 0}
-.serv-day{text-align:center;padding:8px 0;font-size:.82rem;color:#333;border-radius:8px;cursor:pointer;transition:all .15s;border:2px solid transparent}
-.serv-day:hover{background:#f0f0f0}
-.serv-day.other{color:#ddd;pointer-events:none}
-.serv-day.today{font-weight:700;color:#111;background:#f5f5f5}
-.serv-day.selected{background:#111;color:#fff;font-weight:600}
-.serv-day.past{color:#ccc;pointer-events:none}
-.serv-day.sunday{color:#e74c3c}
-.serv-time-grid{display:none;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem}
-.serv-time-grid.active{display:grid}
-.serv-time-slot{text-align:center;padding:10px 4px;font-size:.82rem;font-weight:500;color:#333;border:1.5px solid #ddd;border-radius:8px;cursor:pointer;transition:all .15s}
-.serv-time-slot:hover{background:#f0f0f0;border-color:#999}
-.serv-time-slot.selected{background:#111;color:#fff;border-color:#111}
-.serv-form{display:none;border-top:1px solid #eee;padding-top:1rem;margin-top:.5rem}
-.serv-form.active{display:block}
-.serv-field{margin-bottom:.85rem}
-.serv-field label{display:block;font-size:.8rem;font-weight:500;color:#555;margin-bottom:.25rem}
-.serv-field input,.serv-field select,.serv-field textarea{width:100%;padding:10px 12px;font-size:.85rem;font-family:Inter;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box}
-.serv-field input:focus,.serv-field select:focus,.serv-field textarea:focus{border-color:#111}
-.serv-field textarea{resize:vertical;min-height:70px}
-.serv-submit{width:100%;padding:12px;font-size:.9rem;font-weight:600;font-family:Inter;background:#111;color:#fff;border:none;border-radius:8px;cursor:pointer;margin-top:.5rem}
-.serv-submit:hover{background:#333}
-.serv-success{display:none;text-align:center;padding:2rem 1rem}
-.serv-success.active{display:block}
+.serv-sec h2{font-size:18.4px;font-weight:700;color:#111;text-align:center;margin-bottom:4px}
+.serv-sec .sub{font-size:14px;color:#888;text-align:center;margin-bottom:20px}
+.serv-card{background:#fff;border-radius:16px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:12px}
+.serv-row{display:flex;gap:10px;margin-bottom:12px}
+.serv-row input,.serv-row select{flex:1;padding:12px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;font-family:Inter;outline:none}
+.serv-row input:focus{border-color:#111}
+.serv-btn{width:100%;padding:14px;border:none;border-radius:12px;background:#111;color:#fff;font-size:14px;font-weight:600;font-family:Inter;cursor:pointer}
+.serv-btn:hover{background:#333}
+.serv-ok{display:none;text-align:center;padding:20px}
+.serv-ok.s{display:block}
 </style>
 
 <section style="background:#f8f9fa;padding:32px 0">
 <div class="serv-sec">
-  <div class="st"><h2>Запись на сервис</h2><p>Выберите удобную дату и время</p></div>
+  <h2>Запись на сервис</h2>
+  <p class="sub">Выберите дату, время и оставьте контакты</p>
   
-  <div class="serv-cal">
-    <div class="serv-cal-header">
-      <button class="serv-cal-nav" onclick="sprev()">‹</button>
-      <div class="serv-cal-month" id="svMonth"></div>
-      <button class="serv-cal-nav" onclick="snext()">›</button>
-    </div>
-    <div class="serv-cal-grid" id="svGrid"></div>
-    <div class="serv-time-grid" id="svTimeGrid"></div>
+  <div class="serv-card">
+    <div class="serv-row"><input type="date" id="svDate" min=""><input type="time" id="svTime" value="11:00"></div>
+    <div class="serv-row"><input id="svName" placeholder="Ваше имя"><input id="svPhone" placeholder="+7 (___) ___ __ __"></div>
+    <div class="serv-row"><input id="svModel" placeholder="Модель скутера"></div>
+    <button class="serv-btn" onclick="svBook()">📅 Записаться</button>
   </div>
-
-  <div class="serv-form" id="svForm">
-    <div style="font-size:.9rem;font-weight:600;margin:0 0 1rem;color:#111">Запись на <span id="svDate"></span></div>
-    <div class="serv-field"><label>Ваше имя</label><input id="svName" placeholder="Иван Иванов"></div>
-    <div class="serv-field"><label>Телефон</label><input id="svPhone" placeholder="+7 (999) 123-45-67"></div>
-    <div class="serv-field"><label>Модель скутера</label><input id="svModel" placeholder="Модель"></div>
-    <button class="serv-submit" onclick="svSubmit()">📅 Записаться</button>
-  </div>
-
-  <div class="serv-success" id="svSuccess">
-    <div style="font-size:2.5rem;margin-bottom:4px">✅</div>
-    <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;color:#111">Вы записаны!</h3>
-    <p style="font-size:.82rem;color:#333;margin:0 0 12px" id="svDateOk"></p>
-    <p style="font-size:.78rem;color:#888">Наш адрес: Сочи, Пластунская 52з/2<br><a href="tel:+79000018023" style="color:#1983dd">+7 (900) 001-80-23</a></p>
+  
+  <div class="serv-card serv-ok" id="svOk">
+    <div style="font-size:40px;margin-bottom:8px">✅</div>
+    <h3 style="font-weight:600;margin-bottom:4px">Вы записаны!</h3>
+    <p style="font-size:13px;color:#888" id="svOkText"></p>
   </div>
 </div>
 </section>
 
 <script>
-var smonths=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
-var sdays=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
-var scal=new Date();
-var sselDate=null,sselTime=null;
-
-function srender(){
-  var y=scal.getFullYear(),m=scal.getMonth();
-  document.getElementById('svMonth').textContent=smonths[m]+' '+y;
-  var first=new Date(y,m,1).getDay()||7;
-  var last=new Date(y,m+1,0).getDate();
-  var today=new Date();today.setHours(0,0,0,0);
-  var h='';
-  sdays.forEach(function(d){h+='<div class="serv-wd">'+d+'</div>'});
-  for(var i=1;i<first;i++)h+='<div></div>';
-  for(var d=1;d<=last;d++){
-    var dt=new Date(y,m,d);
-    var cls='serv-day';
-    if(dt<today)cls+=' past';
-    else if(dt.getTime()===today.getTime())cls+=' today';
-    if(dt.getDay()===0)cls+=' sunday';
-    if(sselDate&&sselDate.getTime()===dt.getTime())cls+=' selected';
-    h+='<div class="'+cls+'" onclick="spick('+d+')">'+d+'</div>';
-  }
-  document.getElementById('svGrid').innerHTML=h;
-  document.getElementById('svTimeGrid').classList.remove('active');
-  document.getElementById('svForm').classList.remove('active');
-  document.getElementById('svSuccess').classList.remove('active');
+(function(){var t=new Date().toISOString().split('T')[0];document.getElementById('svDate').setAttribute('min',t);document.getElementById('svDate').value=t})();
+function svBook(){
+  var d=document.getElementById('svDate').value;
+  var t=document.getElementById('svTime').value;
+  var n=document.getElementById('svName').value.trim();
+  var p=document.getElementById('svPhone').value.trim();
+  if(!n||!p){alert('Заполните имя и телефон');return}
+  document.getElementById('svOkText').textContent=d+' в '+t+' · '+(document.getElementById('svModel').value||'—');
+  document.getElementById('svOk').classList.add('s');
 }
-function spick(d){
-  sselDate=new Date(scal.getFullYear(),scal.getMonth(),d);
-  sselTime=null;
-  srender();
-  document.getElementById('svTimeGrid').innerHTML='<div style="font-size:.82rem;color:#666;margin-bottom:.5rem;grid-column:1/-1">🕐 Выберите время:</div>';
-  for(var hr=11;hr<=18;hr++){
-    for(var mn=0;mn<60;mn+=30){
-      var ti=String(hr).padStart(2,"0")+":"+String(mn).padStart(2,"0");
-      var cls='serv-time-slot';
-      if(hr>=14&&hr<15)cls+=' disabled';
-      h+='<div class="'+cls+'" onclick="spickTime(''+ti+'',this)">'+ti+'</div>';
-    }
-  }
-  document.getElementById('svTimeGrid').classList.add('active');
-}
-function spickTime(ti,el){
-  sselTime=ti;
-  document.querySelectorAll('.serv-time-slot').forEach(function(x){x.classList.remove('selected')});
-  el.classList.add('selected');
-  document.getElementById('svForm').classList.add('active');
-  document.getElementById('svDate').textContent=sselDate.toLocaleDateString('ru-RU')+' '+ti;
-  document.getElementById('svSuccess').classList.remove('active');
-}
-function sprev(){scal.setMonth(scal.getMonth()-1);srender()}
-function snext(){scal.setMonth(scal.getMonth()+1);srender()}
-function svSubmit(){
-  var name=document.getElementById('svName').value.trim();
-  var phone=document.getElementById('svPhone').value.trim();
-  if(!name||!phone){alert('Заполните имя и телефон');return}
-  document.getElementById('svDateOk').textContent=sselDate.toLocaleDateString('ru-RU')+' в '+sselTime;
-  document.getElementById('svForm').classList.remove('active');
-  document.getElementById('svSuccess').classList.add('active');
-}
-srender();
 </script>
 
 
