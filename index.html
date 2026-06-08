@@ -173,6 +173,29 @@ document.addEventListener('click', function(e) {
 
 
     <div id="root"></div>
+<!-- ===== Каталог техники (статический) ===== -->
+<style>
+.sc{max-width:480px;margin:0 auto;padding:0 10px 20px;overflow:hidden}
+.sr{display:flex;align-items:center;transition:transform .4s cubic-bezier(.34,1.56,.64,1);padding:10px 0}
+.si{flex:0 0 72%;transition:all .4s;text-align:center;padding:0 3%}
+.sd{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08);text-align:left}
+.simg{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:#e8e8e8}
+.sb{padding:16px}.st{font-size:16px;font-weight:700;margin-bottom:8px}
+.ss{display:flex;flex-direction:column;gap:4px}
+.sp{font-size:13px;display:flex;gap:4px}.sl{color:#888}.sv{color:#111}
+.sf{display:flex;align-items:center;justify-content:space-between;padding-top:8px;margin-top:4px;border-top:1px solid #f0f0f0}
+.sp{font-size:16px;font-weight:700;color:#111}
+.sbtn{font-size:10px;font-weight:600;color:#fff;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);border:none;border-radius:8px;padding:4px 14px;cursor:pointer;text-transform:uppercase;letter-spacing:.5px}
+.sa{padding:10px 22px;border:1.5px solid #ddd;border-radius:12px;background:#fff;font-size:18px;cursor:pointer}
+.sdots{display:flex;justify-content:center;gap:6px;margin-top:12px}
+.sd2{width:8px;height:8px;border-radius:50%;background:#ddd;cursor:pointer;border:none;transition:all .2s}
+.sd2.on{background:#0bc5ea;transform:scale(1.3)}
+</style>
+<div style="text-align:center;padding:20px 16px 0"><h2 class="section__title" style="font-size:1.15rem!important;font-weight:700!important;color:#111!important;margin-bottom:4px!important">Каталог техники</h2><div style="font-size:.85rem;color:#888">Выбирай технику под свой характер и задачи</div></div>
+<div class="sc"><div class="sr" id="srR"></div><div style="display:flex;justify-content:center;gap:12px;margin:10px 0"><button class="sa" onclick="srs(-1)">←</button><button class="sa" onclick="srs(1)">→</button></div><div class="sdots" id="srD"></div></div>
+<script>
+var sD=[{n:"TANK X",p:"129 900",i:"images/tank-x.jpg",f:["Состояние: новый","Пластик: новый","Пробег: 0 км","Мощность: 175/49сс","Охлаждение: воздушное","Колёса: 13/13"]},{n:"N-MAX BAM-X",p:"169 900",i:"images/n-max-bam-x-1.jpg",f:["Состояние: б/у","Пластик: без трещин","Пробег: 2700 км","Мощность: 175/49сс","Охлаждение: водяное","Колёса: 13/13"]},{n:"MAXI / GALAXY",p:"65 900",i:"images/maxi-galaxy.jpg",f:["Состояние: б/у","Пластик: притёртости","Пробег: 13800 км","Мощность: 150/49сс","Охлаждение: воздушное","Колёса: 12/12"]},{n:"HONDA SUNDERO",p:"249 900",i:"images/honda-sundero-1.jpg",f:["Состояние: новая","Пробег: 0 км","Мощность: 150/49сс","Колёса: 10/10"]},{n:"TANK KUNHAO",p:"84 900",i:"images/tank-kunhao-1.jpg",f:["Состояние: б/у","Пластик: притёртости","Пробег: 1700 км","Мощность: 150/49сс","Охлаждение: воздушное","Колёса: 12/12"]},{n:"ADV BAM-X",p:"149 900",i:"images/adv-bam-x-1.jpg",f:["Состояние: новый","Пробег: 0 км","Мощность: 175/49сс","Колёса: 14/14"]},{n:"GUSITE AGV-R",p:"194 900",i:"images/gusite-agv-r-1.jpg",f:["Состояние: новый","Пробег: 0 км","Мощность: 200/49сс","Макс.скорость: 110 км/ч","Колёса: 13/14"]}];var sP=0;function srR(){var e=document.getElementById("srR");if(!e)return;var h="";sD.forEach(function(x,i){var d=i-sP;var a=Math.abs(d);var sc=a==0?1:.82;var op=a==0?1:.5;h+='<div class="si" style="transform:scale('+sc+');opacity:'+op+'"><div class="sd"><img class="simg" src="'+x.i+'"><div class="sb"><div class="st">'+x.n+'</div><div class="ss">';x.f.forEach(function(z){var p=z.split(": ");if(p.length>1)h+='<div class="sp"><span class="sl">'+p[0]+': </span><span class="sv">'+p[1]+'</span></div>'});h+='</div><div class="sf"><span class="spr">'+x.p+' ₽</span><button class="sbtn">Тест-драйв</button></div></div></div></div>'});e.innerHTML=h;e.style.transform="translateX("+(-sP*72)+"%)";var d="";sD.forEach(function(x,i){d+='<button class="sd2'+(i==sP?" on":"")+'" onclick="srg('+i+')"></button>'});document.getElementById("srD").innerHTML=d}function srs(d){sP+=d;if(sP<0)sP=sD.length-1;if(sP>=sD.length)sP=0;srR()}function srg(n){sP=n;srR()}var sX=0;document.addEventListener("touchstart",function(e){sX=e.changedTouches[0].screenX;},{passive:true});document.addEventListener("touchend",function(e){var d=sX-e.changedTouches[0].screenX;if(Math.abs(d)>40)srs(d>0?1:-1);},{passive:true});
+</script>
 
 
     <!-- Комплектация V11 -->
@@ -2146,7 +2169,7 @@ document.addEventListener('click',function(e){
 .cd-d{width:8px;height:8px;border-radius:50%;background:#ddd;cursor:pointer;border:none;transition:all .2s}
 .cd-d.on{background:#0bc5ea;transform:scale(1.3)}
 </style>
-<div id="crStatic" style="display:none">
+<div id="crStatic">
 <div class="cr-c" id="crWrap">
 <div class="cr" id="crR"></div>
 <div style="display:flex;justify-content:center;gap:12px;margin:10px 0">
