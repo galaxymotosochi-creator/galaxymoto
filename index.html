@@ -1946,15 +1946,12 @@ document.addEventListener("mousedown",function(e){
 if(visitorName){document.getElementById("chatNameForm").classList.remove("chat-name-form--show")}
 </script>
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 .guide-onpage{max-width:860px;margin:22px auto;padding:0 16px 40px;font-family:Inter,sans-serif}
 .guide-onpage h2{font-size:18.4px!important;font-weight:700!important;color:#111;text-transform:uppercase!important;text-align:center;margin:0 0 4px;font-family:Inter,sans-serif;letter-spacing:normal!important}
 .guide-onpage h2 span{background:linear-gradient(135deg,#0bc5ea,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .guide-onpage .sub{font-size:.88rem;color:#888;text-align:center;margin:0 0 16px}
-.guide-onpage .map-wrap{width:100%;height:400px;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:14px;background:#eef1f5}
-.guide-onpage .map-wrap .ml{display:flex;align-items:center;justify-content:center;height:100%;color:#888;font-size:.9rem}
+.guide-onpage .map-wrap{width:100%;height:400px;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:14px}
 @media(max-width:600px){.guide-onpage .map-wrap{height:280px}}
 .guide-onpage .pan{display:none;background:#fff;border-radius:16px;margin:0 0 14px;padding:16px 20px;box-shadow:0 4px 24px rgba(0,0,0,.08)}
 .guide-onpage .pan.s{display:block}
@@ -1996,8 +1993,17 @@ if(visitorName){document.getElementById("chatNameForm").classList.remove("chat-n
   <h2>Сочи <span>на скутере</span></h2>
   <p class="sub">Исследуйте лучшие места за рулём наших скутеров!</p>
   
-  <div id="mapW" class="map-wrap">
-    <div id="mapL" class="ml">🗺️ Загружаем карту...</div>
+  <div class="map-wrap">
+    <iframe src="https://yandex.ru/map-widget/v1/?ll=39.77,43.55&z=11&l=map" width="100%" height="100%" frameborder="0" style="border:none;display:block"></iframe>
+  </div>
+
+  <div class="pl-list" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">
+    <script>
+    for(var i=0;i<PL.length;i++){
+      document.write('<div class="pl-btn" data-i="'+i+'" style="padding:6px 10px;border:1.5px solid #eee;border-radius:10px;cursor:pointer;font-size:.78rem;background:#fff;transition:all .15s">'+PL[i].i+' '+PL[i].t+'</div>');
+    }
+    document.querySelectorAll('.pl-btn').forEach(function(b){b.addEventListener('click',function(){showLoc(parseInt(this.getAttribute('data-i')));});});
+    </script>
   </div>
 
   <div class="pan" id="pan">
@@ -2040,40 +2046,29 @@ if(visitorName){document.getElementById("chatNameForm").classList.remove("chat-n
 
 <script>
 var PL = [
-{i:'🎿',t:'Роза Хутор',la:43.6581,lo:40.3075,c:'g',d:'Лучший курорт России!',di:'45 км',ti:'55 мин',rt:'https://yandex.ru/maps/?rtext=~43.6581,40.3075'},
-{i:'🗼',t:'Гора Ахун',la:43.5552,lo:39.8420,c:'g',d:'Смотровая башня на 663 м',di:'8 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.5552,39.8420'},
-{i:'⛰️',t:'Орлиные скалы',la:43.5646,lo:39.8318,c:'g',d:'Обрыв над морем — сказочный вид!',di:'9 км',ti:'18 мин',rt:'https://yandex.ru/maps/?rtext=~43.5646,39.8318'},
-{i:'🏞️',t:'Агурские водопады',la:43.5488,lo:39.8486,c:'w',d:'Каскад водопадов в ущелье',di:'10 км',ti:'20 мин',rt:'https://yandex.ru/maps/?rtext=~43.5488,39.8486'},
-{i:'🏖️',t:'Пляж в Адлере',la:43.4297,lo:39.9428,c:'b',d:'Закаты — космос! 🔥',di:'5 км',ti:'10 мин',rt:'https://yandex.ru/maps/?rtext=~43.4297,39.9428'},
-{i:'🌊',t:'Набережная',la:43.5807,lo:39.7207,c:'b',d:'Главный променад города',di:'2 км',ti:'5 мин',rt:'https://yandex.ru/maps/?rtext=~43.5807,39.7207'},
-{i:'🌃',t:'Олимпийский парк',la:43.4025,lo:39.9564,c:'p',d:'Ночная подсветка и фонтаны',di:'7 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.4025,39.9564'},
-{i:'🌴',t:'Дендрарий',la:43.5767,lo:39.7419,c:'p',d:'Редкие растения со всего мира',di:'3 км',ti:'7 мин',rt:'https://yandex.ru/maps/?rtext=~43.5767,39.7419'},
-{i:'✈️',t:'Смотровая самолёты',la:43.4481,lo:39.9397,c:'s',d:'Самолёты прямо над головой!',di:'8 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.4481,39.9397'},
-{i:'⛵',t:'Морской порт',la:43.5832,lo:39.7190,c:'s',d:'Яхты, чайки, закаты',di:'2 км',ti:'5 мин',rt:'https://yandex.ru/maps/?rtext=~43.5832,39.7190'}
+{i:'🎿',t:'Роза Хутор',d:'Лучший курорт России!',di:'45 км',ti:'55 мин',rt:'https://yandex.ru/maps/?rtext=~43.6581,40.3075'},
+{i:'🗼',t:'Гора Ахун',d:'Смотровая башня на 663 м',di:'8 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.5552,39.8420'},
+{i:'⛰️',t:'Орлиные скалы',d:'Обрыв над морем — сказочный вид!',di:'9 км',ti:'18 мин',rt:'https://yandex.ru/maps/?rtext=~43.5646,39.8318'},
+{i:'🏞️',t:'Агурские водопады',d:'Каскад водопадов в ущелье',di:'10 км',ti:'20 мин',rt:'https://yandex.ru/maps/?rtext=~43.5488,39.8486'},
+{i:'🏖️',t:'Пляж в Адлере',d:'Закаты — космос! 🔥',di:'5 км',ti:'10 мин',rt:'https://yandex.ru/maps/?rtext=~43.4297,39.9428'},
+{i:'🌊',t:'Набережная',d:'Главный променад города',di:'2 км',ti:'5 мин',rt:'https://yandex.ru/maps/?rtext=~43.5807,39.7207'},
+{i:'🌃',t:'Олимпийский парк',d:'Ночная подсветка и фонтаны',di:'7 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.4025,39.9564'},
+{i:'🌴',t:'Дендрарий',d:'Редкие растения со всего мира',di:'3 км',ti:'7 мин',rt:'https://yandex.ru/maps/?rtext=~43.5767,39.7419'},
+{i:'✈️',t:'Смотровая самолёты',d:'Самолёты прямо над головой!',di:'8 км',ti:'15 мин',rt:'https://yandex.ru/maps/?rtext=~43.4481,39.9397'},
+{i:'⛵',t:'Морской порт',d:'Яхты, чайки, закаты',di:'2 км',ti:'5 мин',rt:'https://yandex.ru/maps/?rtext=~43.5832,39.7190'}
 ];
-var mm;var cols={g:'#8b5cf6',w:'#0bc5ea',b:'#f59e0b',p:'#10b981',s:'#ef4444'};
-function initMap(){try{
-document.getElementById('mapL').style.display='none';
-mm=L.map('mapW',{center:[43.55,39.77],zoom:11,zoomControl:true});
-L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}{r}.png',{maxZoom:19,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>'}).addTo(mm);
-PL.forEach(function(l){
-var c=cols[l.c]||'#8b5cf6';
-var mk=L.marker([l.la,l.lo],{icon:L.divIcon({className:'',html:'<div style="width:34px;height:34px;border-radius:50%;background:'+c+';color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 2px 10px rgba(0,0,0,.35);border:2px solid #fff">'+l.i+'</div>',iconSize:[34,34],iconAnchor:[17,17]})}).addTo(mm);
-mk.bindTooltip(l.t,{direction:'top',offset:[0,-16]});
-(function(loc){mk.on('click',function(){showLoc(loc);});})(l);
-});
-}catch(e){}}
-function showLoc(l){
-document.getElementById('pi').textContent=l.i;
-document.getElementById('pt').textContent=l.t;
-document.getElementById('pd').textContent=l.d;
-document.getElementById('pds').textContent=l.di;
-document.getElementById('pts').textContent=l.ti;
-document.getElementById('pr').href=l.rt;
-document.getElementById('pan').classList.add('s');
-if(mm)mm.flyTo([l.la,l.lo],14,{duration:0.4});
+var cur=0;
+function showLoc(n){
+  if(typeof n==='number'){var l=PL[n];cur=n;}else var l=n;
+  document.getElementById('pi').textContent=l.i;
+  document.getElementById('pt').textContent=l.t;
+  document.getElementById('pd').textContent=l.d;
+  document.getElementById('pds').textContent=l.di;
+  document.getElementById('pts').textContent=l.ti;
+  document.getElementById('pr').href=l.rt;
+  document.getElementById('pan').classList.add('s');
 }
-(function retry(){if(typeof L!=='undefined')initMap();else setTimeout(retry,500);})();
+showLoc(0);
 document.addEventListener('click',function(e){
 var c=e.target.closest('.sp');
 if(c&&c.parentElement.id==='sc'){document.querySelectorAll('#sc .sp').forEach(function(x){x.classList.remove('on')});c.classList.add('on');calc();}
