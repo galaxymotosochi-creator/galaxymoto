@@ -2122,7 +2122,7 @@ setTimeout(function(){
 setTimeout(function(){
   var btn=document.querySelector('.hero__btn--outline');
   var guide=document.querySelector('.guide-onpage');
-  if(btn&&guide)btn.addEventListener('click',function(e){e.preventDefault();guide.scrollIntoView({behavior:'smooth',block:'start'});});
+  if(btn&&guide)btn.addEventListener('click',function(e){e.preventDefault();var top=guide.getBoundingClientRect().top+window.scrollY-20;window.scrollTo({top:top,behavior:'smooth'});});
 },3500);
 </script>
 </body>
