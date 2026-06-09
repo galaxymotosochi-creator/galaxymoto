@@ -168,8 +168,17 @@ document.addEventListener('click', function(e) {
     }
   </script>
 
-<style>.section--light,section[id="catalog"],.catalog-page,.catalog-page__grid{display:none!important}
-</style>
+<script>
+// Удаление каталога React
+setTimeout(function(){
+  var el=document.querySelector('section[id="catalog"],.section--light');
+  if(el)el.remove();
+},100);
+setTimeout(function(){
+  var el=document.querySelector('section[id="catalog"],.section--light');
+  if(el)el.remove();
+},1000);
+</script>
 </head>
   <body>
 
