@@ -51,8 +51,6 @@ document.addEventListener('click', function(e) {
         .gallery-close{top:12px;right:12px}
       }
     
-
-
 </style>
 <!-- Модалка тест-драйва -->
 <div class="serv-overlay" id="tdOverlay" style="display:none">
@@ -167,25 +165,15 @@ document.addEventListener('click', function(e) {
       console.error('Firebase init error:', e);
     }
   </script>
-
-<script>
-// Удаление каталога React
-setTimeout(function(){
-  var el=document.querySelector('section[id="catalog"],.section--light');
-  if(el)el.remove();
-},100);
-setTimeout(function(){
-  var el=document.querySelector('section[id="catalog"],.section--light');
-  if(el)el.remove();
-},1000);
-</script>
 </head>
   <body>
 
 
 
     <div id="root"></div>
-<!-- Комплектация V11 -->
+
+
+    <!-- Комплектация V11 -->
     <div id="equipment-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:999;justify-content:center;align-items:flex-start;padding:2rem 1rem;overflow-y:auto">
       <div style="background:#fff;max-width:600px;width:100%;margin:auto;border-radius:12px;padding:1.5rem;position:relative;box-shadow:0 10px 40px rgba(0,0,0,.2)">
         <button onclick="document.getElementById('equipment-modal').style.display='none'" style="position:absolute;top:.75rem;right:1rem;background:none;border:none;font-size:1.3rem;cursor:pointer;color:#999">&times;</button>
@@ -1713,7 +1701,14 @@ var msg = '\ud83d\udccb \u0417\u0410\u042f\u0412\u041a\u0410 \u041d\u0410 \u041a
 .footer-copy{text-align:center;padding:16px;font-size:13px;color:#999;margin-top:10px}
 
 </style>
-
+<script>
+setTimeout(function(){
+  var f=document.createElement("div");
+  f.className="footer-new";
+  f.style.cssText="background:#fff;border-top:1px solid #eee;padding:24px 16px 20px;text-align:center";
+  f.innerHTML='<div class="footer-grid" style="display:inline-grid;grid-template-columns:1fr 1fr 1fr;gap:10px;text-align:center">\n<div class="footer-card" style="background:#fff;border-radius:10px;padding:10px 12px;border:1px solid #eee"><div class="l" style="font-size:13.6px;font-weight:500!important;color:#000;text-transform:uppercase;letter-spacing:.5px">\u0410\u0434\u0440\u0435\u0441</div><div class="v" style="font-size:13.6px;font-weight:400!important;color:#111">\u041f\u043b\u0430\u0441\u0442\u0443\u043d\u0441\u043a\u0430\u044f 52\u0437/2</div></div>\n<div class="footer-card" style="background:#fff;border-radius:10px;padding:10px 12px;border:1px solid #eee"><div class="l" style="font-size:13.6px;font-weight:500!important;color:#000;text-transform:uppercase;letter-spacing:.5px">\u041a\u0430\u0440\u0442\u044b</div><div class="v" style="font-size:13.6px;font-weight:400!important;color:#111"><a href="https://yandex.ru/maps/org/galaxy_moto_service/172501949586" target="_blank" style="color:#1983dd;text-decoration:none;font-weight:600">\u042f\u043d\u0434\u0435\u043a\u0441.\u041a\u0430\u0440\u0442\u044b</a></div></div>\n<div class="footer-card" style="background:#fff;border-radius:10px;padding:10px 12px;border:1px solid #eee"><div class="l" style="font-size:13.6px;font-weight:500!important;color:#000;text-transform:uppercase;letter-spacing:.5px">\u0413\u0440\u0430\u0444\u0438\u043a</div><div class="v" style="font-size:13.6px;font-weight:400!important;color:#111">\u0415\u0436\u0435\u0434\u043d\u0435\u0432\u043d\u043e 10:00\u201319:00</div></div>\n<div class="footer-card" style="background:#fff;border-radius:10px;padding:10px 12px;border:1px solid #eee"><div class="l" style="font-size:13.6px;font-weight:500!important;color:#000;text-transform:uppercase;letter-spacing:.5px">\u041f\u0440\u043e\u0434\u0430\u0436\u0438</div><div class="v" style="font-size:13.6px;font-weight:400!important;color:#111"><a href="tel:+79000008023" style="color:#1983dd;text-decoration:none;font-weight:600">+7 900 000-80-23</a></div></div>\n<div class="footer-card" style="background:#fff;border-radius:10px;padding:10px 12px;border:1px solid #eee"><div class="l" style="font-size:13.6px;font-weight:500!important;color:#000;text-transform:uppercase;letter-spacing:.5px">\u0421\u0435\u0440\u0432\u0438\u0441</div><div class="v" style="font-size:13.6px;font-weight:400!important;color:#111"><a href="tel:+79000018023" style="color:#1983dd;text-decoration:none;font-weight:600">+7 900 001-80-23</a></div></div>\n<div class="footer-card" style="background:#fff;border-radius:10px;padding:10px 12px;border:1px solid #eee"><div class="l" style="font-size:13.6px;font-weight:500!important;color:#000;text-transform:uppercase;letter-spacing:.5px">\u041f\u043e\u0447\u0442\u0430</div><div class="v" style="font-size:13.6px;font-weight:400!important;color:#111"><a href="mailto:galaxymoto@mail.ru" style="color:#1983dd;text-decoration:none;font-weight:600">galaxymoto@mail.ru</a></div></div>\n</div>\n<div class="footer-copy" style="text-align:center;padding:16px;font-size:13px;color:#999;margin-top:10px">\u00a9 2026 GALAXY MOTO. \u0412\u0441\u0435 \u043f\u0440\u0430\u0432\u0430 \u0437\u0430\u0449\u0438\u0449\u0435\u043d\u044b.</div>';
+  document.body.appendChild(f);
+}, 1000);
 </script>
 
 
@@ -2089,9 +2084,6 @@ document.getElementById('tot').textContent=(p*d).toLocaleString('ru-RU')+' ₽';
 }
 (function(){var t=new Date().toISOString().split('T')[0];document.getElementById('dF').setAttribute('min',t);document.getElementById('dT').setAttribute('min',t);document.getElementById('dF').value=t;})();
 document.getElementById('bookBtn').onclick=function(){alert('✅ Бронирование отправлено! Мы перезвоним в течение 15 минут ☎️');};
-// Вставка карусели под подзаголовок каталога
-// Карусель каталога - вставка под подзаголовок
-
 // Вставка блока ПОД каталог скутеров
 setTimeout(function(){
   var b=document.querySelector('.guide-onpage');if(!b)return;
@@ -2120,34 +2112,42 @@ setTimeout(function(){
   });
 },3500);
 // Прокрутка к путеводителю при клике «Взять в аренду»
-document.addEventListener('click',function(e){
-  var btn=e.target.closest('.hero__btn--outline');
-  if(btn){
-    e.preventDefault();
-    var guide=document.querySelector('.guide-onpage');
-    if(guide){
-      var top=guide.getBoundingClientRect().top+window.scrollY-20;
-      window.scrollTo({top:top,behavior:'smooth'});
-    }
-  }
-});
+setTimeout(function(){
+  var btn=document.querySelector('.hero__btn--outline');
+  var guide=document.querySelector('.guide-onpage');
+  if(btn&&guide)btn.addEventListener('click',function(e){e.preventDefault();var top=guide.getBoundingClientRect().top+window.scrollY-20;window.scrollTo({top:top,behavior:'smooth'});});
+},3500);
 </script>
 
 
 
-<!-- ===== Карусель каталога (статическая) ===== -->
-<style>
-
 <!-- Contacts modal (Neon) -->
 <style>
-.cm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);z-index:999999;align-items:center;justify-content:center;padding:20px}
+.cm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);z-index:99998;align-items:center;justify-content:center;padding:20px}
 .cm-overlay.s{display:flex}
 .cm-modal{background:#fff;max-width:380px;width:100%;border-radius:20px;padding:36px 24px 24px;position:relative;max-height:90vh;overflow-y:auto}
 .cm-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;border:none;background:#f0f0f0;color:#999;font-size:16px;cursor:pointer;z-index:5;display:flex;align-items:center;justify-content:center}
 .cm-link{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;text-decoration:none;font-size:13px;color:inherit;transition:background .15s}
 .cm-link:hover{background:#f8f8f8}
 </style>
-
+<div class="cm-overlay" id="cmOverlay"><div class="cm-modal"><button class="cm-close" onclick="closeContactsModal()">&#x2715;</button>
+<div style="text-align:center;margin-bottom:24px">
+<div style="font-size:22px;font-weight:800;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent">GALAXY MOTO</div>
+<div style="font-size:12px;color:#888;margin-top:4px">Наши контакты:</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<a href="tel:+79000008023" class="cm-link" style="border:1px solid #f0f0f0"><span style="font-size:16px;color:#1983dd">📞</span><span style="color:#111"><strong>Продажи:</strong> +7 900 000-80-23</span></a>
+<a href="tel:+79000018023" class="cm-link" style="border:1px solid #f0f0f0"><span style="font-size:16px;color:#1983dd">🔧</span><span style="color:#111"><strong>Сервис:</strong> +7 900 001-80-23</span></a>
+<div class="cm-link" style="border:1px solid #f0f0f0"><span style="font-size:16px;color:#888">📍</span><div><div style="color:#111;font-weight:500">Сочи, Пластунская 52з/2</div><div style="font-size:11px;color:#888;margin-top:2px">Ежедневно 10:00–19:00</div></div></div>
+<a href="mailto:galaxymoto@mail.ru" class="cm-link" style="border:1px solid #f0f0f0"><span style="font-size:16px;color:#888">✉️</span><span style="color:#111">galaxymoto@mail.ru</span></a>
+</div>
+<a href="https://yandex.ru/maps/org/galaxy_moto_service/172501949586" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:16px;padding:12px;border-radius:12px;background:#f5f5f5;color:#111;font-size:13px;font-weight:500;text-decoration:none">🗺️ Открыть на Яндекс.Картах</a>
+</div></div>
+<script>
+function openContactsModal(){document.getElementById('cmOverlay').classList.add('s')}
+function closeContactsModal(){document.getElementById('cmOverlay').classList.remove('s')}
+document.getElementById('cmOverlay').addEventListener('click',function(e){if(e.target===this)this.classList.remove('s')});
+</script>
 
 <!-- ===== Нижняя навигация (мобильная) ===== -->
 <style>
@@ -2182,26 +2182,13 @@ document.addEventListener('click',function(e){
     <span class="bn-icon">🔧</span>
     <span class="bn-label">Сервис</span>
   </div>
-  <div class="bn-item" data-target="contacts" onclick="scrollToSection('contacts',this)">
+  <div class="bn-item" onclick="openContactsModal()">
     <span class="bn-icon">📞</span>
     <span class="bn-label">Контакты</span>
   </div>
 </nav>
 
 <script>
-function openContactsModal(){
-  if(document.getElementById('cmOverlay')){document.getElementById('cmOverlay').classList.add('s');return}
-  var css=document.createElement('style');
-  css.textContent='.cm-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);z-index:999999;align-items:center;justify-content:center;padding:20px}.cm-overlay.s{display:flex}.cm-modal{background:#fff;max-width:380px;width:100%;border-radius:20px;padding:36px 24px 24px;position:relative;max-height:90vh;overflow-y:auto}.cm-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;border:none;background:#f0f0f0;color:#999;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}.cm-link{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;text-decoration:none;font-size:13px;color:inherit}.cm-link:hover{background:#f8f8f8}';
-  document.head.appendChild(css);
-  var m=document.createElement('div');m.className='cm-overlay';m.id='cmOverlay';
-  m.innerHTML='<div class="cm-modal"><button class="cm-close" onclick="closeContactsModal()">&#x2715;</button><div style="text-align:center;margin-bottom:24px"><div style="font-size:22px;font-weight:800;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent">GALAXY MOTO</div><div style="font-size:12px;color:#888;margin-top:4px">Наши контакты:</div></div><div style="display:flex;flex-direction:column;gap:8px"><a href="tel:+79000008023" class="cm-link" style="border:1px solid #f0f0f0"><span style="font-size:16px;color:#1983dd">📞</span><span style="color:#111"><strong>Продажи:</strong> +7 900 000-80-23</span></a><a href="tel:+79000018023" class="cm-link" style="border:1px solid #f0f0f0"><span style="font-size:16px;color:#1983dd">🔧</span><span style="color:#111"><strong>Сервис:</strong> +7 900 001-80-23</span></a><div class="cm-link" style="border:1px solid #f0f0f0"><span style="font-size:16px;color:#888">📍</span><div><div style="color:#111;font-weight:500">Сочи, Пластунская 52з/2</div><div style="font-size:11px;color:#888;margin-top:2px">Ежедневно 10:00–19:00</div></div></div><a href="mailto:galaxymoto@mail.ru" class="cm-link" style="border:1px solid #f0f0f0"><span style="font-size:16px;color:#888">✉️</span><span style="color:#111">galaxymoto@mail.ru</span></a></div><a href="https://yandex.ru/maps/org/galaxy_moto_service/172501949586" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:16px;padding:12px;border-radius:12px;background:#f5f5f5;color:#111;font-size:13px;font-weight:500;text-decoration:none">🗺️ Открыть на Яндекс.Картах</a></div></div>';
-  document.body.appendChild(m);
-  m.classList.add('s');
-  m.addEventListener('click',function(e){if(e.target===this)this.classList.remove('s')});
-}
-function closeContactsModal(){var e=document.getElementById('cmOverlay');if(e)e.classList.remove('s')}
-
 function scrollToSection(target,el){
   var items=document.querySelectorAll('.bn-item');
   items.forEach(function(i){i.classList.remove('active')});
@@ -2227,39 +2214,6 @@ function scrollToSection(target,el){
 }
 
 </script>
-
-<!-- ===== Каталог техники ===== -->
-<style>
-.sc.m-ready{display:block}.sc{max-width:480px;margin:0 auto;padding:0 10px 20px;overflow:hidden;display:none}
-.sr{display:flex;align-items:center;transition:transform .4s cubic-bezier(.34,1.56,.64,1);padding:10px 0}
-.si{flex:0 0 72%;transition:all .4s;text-align:center;padding:0 3%}
-.sd{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08);text-align:left}
-.simg{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:#e8e8e8}
-.sb{padding:16px}.st{font-size:16px;font-weight:700;margin-bottom:8px}
-.ss{display:flex;flex-direction:column;gap:4px}
-.sp{font-size:13px;display:flex;gap:4px}.sl{color:#888}.sv{color:#111}
-.sf{display:flex;align-items:center;justify-content:space-between;padding-top:8px;margin-top:4px;border-top:1px solid #f0f0f0}
-.spr{font-size:16px;font-weight:700;color:#111}
-.sbtn{font-size:10px;font-weight:600;color:#fff;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);border:none;border-radius:8px;padding:4px 14px;cursor:pointer;text-transform:uppercase;letter-spacing:.5px}
-.sa{padding:10px 22px;border:1.5px solid #ddd;border-radius:12px;background:#fff;font-size:18px;cursor:pointer;font-family:Inter}
-.sa:hover{background:#f8f8f8}
-.sdots{display:flex;justify-content:center;gap:6px;margin-top:12px}
-.sd2{width:8px;height:8px;border-radius:50%;background:#ddd;cursor:pointer;border:none;transition:all .2s}
-.sd2.on{background:#0bc5ea;transform:scale(1.3)}
-section[id="catalog"]{display:none!important}
-</style>
-<div style="text-align:center;padding:20px 16px 0"><h2 class="section__title" style="font-size:1.15rem!important;font-weight:700!important;color:#111!important;margin-bottom:4px!important">Каталог техники</h2><div style="font-size:.85rem;color:#888">Выбирай технику под свой характер и задачи</div></div>
-<div class="sc"><div class="sr" id="srR" style="transform:translateX(0%)"><div class="si" style="transform:scale(1);opacity:1"><div class="sd"><img class="simg" src="images/tank-next.jpg"><div class="sb"><div class="st">Tank Next</div><div class="ss"><div class="sp"><span class="sl">Состояние: </span><span class="sv">б/у</span></div><div class="sp"><span class="sl">Пластик: </span><span class="sv">без трещин</span></div><div class="sp"><span class="sl">Технически: </span><span class="sv">отличное</span></div><div class="sp"><span class="sl">Пробег: </span><span class="sv">12000 км</span></div><div class="sp"><span class="sl">Мощность: </span><span class="sv">150/49сс</span></div><div class="sp"><span class="sl">Тип подачи: </span><span class="sv">карбюратор</span></div><div class="sp"><span class="sl">Охлаждение: </span><span class="sv">воздушное</span></div><div class="sp"><span class="sl">Макс. скорость: </span><span class="sv">100 км/ч</span></div><div class="sp"><span class="sl">Колёса: </span><span class="sv">12/12</span></div></div><div class="sf"><span class="spr">72 900 &#8381;</span><button class="sbtn">Тест-драйв</button></div></div></div></div><div class="si" style="transform:scale(0.82);opacity:0.5"><div class="sd"><img class="simg" src="images/tank-x.jpg"><div class="sb"><div class="st">TANK X</div><div class="ss"><div class="sp"><span class="sl">Состояние: </span><span class="sv">новый</span></div><div class="sp"><span class="sl">Пробег: </span><span class="sv">0 км</span></div><div class="sp"><span class="sl">Мощность: </span><span class="sv">175/49сс</span></div><div class="sp"><span class="sl">Охлаждение: </span><span class="sv">воздушное</span></div><div class="sp"><span class="sl">Колёса: </span><span class="sv">13/13</span></div></div><div class="sf"><span class="spr">129 900 &#8381;</span><button class="sbtn">Тест-драйв</button></div></div></div></div><div class="si" style="transform:scale(0.82);opacity:0.5"><div class="sd"><img class="simg" src="images/n-max-bam-x-1.jpg"><div class="sb"><div class="st">N-MAX BAM-X</div><div class="ss"><div class="sp"><span class="sl">Состояние: </span><span class="sv">б/у</span></div><div class="sp"><span class="sl">Пробег: </span><span class="sv">2700 км</span></div><div class="sp"><span class="sl">Мощность: </span><span class="sv">175/49сс</span></div><div class="sp"><span class="sl">Охлаждение: </span><span class="sv">водяное</span></div><div class="sp"><span class="sl">Колёса: </span><span class="sv">13/13</span></div></div><div class="sf"><span class="spr">169 900 &#8381;</span><button class="sbtn">Тест-драйв</button></div></div></div></div><div class="si" style="transform:scale(0.82);opacity:0.5"><div class="sd"><img class="simg" src="images/maxi-galaxy.jpg"><div class="sb"><div class="st">MAXI / GALAXY</div><div class="ss"><div class="sp"><span class="sl">Состояние: </span><span class="sv">б/у</span></div><div class="sp"><span class="sl">Пластик: </span><span class="sv">притёртости</span></div><div class="sp"><span class="sl">Пробег: </span><span class="sv">13800 км</span></div><div class="sp"><span class="sl">Мощность: </span><span class="sv">150/49сс</span></div><div class="sp"><span class="sl">Охлаждение: </span><span class="sv">воздушное</span></div><div class="sp"><span class="sl">Колёса: </span><span class="sv">12/12</span></div></div><div class="sf"><span class="spr">65 900 &#8381;</span><button class="sbtn">Тест-драйв</button></div></div></div></div><div class="si" style="transform:scale(0.82);opacity:0.5"><div class="sd"><img class="simg" src="images/honda-sundero-1.jpg"><div class="sb"><div class="st">HONDA SUNDERO</div><div class="ss"><div class="sp"><span class="sl">Состояние: </span><span class="sv">новая</span></div><div class="sp"><span class="sl">Пробег: </span><span class="sv">0 км</span></div><div class="sp"><span class="sl">Мощность: </span><span class="sv">150/49сс</span></div><div class="sp"><span class="sl">Колёса: </span><span class="sv">10/10</span></div></div><div class="sf"><span class="spr">249 900 &#8381;</span><button class="sbtn">Тест-драйв</button></div></div></div></div><div class="si" style="transform:scale(0.82);opacity:0.5"><div class="sd"><img class="simg" src="images/tank-kunhao-1.jpg"><div class="sb"><div class="st">TANK KUNHAO</div><div class="ss"><div class="sp"><span class="sl">Состояние: </span><span class="sv">б/у</span></div><div class="sp"><span class="sl">Пластик: </span><span class="sv">притёртости</span></div><div class="sp"><span class="sl">Пробег: </span><span class="sv">1700 км</span></div><div class="sp"><span class="sl">Мощность: </span><span class="sv">150/49сс</span></div><div class="sp"><span class="sl">Охлаждение: </span><span class="sv">воздушное</span></div><div class="sp"><span class="sl">Колёса: </span><span class="sv">12/12</span></div></div><div class="sf"><span class="spr">84 900 &#8381;</span><button class="sbtn">Тест-драйв</button></div></div></div></div><div class="si" style="transform:scale(0.82);opacity:0.5"><div class="sd"><img class="simg" src="images/tank-kunhao2-1.jpg"><div class="sb"><div class="st">TANK KUNHAO</div><div class="ss"><div class="sp"><span class="sl">Состояние: </span><span class="sv">б/у</span></div><div class="sp"><span class="sl">Пластик: </span><span class="sv">без трещин</span></div><div class="sp"><span class="sl">Технически: </span><span class="sv">после ремонта</span></div><div class="sp"><span class="sl">Пробег: </span><span class="sv">17000 км</span></div><div class="sp"><span class="sl">Мощность: </span><span class="sv">150/49сс</span></div><div class="sp"><span class="sl">Охлаждение: </span><span class="sv">воздушное</span></div><div class="sp"><span class="sl">Колёса: </span><span class="sv">12/12</span></div></div><div class="sf"><span class="spr">72 900 &#8381;</span><button class="sbtn">Тест-драйв</button></div></div></div></div><div class="si" style="transform:scale(0.82);opacity:0.5"><div class="sd"><img class="simg" src="images/adv-bam-x-1.jpg"><div class="sb"><div class="st">ADV BAM-X</div><div class="ss"><div class="sp"><span class="sl">Состояние: </span><span class="sv">новый</span></div><div class="sp"><span class="sl">Пробег: </span><span class="sv">0 км</span></div><div class="sp"><span class="sl">Мощность: </span><span class="sv">175/49сс</span></div><div class="sp"><span class="sl">Колёса: </span><span class="sv">14/14</span></div></div><div class="sf"><span class="spr">149 900 &#8381;</span><button class="sbtn">Тест-драйв</button></div></div></div></div><div class="si" style="transform:scale(0.82);opacity:0.5"><div class="sd"><img class="simg" src="images/gusite-agv-r-1.jpg"><div class="sb"><div class="st">GUSITE AGV-R</div><div class="ss"><div class="sp"><span class="sl">Состояние: </span><span class="sv">новый</span></div><div class="sp"><span class="sl">Пробег: </span><span class="sv">0 км</span></div><div class="sp"><span class="sl">Мощность: </span><span class="sv">200/49сс</span></div><div class="sp"><span class="sl">Макс.скорость: </span><span class="sv">110 км/ч</span></div><div class="sp"><span class="sl">Колёса: </span><span class="sv">13/14</span></div></div><div class="sf"><span class="spr">194 900 &#8381;</span><button class="sbtn">Тест-драйв</button></div></div></div></div></div><div style="display:flex;justify-content:center;gap:12px;margin:10px 0"><button class="sa" onclick="srs(-1)">&#x2190;</button><button class="sa" onclick="srs(1)">&#x2192;</button></div><div class="sdots" id="srD"><button class="sd2 on"></button><button class="sd2"></button><button class="sd2"></button><button class="sd2"></button><button class="sd2"></button><button class="sd2"></button><button class="sd2"></button><button class="sd2"></button><button class="sd2"></button></div></div>
-<script>
-var sP=0;
-function up(){var e=document.getElementById("srR");if(!e)return;var items=e.querySelectorAll(".si");items.forEach(function(el,i){var d=i-sP;var a=Math.abs(d);el.style.transform="scale("+(a==0?1:.82)+")";el.style.opacity=a==0?1:.5});e.style.transform="translateX("+(-sP*72)+"%)";var d=document.getElementById("srD");if(d){var btns=d.querySelectorAll("button");btns.forEach(function(b,i){b.classList.toggle("on",i==sP)})}}
-function srs(d){sP+=d;if(sP<0)sP=8;if(sP>=9)sP=0;up()}
-function srg(n){sP=n;up()}
-var sX=0;document.addEventListener("touchstart",function(e){sX=e.changedTouches[0].screenX;},{passive:true});document.addEventListener("touchend",function(e){var d=sX-e.changedTouches[0].screenX;if(Math.abs(d)>40)srs(d>0?1:-1);},{passive:true});
-// Insert carousel after full page load (React + resources)
-window.addEventListener('load',function(){var h=document.getElementById('root');if(!h)return;var cat=h.querySelector('section[id=catalog]');if(!cat)return;var wrap=document.querySelector('.sc');if(!wrap||wrap.classList.contains('m-ready'))return;var header=cat.querySelector('.section__header');if(header)header.after(wrap);else cat.prepend(wrap);wrap.classList.add('m-ready');var g=cat.querySelector('.catalog-page__grid');if(g)g.style.display='none'});
-</script>
-
 
 </body>
 </html>
