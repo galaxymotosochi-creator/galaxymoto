@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>GALAXY MOTO — 5 вариантов Hero</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Inter','SF Pro Display',sans-serif;background:#e8e8ed;padding:32px 16px;-webkit-font-smoothing:antialiased}
+.header{text-align:center;margin-bottom:32px}
+.header h1{font-size:26px;font-weight:800;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px}
+.header p{font-size:14px;color:#666}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px;max-width:1760px;margin:0 auto}
+.card{background:#fff;border-radius:16px;padding:14px 14px 18px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.cl{font-size:11px;font-weight:600;color:#888;letter-spacing:.06em;text-transform:uppercase;text-align:center;margin-bottom:10px}
+.phone{max-width:340px;margin:0 auto;background:#fff;border-radius:34px;overflow:hidden;box-shadow:0 0 0 2px #3a3a3e,0 12px 40px rgba(0,0,0,.15);position:relative;aspect-ratio:340/660}
+.notch{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:100px;height:20px;background:#0d0d0f;border-radius:0 0 9px 9px;z-index:10}
+.screen{width:100%;height:100%;background-size:cover;background-position:center;display:flex;flex-direction:column;position:relative}
+.ov{position:absolute;inset:0}
+.ct{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:44px 18px 20px;gap:4px}
+.bdg{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:600;padding:4px 10px 4px 7px;border-radius:14px;letter-spacing:.02em;margin-bottom:2px}
+.bdg .dot{width:6px;height:6px;border-radius:50%;background:#34c759;flex-shrink:0;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.ttl{font-size:19px;font-weight:800;line-height:1.25;letter-spacing:-.03em}
+.ttl span{display:block}
+.dsc{font-size:11px;line-height:1.5;max-width:270px}
+.r8{display:flex;align-items:center;gap:5px;font-size:10px;margin:2px 0 6px}
+.r8 .st{width:24px;height:24px;background:linear-gradient(135deg,#0bc5ea,#8b5cf6);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+.btns{display:flex;flex-direction:column;gap:5px;width:100%;max-width:250px}
+.br{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.btn{display:flex;align-items:center;justify-content:center;gap:5px;padding:9px 12px;border-radius:10px;font-size:11.5px;font-weight:600;font-family:inherit;border:none;cursor:pointer;transition:all .12s;-webkit-tap-highlight-color:transparent}
+.btn:active{transform:scale(.97)}
+.meta{font-size:10px;color:#aaa;text-align:center;margin-top:10px;line-height:1.4;padding:0 8px}
+
+/* V1 */
+.v1{background-image:url('https://www.galaxymoto.ru/hero-poster.jpg')}
+.v1 .ov{background:linear-gradient(180deg,rgba(0,0,0,.5) 0%,rgba(0,0,0,.72) 100%)}
+.v1 .bdg{background:rgba(255,255,255,.12);color:#fff;backdrop-filter:blur(6px)}
+.v1 .ttl{color:#fff}
+.v1 .dsc{color:rgba(255,255,255,.8)}
+.v1 .r8{color:rgba(255,255,255,.65)}
+.v1 .b1{background:#fff;color:#111}
+.v1 .b2{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.25)}
+
+/* V2 */
+.v2{background-image:url('https://www.galaxymoto.ru/images/maxi-galaxy-3.jpg')}
+.v2 .ov{background:linear-gradient(180deg,rgba(255,255,255,.92) 0%,rgba(255,255,255,.68) 100%)}
+.v2 .bdg{background:rgba(0,0,0,.05);color:#555}
+.v2 .ttl{color:#111}
+.v2 .ttl .hl{color:#0bc5ea}
+.v2 .dsc{color:#555}
+.v2 .r8{color:#888}
+.v2 .b1{background:#111;color:#fff}
+.v2 .b2{background:#f0f0f0;color:#111}
+
+/* V3 */
+.v3{background-image:url('https://www.galaxymoto.ru/images/gusite-agv-r-2.jpg')}
+.v3 .ov{background:linear-gradient(160deg,rgba(11,197,234,.55) 0%,rgba(139,92,246,.7) 100%)}
+.v3 .bdg{background:rgba(255,255,255,.18);color:#fff;backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.1)}
+.v3 .ttl{color:#fff}
+.v3 .dsc{color:rgba(255,255,255,.85)}
+.v3 .r8{color:rgba(255,255,255,.7)}
+.v3 .b1{background:#fff;color:#111;box-shadow:0 4px 14px rgba(0,0,0,.1)}
+.v3 .b2{background:rgba(255,255,255,.13);color:#fff;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.1)}
+
+/* V4 */
+.v4{background-image:url('https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=900&q=85')}
+.v4 .ov{background:linear-gradient(180deg,rgba(0,0,0,.15) 0%,rgba(0,0,0,.82) 100%);backdrop-filter:blur(1.5px)}
+.v4 .bdg{background:rgba(0,0,0,.5);color:#fff;backdrop-filter:blur(8px)}
+.v4 .ttl{color:#fff}
+.v4 .ttl .hl{color:#ffd700}
+.v4 .dsc{color:rgba(255,255,255,.8)}
+.v4 .r8{color:rgba(255,255,255,.65)}
+.v4 .b1{background:linear-gradient(135deg,#0bc5ea,#8b5cf6);color:#fff;box-shadow:0 4px 14px rgba(11,197,234,.3)}
+.v4 .b2{background:rgba(255,255,255,.08);color:#fff;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.1)}
+
+/* V5 */
+.v5{background-image:url('https://www.galaxymoto.ru/images/t5-photo1.jpg')}
+.v5 .ov{background:linear-gradient(180deg,rgba(0,0,0,.6) 0%,rgba(0,0,0,.88) 100%)}
+.v5 .bdg{background:#34c759;color:#fff}
+.v5 .ttl{color:#fff}
+.v5 .ttl .hl{color:#0bc5ea}
+.v5 .dsc{color:rgba(255,255,255,.75)}
+.v5 .r8{color:rgba(255,255,255,.6)}
+.v5 .b1{background:#0bc5ea;color:#111;font-weight:800}
+.v5 .b2{background:rgba(255,255,255,.08);color:#fff;backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.1)}
+
+@media(max-width:720px){body{padding:16px 10px}.header h1{font-size:22px}.grid{gap:18px}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>GALAXY MOTO</h1>
+  <p>5 вариантов hero-блока для мобильной версии · с фото на фоне</p>
+</div>
+
+<div class="grid">
+
+<div class="card">
+  <div class="cl">Вариант 1 · Тёмный премиум</div>
+  <div class="phone"><div class="notch"></div>
+    <div class="screen v1"><div class="ov"></div><div class="ct">
+      <div class="bdg"><span class="dot"></span> Работаем ежедневно</div>
+      <div class="ttl">GALAXY MOTO<span>Полный цикл твоего движения</span></div>
+      <div class="dsc">Покупка, аренда, честный сервис и оригинальные запчасти для мототехники. Берем все заботы на себя</div>
+      <div class="r8"><div class="st">⭐</div><strong>5.0</strong> Яндекс.Карты · читайте отзывы</div>
+      <div class="btns">
+        <button class="btn b1">Выбрать технику</button>
+        <div class="br"><button class="btn b2">Взять в аренду</button><button class="btn b2">Записаться на сервис</button></div>
+      </div>
+    </div></div>
+  </div>
+  <div class="meta">Классический тёмный · белые кнопки · фото на весь экран</div>
+</div>
+
+<div class="card">
+  <div class="cl">Вариант 2 · Светлый минимал</div>
+  <div class="phone"><div class="notch"></div>
+    <div class="screen v2"><div class="ov"></div><div class="ct">
+      <div class="bdg"><span class="dot"></span> Работаем ежедневно</div>
+      <div class="ttl">GALAXY <span class="hl">MOTO</span><span>Полный цикл твоего движения</span></div>
+      <div class="dsc">Покупка, аренда, честный сервис и оригинальные запчасти для мототехники. Берем все заботы на себя</div>
+      <div class="r8"><div class="st">⭐</div><strong>5.0</strong> Яндекс.Карты · читайте отзывы</div>
+      <div class="btns">
+        <button class="btn b1">Выбрать технику</button>
+        <div class="br"><button class="btn b2">Взять в аренду</button><button class="btn b2">Записаться на сервис</button></div>
+      </div>
+    </div></div>
+  </div>
+  <div class="meta">Светлый оверлей · фото просвечивает · мягкие серые кнопки</div>
+</div>
+
+<div class="card">
+  <div class="cl">Вариант 3 · Циан-космос</div>
+  <div class="phone"><div class="notch"></div>
+    <div class="screen v3"><div class="ov"></div><div class="ct">
+      <div class="bdg"><span class="dot"></span> Работаем ежедневно</div>
+      <div class="ttl">GALAXY MOTO<span>Полный цикл твоего движения</span></div>
+      <div class="dsc">Покупка, аренда, честный сервис и оригинальные запчасти для мототехники. Берем все заботы на себя</div>
+      <div class="r8"><div class="st">⭐</div><strong>5.0</strong> Яндекс.Карты · читайте отзывы</div>
+      <div class="btns">
+        <button class="btn b1">Выбрать технику</button>
+        <div class="br"><button class="btn b2">Взять в аренду</button><button class="btn b2">Записаться на сервис</button></div>
+      </div>
+    </div></div>
+  </div>
+  <div class="meta">Градиент циан→фиолет · стеклянные кнопки · футуристичный</div>
+</div>
+
+<div class="card">
+  <div class="cl">Вариант 4 · Тёплый закат</div>
+  <div class="phone"><div class="notch"></div>
+    <div class="screen v4"><div class="ov"></div><div class="ct">
+      <div class="bdg"><span class="dot"></span> Работаем ежедневно</div>
+      <div class="ttl">GALAXY <span class="hl">MOTO</span><span>Полный цикл твоего движения</span></div>
+      <div class="dsc">Покупка, аренда, честный сервис и оригинальные запчасти для мототехники. Берем все заботы на себя</div>
+      <div class="r8"><div class="st">⭐</div><strong>5.0</strong> Яндекс.Карты · читайте отзывы</div>
+      <div class="btns">
+        <button class="btn b1">Выбрать технику</button>
+        <div class="br"><button class="btn b2">Взять в аренду</button><button class="btn b2">Записаться на сервис</button></div>
+      </div>
+    </div></div>
+  </div>
+  <div class="meta">Тёплый размытый оверлей · золотой акцент · градиентные кнопки</div>
+</div>
+
+<div class="card">
+  <div class="cl">Вариант 5 · Яркий дерзкий</div>
+  <div class="phone"><div class="notch"></div>
+    <div class="screen v5"><div class="ov"></div><div class="ct">
+      <div class="bdg"><span class="dot"></span> Работаем ежедневно</div>
+      <div class="ttl">GALAXY <span class="hl">MOTO</span><span>Полный цикл твоего движения</span></div>
+      <div class="dsc">Покупка, аренда, честный сервис и оригинальные запчасти для мототехники. Берем все заботы на себя</div>
+      <div class="r8"><div class="st">⭐</div><strong>5.0</strong> Яндекс.Карты · читайте отзывы</div>
+      <div class="btns">
+        <button class="btn b1">Выбрать технику</button>
+        <div class="br"><button class="btn b2">Взять в аренду</button><button class="btn b2">Записаться на сервис</button></div>
+      </div>
+    </div></div>
+  </div>
+  <div class="meta">Зелёный бейдж · яркая циан-кнопка · контрастный тёмный</div>
+</div>
+
+</div>
+</body>
+</html>
