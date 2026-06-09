@@ -416,10 +416,10 @@ document.getElementById('rentBookBtn').onclick=function(){alert('✅ Брони�
       .serv-day.selected{background:#111;color:#fff;font-weight:600}
       .serv-day.past{color:#ccc;pointer-events:none}
       .serv-day.sunday{color:#e74c3c}
-      .serv-time-grid{display:none;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem}
+      .serv-time-grid{display:none;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem;width:100%}
       .serv-time-grid.active{display:grid}
 .serv-modal select{appearance:auto}
-      .serv-text{font-size:.82rem;color:#666;margin-bottom:.7rem}
+      .serv-text{font-size:.82rem;color:#666;text-align:center;width:100%;margin-bottom:12px}
       .serv-time-slot{text-align:center;padding:10px 4px;font-size:.82rem;font-weight:500!important;color:#333;border:1.5px solid #ddd;border-radius:8px;cursor:pointer;transition:all .15s}
       .serv-time-slot:hover{background:#f0f0f0;border-color:#999}
       .serv-time-slot.booked{color:#ccc;border-color:#eee;background:#f9f9f9;cursor:not-allowed;text-decoration:line-through;pointer-events:none}
@@ -451,7 +451,6 @@ document.getElementById('rentBookBtn').onclick=function(){alert('✅ Брони�
           <div class="serv-cal-grid" id="servCalGrid"></div>
         </div>
 
-        <div id="servTimeLabel" class="serv-text" style="display:none">🕐 График работы: <strong>11:00 – 19:00</strong></div>
         <div class="serv-time-grid" id="servTimeGrid"></div>
 
         <div class="serv-form" id="servForm">
