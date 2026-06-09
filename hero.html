@@ -397,160 +397,36 @@ document.getElementById('rentBookBtn').onclick=function(){alert('✅ Брони�
 
 <!-- ===== ЗАПИСЬ НА СЕРВИС ===== -->
 <style>
-.serv-inline{background:#f8f9fa;padding:32px 16px}
+.serv-sec{background:#f8f9fa;padding:32px 16px}
 .serv-inner{max-width:480px;margin:0 auto;background:#fff;border-radius:16px;padding:1.5rem;box-shadow:0 2px 12px rgba(0,0,0,.06)}
-.serv-title{font-size:1.2rem;font-weight:600;margin:0 0 .3rem;color:#111;text-align:center}
-.serv-sub{font-size:.85rem;color:#888;margin:0 0 1.5rem;text-align:center}
-.serv-cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
-.serv-cal-nav{background:none;border:1px solid #ddd;border-radius:8px;width:36px;height:36px;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#333;transition:all .15s}
-.serv-cal-nav:hover{background:#f0f0f0;border-color:#999}
-.serv-cal-month{font-weight:600;font-size:1rem;color:#111}
-.serv-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:1rem}
-.serv-wd{text-align:center;font-size:.75rem;font-weight:600;color:#999;padding:6px 0;text-transform:uppercase}
-.serv-day{text-align:center;padding:8px 0;font-size:.85rem;color:#333;border-radius:8px;cursor:pointer;transition:all .15s;border:2px solid transparent}
-.serv-day:hover{background:#f0f0f0}
-.serv-day.other{color:#ddd;pointer-events:none}
-.serv-day.today{font-weight:700;color:#111;background:#f5f5f5}
-.serv-day.selected{background:#111;color:#fff;font-weight:600}
-.serv-day.past{color:#ccc;pointer-events:none}
-.serv-day.sunday{color:#e74c3c}
-.serv-text{font-size:.82rem;color:#666;margin-bottom:.5rem;text-align:center}
-.serv-text strong{color:#333}
-.serv-time-grid{display:none;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem}
-.serv-time-grid.active{display:grid}
-.serv-time-slot{text-align:center;padding:10px 4px;font-size:.82rem;font-weight:500;color:#333;border:1.5px solid #ddd;border-radius:8px;cursor:pointer;transition:all .15s}
-.serv-time-slot:hover{background:#f0f0f0;border-color:#999}
-.serv-time-slot.selected{background:#111;color:#fff;border-color:#111}
-.serv-form{display:none;border-top:1px solid #eee;padding-top:1.2rem;margin-top:.5rem}
-.serv-form-title{font-size:.9rem;font-weight:600;margin:0 0 1rem;color:#111}
-.serv-field{margin-bottom:.85rem}
-.serv-field label{display:block;font-size:.8rem;font-weight:500;color:#555;margin-bottom:.25rem}
-.serv-field input,.serv-field select,.serv-field textarea{width:100%;padding:10px 12px;font-size:.85rem;font-family:Inter;border:1.5px solid #ddd;border-radius:8px;outline:none;transition:border-color .2s;box-sizing:border-box;background:#fff;color:#111}
-.serv-field input:focus,.serv-field select:focus,.serv-field textarea:focus{border-color:#111}
-.serv-field textarea{resize:vertical;min-height:70px}
-.serv-submit{width:100%;padding:12px;font-size:.9rem;font-weight:600;font-family:Inter;background:#111;color:#fff;border:none;border-radius:8px;cursor:pointer;transition:background .2s;margin-top:.5rem}
-.serv-submit:hover{background:#333}
-.serv-success{display:none;text-align:center;padding:2rem 1rem}
-.serv-success-icon{font-size:3rem;margin-bottom:.5rem}
-.serv-success h3{font-size:1.1rem;font-weight:600;margin:0 0 .3rem;color:#111}
-.serv-success p{font-size:.85rem;color:#888;margin:0}
+.serv-sec h2{font-size:18.4px;font-weight:700;color:#111;text-align:center;margin-bottom:4px}
+.serv-sec p{font-size:14px;color:#888;text-align:center;margin-bottom:16px}
+.serv-row{display:flex;gap:10px;margin-bottom:12px}
+.serv-row input,.serv-row select{flex:1;padding:12px;border:1.5px solid #ddd;border-radius:10px;font-size:14px;font-family:Inter;outline:none}
+.serv-row input:focus{border-color:#111}
+.serv-btn{width:100%;padding:14px;border:none;border-radius:12px;background:#111;color:#fff;font-size:14px;font-weight:600;font-family:Inter;cursor:pointer}
+.serv-btn:hover{background:#333}
+.serv-ok{display:none;text-align:center;padding:20px}
+.serv-ok.show{display:block}
 </style>
-
-
-
-<div class="serv-inline">
-  <div class="serv-inner">
-    <h2 class="serv-title">Запись на сервис</h2>
-    <p class="serv-sub">Выберите удобную дату и время</p>
-
-    <div id="servCalendar">
-      <div class="serv-cal-header">
-        <button class="serv-cal-nav" onclick="servPrevMonth()">‹</button>
-        <div class="serv-cal-month" id="servCalMonth"></div>
-        <button class="serv-cal-nav" onclick="servNextMonth()">›</button>
-      </div>
-      <div class="serv-cal-grid" id="servCalGrid"></div>
-    </div>
-
-    <div id="servTimeLabel" class="serv-text" style="display:none">🕐 График работы: <strong>11:00 – 19:00</strong></div>
-    <div class="serv-time-grid" id="servTimeGrid"></div>
-
-    <div class="serv-form" id="servForm">
-      <div class="serv-form-title">Запись на <span id="servDateDisplay"></span></div>
-      <div class="serv-field">
-        <label>Ваше имя</label>
-        <input type="text" id="servName" placeholder="Иван Иванов" />
-      </div>
-      <div class="serv-field">
-        <label>Телефон</label>
-        <input type="tel" id="servPhone" placeholder="+7 (999) 123-45-67" />
-      </div>
-      <div class="serv-field">
-        <label>Модель скутера</label>
-        <input type="text" id="servModel" placeholder="Модель скутера" />
-      </div>
-      <div class="serv-field">
-        <label>Тип обслуживания</label>
-        <select id="servType">
-          <option value="">Выберите тип</option>
-          <option value="ТО">ТО (техническое обслуживание)</option>
-          <option value="Ремонт">Ремонт</option>
-          <option value="Диагностика">Диагностика</option>
-          <option value="Запчасти">Установка запчастей</option>
-          <option value="Другое">Другое</option>
-        </select>
-      </div>
-      <div class="serv-field">
-        <label>Комментарий</label>
-        <textarea id="servNotes" placeholder="Опишите проблему или пожелания"></textarea>
-      </div>
-      <button class="serv-submit" onclick="servSubmit()">📅 Записаться</button>
-    </div>
-
-    <div class="serv-success" id="servSuccess">
-      <div class="serv-success-icon" style="font-size:2.5rem;margin-bottom:4px">✅</div>
-      <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;color:#111">Вы записаны!</h3>
-      <p style="font-size:.85rem;color:#333;margin:0 0 12px"><span id="servDateDisplaySuccess"></span></p>
-      <div style="font-size:.8rem;color:#555;line-height:1.6">
-        <div style="margin-bottom:8px">Наш адрес:<br><strong>г. Сочи, ул. Пластунская 52 З/2</strong></div>
-        <div style="margin-bottom:8px"><strong>Телефон: <a href="tel:+79000018023" style="color:#1983dd">+7 (900) 001-80-23</a></strong></div>
-      </div>
-    </div>
+<div class="serv-sec">
+<div class="serv-inner">
+  <h2>Запись на сервис</h2>
+  <p>Выберите дату, время и оставьте контакты</p>
+  <div class="serv-row"><input type="date" id="svDate" min=""><input type="time" id="svTime" value="11:00"></div>
+  <div class="serv-row"><input id="svName" placeholder="Ваше имя"><input id="svPhone" placeholder="+7 (___) ___ __ __"></div>
+  <div class="serv-row"><input id="svModel" placeholder="Модель скутера"></div>
+  <button class="serv-btn" onclick="svBook()">📅 Записаться</button>
+  <div class="serv-ok" id="svOk">
+    <div style="font-size:40px;margin-bottom:8px">✅</div>
+    <h3 style="font-weight:600;margin-bottom:4px">Вы записаны!</h3>
+    <p style="font-size:13px;color:#888" id="svOkText"></p>
   </div>
-</div>";}
-      if(sd&&st){h+="<div class='sfm' id='fm'><h4>"+sd.split("-").reverse().join(".")+" "+st+"</h4><input id='n1' placeholder='Имя'><input id='n2' placeholder='Телефон'><input id='n3' placeholder='Модель'><textarea id='n4' rows='2' placeholder='Краткое описание проблемы / визита' style='width:100%;padding:10px;font-size:.82rem;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box;margin-bottom:8px;resize:vertical'></textarea><button class='sbn' onclick='sb()'>Записаться</button></div>"}
-      h+="<div class='ssc' id='sc'><div style='font-size:2.5rem;margin-bottom:4px'>✅</div><h3 style='font-size:1rem;font-weight:600;margin:0 0 4px;color:#111'>Вы записаны!</h3><p style='font-size:.85rem;color:#333;margin:0 0 12px'><span id='sdt'></span></p><div style='font-size:.8rem;color:#555;line-height:1.6'><div style='margin-bottom:8px'>Наш адрес:<br><strong>г. Сочи, ул. Пластунская 52 З/2</strong></div><div style='margin-bottom:8px'>Поднимайтесь к нам по Промышленному переулку или постройте маршрут:<br><a href='https://yandex.ru/maps/org/galaxy_moto_service/172501949586' target='_blank' style='color:#1983dd;font-weight:600'>Яндекс.Карты</a></div><div style='margin-bottom:8px'><strong>Телефон: <a href='tel:+79000018023' style='color:#1983dd'>+7 (900) 001-80-23</a></strong></div><div style='font-size:.78rem;color:#888'>Если планы изменились, пожалуйста, предупредите нас! До встречи 👋</div></div></div></div>";
-      e.innerHTML=h;
-    }
-    function pm(){sc.setMonth(sc.getMonth()-1);sd=null;st=null;ld(function(){rd()})}
-    function nx(){sc.setMonth(sc.getMonth()+1);sd=null;st=null;ld(function(){rd()})}
-    function slc(d){var y=sc.getFullYear(),m=sc.getMonth(),ds=y+"-"+String(m+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");var t=new Date();t.setHours(0,0,0,0);if(new Date(y,m,d)<t)return;sd=ds;st=null;rd()}
-    function tp(t){st=t;rd()}
-    function sb(){
-  var n=document.getElementById("n1").value.trim(),p=document.getElementById("n2").value.trim();
-  if(!n){alert("\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0438\u043c\u044f");return}if(!p){alert("\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0442\u0435\u043b\u0435\u0444\u043e\u043d");return}
-  var desc=document.getElementById("n4").value.trim();
-  var dt={date:sd,time:st,name:n,phone:p,model:document.getElementById("n3").value.trim()||"",notes:desc,created:new Date().toISOString()};
-  window.db.collection("galaxymoto_bookings").doc(sd+"_"+st.replace(":","-")).set(dt).catch(function(e){console.error(e)});
-  // Telegram + смарт-история
-  window.db.collection("galaxymoto_bookings").get().then(function(snap){
-    var prev=[];
-    snap.forEach(function(doc){
-      var d=doc.data();
-      if(d.workDone&&d.workDone.items&&d.workDone.items.length>0) prev.push(d);
-    });
-    prev.sort(function(a,b){return a.date.localeCompare(b.date)});
-    var msg="\uD83D\uDEF5 \u041D\u041E\u0412\u0410\u042F \u0417\u0410\u041F\u0418\u0421\u042C \u2116 "+(dt.orderNumber||"")+" \u041D\u0410 \u0421\u0415\u0420\u0412\u0418\u0421!\n\n";
-    msg+="\uD83D\uDCC5 \u0414\u0430\u0442\u0430: "+sd+"\n";
-    msg+="\u0412\u0440\u0435\u043C\u044F: "+st+"\n";
-    msg+="\uD83D\uDC64 \u0418\u043C\u044F: "+n+"\n";
-    msg+="\u0422\u0435\u043B\u0435\u0444\u043E\u043D: "+p+"\n";
-    msg+="\uD83D\uDEF5 \u041C\u043E\u0434\u0435\u043B\u044C: "+(dt.model||"-")+"\n";
-    msg+="\u041A\u043E\u043C\u043C\u0435\u043D\u0442\u0430\u0440\u0438\u0439: "+(desc||"-")+"\n";
-    if(prev.length>0){
-      var last=prev[prev.length-1];
-      msg+="\n\uD83D\uDD0D \u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0435\u0435 \u043f\u043e\u0441\u0435\u0449\u0435\u043d\u0438\u0435: "+last.date.split("-").reverse().join(".")+"\n";
-      if(last.workDone.mileage) msg+="\uD83D\uDCCF \u041f\u0440\u043e\u0431\u0435\u0433: "+last.workDone.mileage+" \u043a\u043c\n";
-      msg+="\uD83D\uDCCB \u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u0435 \u0440\u0430\u0431\u043e\u0442\u044b:";
-      for(var i=0;i<last.workDone.items.length;i++){
-        msg+="\n  - "+last.workDone.items[i].name+": "+last.workDone.items[i].price+" \u0440\u0443\u0431";
-      }
-      msg+="\n\u0421\u0443\u043c\u043c\u0430: "+last.workDone.total+" \u0440\u0443\u0431";
-    }else{
-      msg+="\n\uD83D\uDC4B \u041a\u043b\u0438\u0435\u043d\u0442 \u043d\u043e\u0432\u044b\u0439, \u043f\u0440\u0435\u0434\u044b\u0434\u0443\u0449\u0438\u0445 \u0440\u0430\u0431\u043e\u0442 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e";
-    }
-    tgBroadcast(msg);
-  }).catch(function(){
-    // fallback: простое уведомление
-    var msg="\uD83D\uDEF5 \u041D\u041E\u0412\u0410\u042F \u0417\u0410\u041F\u0418\u0421\u042C \u2116 "+(dt.orderNumber||"")+"!\n\n";
-    msg+="\uD83D\uDCC5 "+sd+"\n";
-    msg+="\u0412\u0440\u0435\u043C\u044F: "+st+"\n";
-    msg+="\uD83D\uDC64 "+n+"\n";
-    msg+="\u0422\u0435\u043B\u0435\u0444\u043E\u043D: "+p+"\n";
-    if(dt.model) msg+="\uD83D\uDEF5 "+dt.model;
-    tgBroadcast(msg);
-  });
-  document.getElementById("fm").style.display="none";document.getElementById("sdt").textContent=sd.split("-").reverse().join(".")+" "+st;document.getElementById("servSuccessDateTime").textContent=sd.split("-").reverse().join(".")+" "+st;document.getElementById("servSuccessOverlay").classList.add("active")
-}
+</div>
+</div>
+<script>
+(function(){var t=new Date().toISOString().split('T')[0];document.getElementById('svDate').setAttribute('min',t);document.getElementById('svDate').value=t})();
+function svBook(){var d=document.getElementById('svDate').value;var t=document.getElementById('svTime').value;var n=document.getElementById('svName').value.trim();var p=document.getElementById('svPhone').value.trim();if(!n||!p){alert('Заполните имя и телефон');return}document.getElementById('svOkText').textContent=d+' в '+t;document.getElementById('svOk').classList.add('show')}
+</script>
 </body>
 </html>
