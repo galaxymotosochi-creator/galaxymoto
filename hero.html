@@ -397,452 +397,107 @@ document.getElementById('rentBookBtn').onclick=function(){alert('✅ Брони�
 
 <!-- ===== ЗАПИСЬ НА СЕРВИС ===== -->
 <style>
-.serv-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;justify-content:center;align-items:center;padding:1rem}
-      .serv-overlay.active{display:flex}
-      .serv-modal{background:#fff;max-width:520px;width:100%;border-radius:16px;padding:2rem;position:relative;box-shadow:0 10px 40px rgba(0,0,0,.2);max-height:90vh;overflow-y:auto}
-      .serv-close{position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.4rem;cursor:pointer;color:#999;line-height:1}
-      .serv-title{font-size:1.2rem;font-weight:600;margin:0 0 .3rem;color:#111}
-      .serv-sub{font-size:.85rem;color:#888;margin:0 0 1.5rem}
-      .serv-cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
-      .serv-cal-nav{background:none;border:1px solid #ddd;border-radius:8px;width:36px;height:36px;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#333;transition:all .15s}
-      .serv-cal-nav:hover{background:#f0f0f0;border-color:#999}
-      .serv-cal-month{font-weight:600;font-size:1rem;color:#111}
-      .serv-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:1rem}
-      .serv-wd{text-align:center;font-size:.75rem;font-weight:600;color:#999;padding:6px 0;text-transform:uppercase}
-      .serv-day{text-align:center;padding:8px 0;font-size:.85rem;color:#333;border-radius:8px;cursor:pointer;transition:all .15s;border:2px solid transparent}
-      .serv-day:hover{background:#f0f0f0}
-      .serv-day.other{color:#ddd;pointer-events:none}
-      .serv-day.today{font-weight:700;color:#111;background:#f5f5f5}
-      .serv-day.selected{background:#111;color:#fff;font-weight:600}
-      .serv-day.past{color:#ccc;pointer-events:none}
-      .serv-day.sunday{color:#e74c3c}
-      .serv-time-grid{display:none;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem}
-      .serv-time-grid.active{display:grid}
-.serv-modal select{appearance:
+.serv-inline{background:#f8f9fa;padding:32px 16px}
+.serv-inner{max-width:480px;margin:0 auto;background:#fff;border-radius:16px;padding:1.5rem;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.serv-title{font-size:1.2rem;font-weight:600;margin:0 0 .3rem;color:#111;text-align:center}
+.serv-sub{font-size:.85rem;color:#888;margin:0 0 1.5rem;text-align:center}
+.serv-cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.serv-cal-nav{background:none;border:1px solid #ddd;border-radius:8px;width:36px;height:36px;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#333;transition:all .15s}
+.serv-cal-nav:hover{background:#f0f0f0;border-color:#999}
+.serv-cal-month{font-weight:600;font-size:1rem;color:#111}
+.serv-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:1rem}
+.serv-wd{text-align:center;font-size:.75rem;font-weight:600;color:#999;padding:6px 0;text-transform:uppercase}
+.serv-day{text-align:center;padding:8px 0;font-size:.85rem;color:#333;border-radius:8px;cursor:pointer;transition:all .15s;border:2px solid transparent}
+.serv-day:hover{background:#f0f0f0}
+.serv-day.other{color:#ddd;pointer-events:none}
+.serv-day.today{font-weight:700;color:#111;background:#f5f5f5}
+.serv-day.selected{background:#111;color:#fff;font-weight:600}
+.serv-day.past{color:#ccc;pointer-events:none}
+.serv-day.sunday{color:#e74c3c}
+.serv-text{font-size:.82rem;color:#666;margin-bottom:.5rem;text-align:center}
+.serv-text strong{color:#333}
+.serv-time-grid{display:none;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem}
+.serv-time-grid.active{display:grid}
+.serv-time-slot{text-align:center;padding:10px 4px;font-size:.82rem;font-weight:500;color:#333;border:1.5px solid #ddd;border-radius:8px;cursor:pointer;transition:all .15s}
+.serv-time-slot:hover{background:#f0f0f0;border-color:#999}
+.serv-time-slot.selected{background:#111;color:#fff;border-color:#111}
+.serv-form{display:none;border-top:1px solid #eee;padding-top:1.2rem;margin-top:.5rem}
+.serv-form-title{font-size:.9rem;font-weight:600;margin:0 0 1rem;color:#111}
+.serv-field{margin-bottom:.85rem}
+.serv-field label{display:block;font-size:.8rem;font-weight:500;color:#555;margin-bottom:.25rem}
+.serv-field input,.serv-field select,.serv-field textarea{width:100%;padding:10px 12px;font-size:.85rem;font-family:Inter;border:1.5px solid #ddd;border-radius:8px;outline:none;transition:border-color .2s;box-sizing:border-box;background:#fff;color:#111}
+.serv-field input:focus,.serv-field select:focus,.serv-field textarea:focus{border-color:#111}
+.serv-field textarea{resize:vertical;min-height:70px}
+.serv-submit{width:100%;padding:12px;font-size:.9rem;font-weight:600;font-family:Inter;background:#111;color:#fff;border:none;border-radius:8px;cursor:pointer;transition:background .2s;margin-top:.5rem}
+.serv-submit:hover{background:#333}
+.serv-success{display:none;text-align:center;padding:2rem 1rem}
+.serv-success-icon{font-size:3rem;margin-bottom:.5rem}
+.serv-success h3{font-size:1.1rem;font-weight:600;margin:0 0 .3rem;color:#111}
+.serv-success p{font-size:.85rem;color:#888;margin:0}
 </style>
 
 
 
-<div class="serv-overlay" id="servOverlay">
-      <div class="serv-modal">
-        <button class="serv-close" onclick="closeServ()">&times;</button>
-        <h2 class="serv-title">Запись на сервис</h2>
-        <p class="serv-sub">Выберите удобную дату и время</p>
+<div class="serv-inline">
+  <div class="serv-inner">
+    <h2 class="serv-title">Запись на сервис</h2>
+    <p class="serv-sub">Выберите удобную дату и время</p>
 
-        <div id="servCalendar">
-          <div class="serv-cal-header">
-            <button class="serv-cal-nav" onclick="servPrevMonth()">‹</button>
-            <div class="serv-cal-month" id="servCalMonth"></div>
-            <button class="serv-cal-nav" onclick="servNextMonth()">›</button>
-          </div>
-          <div class="serv-cal-grid" id="servCalGrid"></div>
-        </div>
-
-        <div id="servTimeLabel" class="serv-text" style="display:none">🕐 График работы: <strong>11:00 – 19:00</strong></div>
-        <div class="serv-time-grid" id="servTimeGrid"></div>
-
-        <div class="serv-form" id="servForm">
-          <div class="serv-form-title">Запись на <span id="servDateDisplay"></span></div>
-          <div class="serv-field">
-            <label>Ваше имя</label>
-            <input type="text" id="servName" placeholder="Иван Иванов" />
-          </div>
-          <div class="serv-field">
-            <label>Телефон</label>
-            <input type="tel" id="servPhone" placeholder="+7 (999) 123-45-67" />
-          </div>
-          <div class="serv-field">
-            <label>Модель скутера</label>
-            <input type="text" id="servModel" placeholder="Модель скутера" />
-          </div>
-          <div class="serv-field">
-            <label>Тип обслуживания</label>
-            <select id="servType">
-              <option value="">Выберите тип</option>
-              <option value="ТО">ТО (техническое обслуживание)</option>
-              <option value="Ремонт">Ремонт</option>
-              <option value="Диагностика">Диагностика</option>
-              <option value="Запчасти">Установка запчастей</option>
-              <option value="Другое">Другое</option>
-            </select>
-          </div>
-          <div class="serv-field">
-            <label>Комментарий</label>
-            <textarea id="servNotes" placeholder="Опишите проблему или пожелания"></textarea>
-          </div>
-          <button class="serv-submit" onclick="servSubmit()">📅 Записаться</button>
-        </div>
-
-        <div class="serv-success" id="servSuccess">
-          <div class="serv-success-icon" style="font-size:2.5rem;margin-bottom:4px">✅</div>
-          <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;color:#111">Вы записаны!</h3>
-          <p style="font-size:.85rem;color:#333;margin:0 0 12px"><span id="servDateDisplaySuccess"></span></p>
-          <div style="font-size:.8rem;color:#555;line-height:1.6">
-            <div style="margin-bottom:8px">Наш адрес:<br><strong>г. Сочи, ул. Пластунская 52 З/2</strong></div>
-            <div style="margin-bottom:8px">Поднимайтесь к нам по Промышленному переулку или постройте маршрут:<br><a href="https://yandex.ru/maps/org/galaxy_moto_service/172501949586" target="_blank" style="color:#1983dd;font-weight:600">Яндекс.Карты</a></div>
-            <div style="margin-bottom:8px"><strong>Телефон: <a href="tel:+79000018023" style="color:#1983dd">+7 (900) 001-80-23</a></strong></div>
-            <div style="font-size:.78rem;color:#888">Если планы изменились, пожалуйста, предупредите нас! До встречи 👋</div>
-          </div>
-        </div>
+    <div id="servCalendar">
+      <div class="serv-cal-header">
+        <button class="serv-cal-nav" onclick="servPrevMonth()">‹</button>
+        <div class="serv-cal-month" id="servCalMonth"></div>
+        <button class="serv-cal-nav" onclick="servNextMonth()">›</button>
       </div>
+      <div class="serv-cal-grid" id="servCalGrid"></div>
     </div>
 
-<script>
-var servMonths = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
-var servDays = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
-var servCal = new Date();
-var servSelectedDate = null;
-var servSelectedTime = null;
+    <div id="servTimeLabel" class="serv-text" style="display:none">🕐 График работы: <strong>11:00 – 19:00</strong></div>
+    <div class="serv-time-grid" id="servTimeGrid"></div>
 
-function servRender() {
-  var y = servCal.getFullYear();
-  var m = servCal.getMonth();
-  document.getElementById('servCalMonth').textContent = servMonths[m] + ' ' + y;
-  var first = new Date(y, m, 1).getDay() || 7;
-  var last = new Date(y, m + 1, 0).getDate();
-  var today = new Date();
-  today.setHours(0, 0, 0, 0);
-  var h = '';
-  servDays.forEach(function(d) { h += '<div class="serv-wd">' + d + '</div>'; });
-  for (var i = 1; i < first; i++) { h += '<div></div>'; }
-  for (var d = 1; d <= last; d++) {
-    var dt = new Date(y, m, d);
-    var cls = 'serv-day';
-    if (dt < today) cls += ' past';
-    if (dt.getTime() === today.getTime()) cls += ' today';
-    if (dt.getDay() === 0) cls += ' sunday';
-    if (servSelectedDate && servSelectedDate.getTime() === dt.getTime()) cls += ' selected';
-    h += '<div class="' + cls + '" onclick="servPick(' + d + ')">' + d + '</div>';
-  }
-  document.getElementById('servCalGrid').innerHTML = h;
-  document.getElementById('servTimeLabel').style.display = 'none';
-  document.getElementById('servTimeGrid').classList.remove('active');
-  document.getElementById('servForm').style.display = 'none';
-}
+    <div class="serv-form" id="servForm">
+      <div class="serv-form-title">Запись на <span id="servDateDisplay"></span></div>
+      <div class="serv-field">
+        <label>Ваше имя</label>
+        <input type="text" id="servName" placeholder="Иван Иванов" />
+      </div>
+      <div class="serv-field">
+        <label>Телефон</label>
+        <input type="tel" id="servPhone" placeholder="+7 (999) 123-45-67" />
+      </div>
+      <div class="serv-field">
+        <label>Модель скутера</label>
+        <input type="text" id="servModel" placeholder="Модель скутера" />
+      </div>
+      <div class="serv-field">
+        <label>Тип обслуживания</label>
+        <select id="servType">
+          <option value="">Выберите тип</option>
+          <option value="ТО">ТО (техническое обслуживание)</option>
+          <option value="Ремонт">Ремонт</option>
+          <option value="Диагностика">Диагностика</option>
+          <option value="Запчасти">Установка запчастей</option>
+          <option value="Другое">Другое</option>
+        </select>
+      </div>
+      <div class="serv-field">
+        <label>Комментарий</label>
+        <textarea id="servNotes" placeholder="Опишите проблему или пожелания"></textarea>
+      </div>
+      <button class="serv-submit" onclick="servSubmit()">📅 Записаться</button>
+    </div>
 
-function servPick(d) {
-  servSelectedDate = new Date(servCal.getFullYear(), servCal.getMonth(), d);
-  servSelectedTime = null;
-  servRender();
-  var h = '<div class="serv-text">🕐 График работы: <strong>11:00 – 19:00</strong></div>';
-  h += '<div class="serv-time-grid active">';
-  for (var hr = 11; hr <= 18; hr++) {
-    for (var mn = 0; mn < 60; mn += 30) {
-      var ti = String(hr).padStart(2, '0') + ':' + String(mn).padStart(2, '0');
-      h += '<div class="serv-time-slot" onclick="servPickTime(\'' + ti + '\', this)">' + ti + '</div>';
-    }
-  }
-  h += '</div>';
-  document.getElementById('servTimeGrid').innerHTML = h;
-  document.getElementById('servTimeGrid').classList.add('active');
-}
-
-function servPickTime(ti, el) {
-  servSelectedTime = ti;
-  var slots = document.querySelectorAll('.serv-time-slot');
-  for (var i = 0; i < slots.length; i++) { slots[i].classList.remove('selected'); }
-  el.classList.add('selected');
-  document.getElementById('servForm').style.display = 'block';
-  document.getElementById('servDateDisplay').textContent = servSelectedDate.toLocaleDateString('ru-RU') + ' в ' + ti;
-}
-
-function servPrevMonth() { servCal.setMonth(servCal.getMonth() - 1); servRender(); }
-function servNextMonth() { servCal.setMonth(servCal.getMonth() + 1); servRender(); }
-
-function servSubmit() {
-  var name = document.getElementById('svName').value.trim();
-  var phone = document.getElementById('svPhone').value.trim();
-  if (!name || !phone) { alert('Заполните имя и телефон'); return; }
-  document.getElementById('svDateDisplaySuccess').textContent = servSelectedDate.toLocaleDateString('ru-RU') + ' в ' + servSelectedTime;
-  document.getElementById('svForm').style.display = 'none';
-  document.getElementById('svSuccess').style.display = 'block';
-}
-
-servRender();
-</script>
-
-    <!-- Firebase sync -->
-  <script>
-    // Patch referral link display with short code
-    function patchReferralCode() {
-      var code = localStorage.getItem('galaxy_ref_code');
-      if (!code) return;
-      var inputs = document.querySelectorAll('.referral-link__input');
-      inputs.forEach(function(inp) {
-        if (inp.value && inp.value.indexOf('ref=') > 0) {
-          inp.value = window.location.origin + window.location.pathname + '#/?r=' + code;
-        }
-      });
-    }
-    setInterval(patchReferralCode, 1000);
-    setTimeout(patchReferralCode, 500);
-
-    (function() {
-      var ready = false;
-      function firebaseReady() {
-        if (ready) return true;
-        ready = typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length > 0;
-        return ready;
-      }
-
-      // Save lead to Firestore when submitted
-      function saveLeadToFirestore(data) {
-        if (!firebaseReady()) return;
-        var ref = sessionStorage.getItem('ref_code') 
-               || new URLSearchParams(window.location.hash.split('?')[1]||window.location.search).get('ref') 
-               || new URLSearchParams(window.location.hash.split('?')[1]||window.location.search).get('r');
-        
-        // Try to resolve short code to email
-        function doSave(agentEmail) {
-          data.agentId = agentEmail;
-          data.firebaseSaved = true;
-          data.createdAt = new Date().toISOString();
-          db.collection('leads').doc(data.id || data.phone + '_' + Date.now()).set(data)
-            .then(function() { console.log('Lead saved to Firestore for agent:', agentEmail); })
-            .catch(function(e) { console.error('Firestore save error:', e); });
-        }
-
-        if (ref) {
-          if (ref.indexOf('@') > 0) {
-            doSave(ref);
-          } else {
-            db.collection('referrals').doc(ref).get().then(function(d) {
-              if (d.exists) doSave(d.data().email);
-              else console.log('Referral code not found:', ref);
-            }).catch(function(e) { console.error('Referral lookup error:', e); });
-          }
-        }
-      }
-
-      // Load leads for agent dashboard
-      function loadAgentLeads(email) {
-        if (!email || !firebaseReady()) return;
-        localStorage.setItem('galaxy_user_refcode', email);
-        
-        // Get referral code
-        db.collection('referrals').where('email', '==', email).get().then(function(snap) {
-          snap.forEach(function(d) { 
-            localStorage.setItem('galaxy_ref_code', d.id);
-            patchReferralCode();
-          });
-        });
-
-        // Pull leads from Firestore
-        db.collection('leads').where('agentId', '==', email).get().then(function(snapshot) {
-          var existing = JSON.parse(localStorage.getItem('galaxy_leads') || '[]');
-          snapshot.forEach(function(doc) {
-            var lead = doc.data();
-            var idx = existing.findIndex(function(l) { return l.id === lead.id; });
-            if (idx >= 0) existing[idx] = lead;
-            else existing.push(lead);
-          });
-          localStorage.setItem('galaxy_leads', JSON.stringify(existing));
-        }).catch(function(e) { console.error('Firestore load error:', e); });
-      }
-
-      // Setup agent: referral code + load leads
-      function setupAgent(email, name) {
-        if (!firebaseReady()) { setTimeout(function() { setupAgent(email, name); }, 500); return; }
-        var existingCode = localStorage.getItem('galaxy_ref_code_' + email);
-        if (!existingCode) {
-          var code = (name ? name.substring(0,2).toUpperCase() : 'AG') 
-                   + Math.random().toString(36).substring(2,5).toUpperCase();
-          db.collection('referrals').doc(code).set({ email: email, name: name || '' })
-            .then(function() { 
-              localStorage.setItem('galaxy_ref_code_' + email, code);
-              localStorage.setItem('galaxy_ref_code', code);
-              console.log('Referral code generated:', code);
-              patchReferralCode();
-            });
-        } else {
-          localStorage.setItem('galaxy_ref_code', existingCode);
-        }
-        loadAgentLeads(email);
-      }
-
-      // Intercept localStorage saves
-      var _origSetItem = Storage.prototype.setItem;
-      Storage.prototype.setItem = function(key, value) {
-        _origSetItem.call(this, key, value);
-        try {
-          if (key === 'galaxy_user' && firebaseReady()) {
-            var user = JSON.parse(value);
-            if (user && user.type === 'agent') {
-              // Find email: check galaxy_agents first, then Firestore
-              function doSetup(agentEmail) {
-                if (!agentEmail) return;
-                if (user.email && user.password) {
-                  auth.createUserWithEmailAndPassword(user.email, user.password).catch(function(e) {
-                    if (e.code !== 'auth/email-already-in-use') console.error('Firebase Auth error:', e.code);
-                  });
-                }
-                setupAgent(agentEmail, user.name || agentEmail);
-              }
-              var agentEmail = user.email;
-              if (!agentEmail && user.id) {
-                var agents = JSON.parse(localStorage.getItem('galaxy_agents') || '[]');
-                var found = agents.find(function(a) { return a.id === user.id || a.email === user.id; });
-                if (found) agentEmail = found.email || found.id;
-              }
-              if (agentEmail) { doSetup(agentEmail); }
-              else if (user.id) {
-                // Direct Firestore lookup
-                db.collection('agents').get().then(function(snap) {
-                  snap.forEach(function(doc) {
-                    var a = doc.data();
-                    if (a.id === user.id || a.email === user.id) {
-                      doSetup(a.email || a.id);
-                      // Also save to localStorage for future
-                      var all = JSON.parse(localStorage.getItem('galaxy_agents') || '[]');
-                      if (!all.find(function(x) { return x.email === a.email; })) {
-                        all.push(a);
-                        localStorage.setItem('galaxy_agents', JSON.stringify(all));
-                      }
-                    }
-                  });
-                });
-              }
-            }
-          }
-          if (key === 'galaxy_agents' && firebaseReady()) {
-            var agents = JSON.parse(value);
-            if (Array.isArray(agents) && agents.length > 0) {
-              var last = agents[agents.length - 1];
-              if (last && last.email) {
-                // Save to Firestore agents collection (for login sync)
-                db.collection('agents').doc(last.email).set(JSON.parse(JSON.stringify(last)));
-                if (last.password) {
-                  auth.createUserWithEmailAndPassword(last.email, last.password).catch(function(e) {
-                    if (e.code !== 'auth/email-already-in-use') console.error('Firebase Auth error:', e.code);
-                  });
-                }
-                setupAgent(last.email, last.fullName || last.name || last.email);
-              }
-            }
-          }
-          if (key === 'galaxy_leads' && firebaseReady()) {
-            var data = JSON.parse(value);
-            var lead = Array.isArray(data) ? data[data.length - 1] : data;
-            if (lead && lead.name && lead.phone) saveLeadToFirestore(lead);
-          }
-        } catch(e) { console.error('Firebase sync error:', e); }
-      };      // Auto-load leads when page loads (check if agent is logged in)
-      // Load existing agents from Firestore (for registration uniqueness check)
-      // Sync agents from Firestore (for login check) - fast
-      function syncExistingAgents() {
-        if (!firebaseReady()) { setTimeout(syncExistingAgents, 200); return; }
-        db.collection('agents').get().then(function(snapshot) {
-          var agents = [];
-          snapshot.forEach(function(doc) { agents.push(doc.data()); });
-          if (agents.length > 0) {
-            localStorage.setItem('galaxy_agents', JSON.stringify(agents));
-          }
-        }).catch(function() {});
-      }
-      // Try immediately, retry quickly
-      syncExistingAgents();
-      setTimeout(syncExistingAgents, 500);
-      setTimeout(syncExistingAgents, 1500);
-
-      function checkAgent() {
-        if (!firebaseReady()) { setTimeout(checkAgent, 1000); return; }
-        var user = JSON.parse(localStorage.getItem('galaxy_user') || '{}');
-        if (user.email && user.type === 'agent') loadAgentLeads(user.email);
-      }
-      setTimeout(checkAgent, 2000);
-    })();
-  </script>
-  <script>
-  // Сохраняем referral код и логируем клики по Telegram
-  (function() {
-    var ref = sessionStorage.getItem('ref_code') 
-           || new URLSearchParams(window.location.hash.split('?')[1]||window.location.search).get('r')
-           || new URLSearchParams(window.location.hash.split('?')[1]||window.location.search).get('ref');
-    if (ref) sessionStorage.setItem('ref_code', ref);
-    
-    // При клике на Telegram — сохраняем действие в Firestore
-    document.body.addEventListener('click', function(e) {
-      var link = e.target.closest('a[href*="t.me"], a[href*="telegram"]');
-      if (link && ref && typeof db !== 'undefined') {
-        // Look up agent email for this ref and save as a lead
-        db.collection('referrals').doc(ref).get().then(function(d) {
-          if (d.exists) {
-            var now = new Date().toISOString();
-            var clickId = 'tg_click_' + Date.now();
-            // Save to leads collection so it shows in dashboard
-            db.collection('leads').doc(clickId).set({
-              id: clickId,
-              agentId: d.data().email,
-              name: '📞 Клик в Telegram',
-              phone: ref,
-              city: '-',
-              house: '-',
-              status: 'Связался',
-              createdAt: now
-            }).then(function() { console.log('Telegram click saved as lead'); });
-          }
-        }).catch(function() {});
-      }
-    });
-  })();
-  </script>
-
-<!-- Activity Tracking -->
-    <style>
-.footer{display:none!important}
-.footer-new{background:#fff;border-top:1px solid #eee;padding:32px 16px 20px;text-align:center}
-      .siw{max-width:600px;margin:0 auto;padding:16px}
-      .sim{display:flex;align-items:center;justify-content:center;gap:20px;margin-bottom:16px}
-      .sim button{background:none;border:1px solid #ddd;border-radius:8px;width:34px;height:34px;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#333}
-      .sim button:hover{background:#f0f0f0;border-color:#999}
-      .sml{font-weight:600;font-size:1rem;color:#111;min-width:160px;text-align:center}
-      .sig{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:16px}
-      .swd{text-align:center;font-size:.75rem;font-weight:600;color:#999;padding:6px 0;text-transform:uppercase}
-      .sdy{text-align:center;padding:10px 0;font-size:.85rem;color:#333;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:all .15s}
-      .sdy:hover{background:#f0f0f0}
-      .sot{color:#ddd;pointer-events:none}
-      .std{font-weight:700;color:#111;background:#f5f5f5}
-      .ssl{background:#111!important;color:#fff!important;font-weight:600}
-      .spa{color:#ccc;pointer-events:none}
-      .stw{margin-bottom:12px}
-      .stl{font-size:.82rem;color:#666;margin-bottom:8px;text-align:center}
-      .stg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-      .sts{text-align:center;padding:10px;font-size:.82rem;font-weight:500!important;color:#333;border:1.5px solid #ddd;border-radius:8px;cursor:pointer;transition:all .15s}
-      .sts:hover{background:#f0f0f0;border-color:#999}
-      .sbk{color:#ccc;border-color:#eee;background:#f9f9f9;cursor:not-allowed;text-decoration:line-through}
-      .stsl{background:#111;color:#fff;border-color:#111}
-      .sfm{max-width:400px;margin:12px auto 0;padding-top:12px;border-top:1px solid #eee}
-      .sfm h4{text-align:center;font-size:.9rem;font-weight:600;margin:0 0 12px;color:#111}
-      .sfm input,.sfm select{width:100%;padding:10px;font-size:.82rem;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box;margin-bottom:8px;display:block}
-      .sfm input:focus,.sfm select:focus{border-color:#111}
-      .sbn{width:100%;padding:11px;font-size:.85rem;font-weight:600;font-family:Inter,sans-serif;background:#111;color:#fff;border:none;border-radius:8px;cursor:pointer}
-      .sbn:hover{background:#333}
-      .ssc{display:none;text-align:center;padding:24px 0}
-      .ssc.ok{display:block}
-      .ssc div{font-size:2.5rem;margin-bottom:8px}
-      .ssc h3{font-size:1rem;font-weight:600;margin:0 0 4px;color:#111}
-      .ssc p{font-size:.82rem;color:#888;margin:0}
-    
-</style>
-<script>
-    var sn=["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"];
-    var sc=new Date(),sd=null,st=null,sl=[];
-    function ld(cb){if(!window.db){sl=[];if(cb)cb();return}
-      window.db.collection("galaxymoto_bookings").get().then(function(s){sl=[];s.forEach(function(d){sl.push(d.data())});if(cb)cb()}).catch(function(){sl=[];if(cb)cb()})}
-    function bk(d,t){return sl.some(function(b){return b.date===d&&b.time===t})}
-    function rd(){
-      var e=document.getElementById("servInlineCalendar");if(!e)return;
-      var y=sc.getFullYear(),m=sc.getMonth(),f=new Date(y,m,1).getDay(),di=new Date(y,m+1,0).getDate(),o=f===0?6:f-1;
-      var t=new Date();t.setHours(0,0,0,0);var ts=t.getFullYear()+"-"+String(t.getMonth()+1).padStart(2,"0")+"-"+String(t.getDate()).padStart(2,"0");
-      var h="<div class='siw'><div class='sim'><button onclick='pm()'>‹</button><span class='sml'>"+sn[m]+" "+y+"</span><button onclick='nx()'>›</button></div><div class='sig'>";
-      for(var i=0;i<7;i++)h+="<div class='swd'>"+["Пн","Вт","Ср","Чт","Пт","Сб","Вс"][i]+"</div>";
-      for(var i=0;i<o;i++)h+="<div class='sdy sot'>&nbsp;</div>";
-      for(var d=1;d<=di;d++){var ds=y+"-"+String(m+1).padStart(2,"0")+"-"+String(d).padStart(2,"0");var c="sdy";if(ds<ts)c+=" spa";if(ds===ts)c+=" std";if(sd===ds)c+=" ssl";h+="<div class='"+c+"' onclick='slc("+d+")'>"+d+"</div>"}
-      var rm=(7-(o+di)%7)%7;for(var i=0;i<rm;i++)h+="<div class='sdy sot'>&nbsp;</div>";
-      h+="</div>";
-      if(sd){h+="<div class='stw'><div class='stl'>11:00-19:00</div><div class='stg'>";
-      for(var hh=11;hh<19;hh++){for(var mm=0;mm<60;mm+=30){var ti=String(hh).padStart(2,"0")+":"+String(mm).padStart(2,"0");var b2=bk(sd,ti);var cc="sts";if(b2)cc+=" sbk";if(st===ti)cc+=" stsl";h+="<div class='"+cc+"' onclick='tp(\""+ti+"\")'>"+ti+"</div>"}}
-      h+="</div></div>";}
+    <div class="serv-success" id="servSuccess">
+      <div class="serv-success-icon" style="font-size:2.5rem;margin-bottom:4px">✅</div>
+      <h3 style="font-size:1rem;font-weight:600;margin:0 0 4px;color:#111">Вы записаны!</h3>
+      <p style="font-size:.85rem;color:#333;margin:0 0 12px"><span id="servDateDisplaySuccess"></span></p>
+      <div style="font-size:.8rem;color:#555;line-height:1.6">
+        <div style="margin-bottom:8px">Наш адрес:<br><strong>г. Сочи, ул. Пластунская 52 З/2</strong></div>
+        <div style="margin-bottom:8px"><strong>Телефон: <a href="tel:+79000018023" style="color:#1983dd">+7 (900) 001-80-23</a></strong></div>
+      </div>
+    </div>
+  </div>
+</div>";}
       if(sd&&st){h+="<div class='sfm' id='fm'><h4>"+sd.split("-").reverse().join(".")+" "+st+"</h4><input id='n1' placeholder='Имя'><input id='n2' placeholder='Телефон'><input id='n3' placeholder='Модель'><textarea id='n4' rows='2' placeholder='Краткое описание проблемы / визита' style='width:100%;padding:10px;font-size:.82rem;font-family:Inter,sans-serif;border:1.5px solid #ddd;border-radius:8px;outline:none;box-sizing:border-box;margin-bottom:8px;resize:vertical'></textarea><button class='sbn' onclick='sb()'>Записаться</button></div>"}
       h+="<div class='ssc' id='sc'><div style='font-size:2.5rem;margin-bottom:4px'>✅</div><h3 style='font-size:1rem;font-weight:600;margin:0 0 4px;color:#111'>Вы записаны!</h3><p style='font-size:.85rem;color:#333;margin:0 0 12px'><span id='sdt'></span></p><div style='font-size:.8rem;color:#555;line-height:1.6'><div style='margin-bottom:8px'>Наш адрес:<br><strong>г. Сочи, ул. Пластунская 52 З/2</strong></div><div style='margin-bottom:8px'>Поднимайтесь к нам по Промышленному переулку или постройте маршрут:<br><a href='https://yandex.ru/maps/org/galaxy_moto_service/172501949586' target='_blank' style='color:#1983dd;font-weight:600'>Яндекс.Карты</a></div><div style='margin-bottom:8px'><strong>Телефон: <a href='tel:+79000018023' style='color:#1983dd'>+7 (900) 001-80-23</a></strong></div><div style='font-size:.78rem;color:#888'>Если планы изменились, пожалуйста, предупредите нас! До встречи 👋</div></div></div></div>";
       e.innerHTML=h;
