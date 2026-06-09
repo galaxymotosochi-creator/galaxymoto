@@ -488,112 +488,78 @@ document.getElementById('rentBookBtn').onclick=function(){alert('✅ Брони�
     </div>
 
 <script>
-var smonths=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
-var sdays=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
-var scal=new Date();var sselDate=null;var sselTime=null;var sbk=[];
-function srender(){
-  var y=scal.getFullYear(),m=scal.getMonth();
-  document.getElementById('servCalMonth').textContent=smonths[m]+' '+y;
-  var first=new Date(y,m,1).getDay()||7,last=new Date(y,m+1,0).getDate();
-  var today=new Date();today.setHours(0,0,0,0);
-  var h='';
-  sdays.forEach(function(d){h+='<div class="serv-wd">'+d+'</div>'});
-  for(var i=1;i<first;i++)h+='<div></div>';
-  for(var d=1;d<=last;d++){
-    var dt=new Date(y,m,d),cls='serv-day'+(dt<today?' past':'')+(dt.getTime()===today.getTime()?' today':'')+(dt.getDay()===0?' sunday':'')+(sselDate&&sselDate.getTime()===dt.getTime()?' selected':'');
-    h+='<div class="'+cls+'" onclick="spick('+d+')">'+d+'</div>';
+var servMonths = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+var servDays = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+var servCal = new Date();
+var servSelectedDate = null;
+var servSelectedTime = null;
+
+function servRender() {
+  var y = servCal.getFullYear();
+  var m = servCal.getMonth();
+  document.getElementById('servCalMonth').textContent = servMonths[m] + ' ' + y;
+  var first = new Date(y, m, 1).getDay() || 7;
+  var last = new Date(y, m + 1, 0).getDate();
+  var today = new Date();
+  today.setHours(0, 0, 0, 0);
+  var h = '';
+  servDays.forEach(function(d) { h += '<div class="serv-wd">' + d + '</div>'; });
+  for (var i = 1; i < first; i++) { h += '<div></div>'; }
+  for (var d = 1; d <= last; d++) {
+    var dt = new Date(y, m, d);
+    var cls = 'serv-day';
+    if (dt < today) cls += ' past';
+    if (dt.getTime() === today.getTime()) cls += ' today';
+    if (dt.getDay() === 0) cls += ' sunday';
+    if (servSelectedDate && servSelectedDate.getTime() === dt.getTime()) cls += ' selected';
+    h += '<div class="' + cls + '" onclick="servPick(' + d + ')">' + d + '</div>';
   }
-  document.getElementById('servCalGrid').innerHTML=h;
-  document.getElementById('svTimeGrid')&&(document.getElementById('svTimeGrid').innerHTML='',document.getElementById('svTimeGrid').classList.remove('active'));
-  document.getElementById('svForm')&&(document.getElementById('svForm').style.display='none');
+  document.getElementById('servCalGrid').innerHTML = h;
+  document.getElementById('servTimeLabel').style.display = 'none';
+  document.getElementById('servTimeGrid').classList.remove('active');
+  document.getElementById('servForm').style.display = 'none';
 }
-function spick(d){
-  sselDate=new Date(scal.getFullYear(),scal.getMonth(),d);sselTime=null;srender();
-  var h='<div class="serv-text">🕐 График работы: <strong>11:00 – 19:00</strong></div><div class="serv-time-grid active">';
-  for(var hr=11;hr<=18;hr++)for(var mn=0;mn<60;mn+=30){
-    var ti=String(hr).padStart(2,'0')+':'+String(mn).padStart(2,'0');
-    h+='<div class="serv-time-slot" onclick="spickTime(''+ti+'',this)">'+ti+'</div>';
+
+function servPick(d) {
+  servSelectedDate = new Date(servCal.getFullYear(), servCal.getMonth(), d);
+  servSelectedTime = null;
+  servRender();
+  var h = '<div class="serv-text">🕐 График работы: <strong>11:00 – 19:00</strong></div>';
+  h += '<div class="serv-time-grid active">';
+  for (var hr = 11; hr <= 18; hr++) {
+    for (var mn = 0; mn < 60; mn += 30) {
+      var ti = String(hr).padStart(2, '0') + ':' + String(mn).padStart(2, '0');
+      h += '<div class="serv-time-slot" onclick="servPickTime(\'' + ti + '\', this)">' + ti + '</div>';
+    }
   }
-  h+='</div>';
-  document.getElementById('svTimeGrid').innerHTML=h;
-  document.getElementById('svTimeGrid').classList.add('active');
+  h += '</div>';
+  document.getElementById('servTimeGrid').innerHTML = h;
+  document.getElementById('servTimeGrid').classList.add('active');
 }
-function spickTime(ti,el){
-  sselTime=ti;
-  document.querySelectorAll('.serv-time-slot').forEach(function(x){x.classList.remove('selected')});
+
+function servPickTime(ti, el) {
+  servSelectedTime = ti;
+  var slots = document.querySelectorAll('.serv-time-slot');
+  for (var i = 0; i < slots.length; i++) { slots[i].classList.remove('selected'); }
   el.classList.add('selected');
-  document.getElementById('svForm').style.display='block';
-  document.getElementById('servDateDisplay').textContent=sselDate.toLocaleDateString('ru-RU')+' в '+ti;
+  document.getElementById('servForm').style.display = 'block';
+  document.getElementById('servDateDisplay').textContent = servSelectedDate.toLocaleDateString('ru-RU') + ' в ' + ti;
 }
-function servPrevMonth(){scal.setMonth(scal.getMonth()-1);srender()}
-function servNextMonth(){scal.setMonth(scal.getMonth()+1);srender()}
-function svSubmit(){
-  var n=document.getElementById('svName').value.trim(),p=document.getElementById('svPhone').value.trim();
-  if(!n||!p){alert('Заполните имя и телефон');return}
-  document.getElementById('svDateDisplaySuccess').textContent=sselDate.toLocaleDateString('ru-RU')+' в '+sselTime;
-  document.getElementById('svForm').style.display='none';
-  document.getElementById('svSuccess').style.display='block';
+
+function servPrevMonth() { servCal.setMonth(servCal.getMonth() - 1); servRender(); }
+function servNextMonth() { servCal.setMonth(servCal.getMonth() + 1); servRender(); }
+
+function servSubmit() {
+  var name = document.getElementById('svName').value.trim();
+  var phone = document.getElementById('svPhone').value.trim();
+  if (!name || !phone) { alert('Заполните имя и телефон'); return; }
+  document.getElementById('svDateDisplaySuccess').textContent = servSelectedDate.toLocaleDateString('ru-RU') + ' в ' + servSelectedTime;
+  document.getElementById('svForm').style.display = 'none';
+  document.getElementById('svSuccess').style.display = 'block';
 }
-srender();
 
-    
-
-<!-- Галерея-лайтбокс -->
-    <div class="gallery-overlay" id="galleryOverlay" onclick="closeGallery(event)" role="dialog" aria-label="Просмотр фото">
-      <button class="gallery-close" onclick="closeGallery()" aria-label="Закрыть">✕</button>
-      <button class="gallery-nav gallery-nav--prev" id="galleryPrev" onclick="galleryNav(-1)" aria-label="Предыдущее">‹</button>
-      <img id="galleryImg" src="" alt="">
-      <button class="gallery-nav gallery-nav--next" id="galleryNext" onclick="galleryNav(1)" aria-label="Следующее">›</button>
-      <div class="gallery-counter" id="galleryCounter"></div>
-    </div>
-
-    <script>
-      var _galleryImages = [];
-      var _galleryIndex = 0;
-
-      document.body.addEventListener('click', function(e) {
-        var img = e.target.closest('.house-card img, .house-card__image img');
-        if (!img) return;
-        if (img.closest('.gallery-arrow')) return;
-        e.preventDefault();
-        var container = img.parentNode;
-        var imgs = container.querySelectorAll('img');
-        _galleryImages = [];
-        imgs.forEach(function(m) { _galleryImages.push(m.src); });
-        _galleryIndex = Array.prototype.indexOf.call(imgs, img);
-        openGallery();
-      });
-
-      function openGallery() {
-        if (_galleryImages.length === 0) return;
-        showGalleryImage();
-        document.getElementById('galleryOverlay').classList.add('gallery-overlay--open');
-        document.body.style.overflow = 'hidden';
-      }
-
-      function closeGallery(e) {
-        if (e && e.target !== e.currentTarget) return;
-        document.getElementById('galleryOverlay').classList.remove('gallery-overlay--open');
-        document.body.style.overflow = '';
-      }
-
-      function galleryNav(dir) {
-        _galleryIndex = (_galleryIndex + dir + _galleryImages.length) % _galleryImages.length;
-        showGalleryImage();
-      }
-
-      function showGalleryImage() {
-        document.getElementById('galleryImg').src = _galleryImages[_galleryIndex];
-        document.getElementById('galleryCounter').textContent = (_galleryIndex + 1) + ' / ' + _galleryImages.length;
-      }
-
-      document.addEventListener('keydown', function(e) {
-        if (!document.getElementById('galleryOverlay').classList.contains('gallery-overlay--open')) return;
-        if (e.key === 'Escape') { closeGallery(); }
-        if (e.key === 'ArrowLeft') { galleryNav(-1); }
-        if (e.key === 'ArrowRight') { galleryNav(1); }
-      });
-    </script>
+servRender();
+</script>
 
     <!-- Firebase sync -->
   <script>
